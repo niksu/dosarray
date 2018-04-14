@@ -22,6 +22,8 @@ MAX_VIP=$((DOSARRAY_VIRT_INSTANCES + 1))
 # FIXME horrible hack -- instead of hardcoding the initial IP use DOSARRAY_VIRT_NET_SUFFIX
 CURRENT_HOST_IP=3
 
+${DOSARRAY_SCRIPT_DIR}/dosarray_servers_load.sh &
+
 # NOTE the first host since we're running the server there.
 for IDX in `dosarray_physical_hosts_skip 1`
 do
