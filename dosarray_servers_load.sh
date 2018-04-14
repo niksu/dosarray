@@ -39,16 +39,19 @@ echo "GAP_BETWEEN_ROUNDS=${GAP_BETWEEN_ROUNDS}"
 
 function logname_of_load() {
   HOST_NAME="$1"
+  # FIXME put in ${DESTINATION_DIR}
   echo "${HOST_NAME}_load.log"
 }
 
 function logname_of_mem() {
   HOST_NAME="$1"
+  # FIXME put in ${DESTINATION_DIR}
   echo "${HOST_NAME}_mem.log"
 }
 
 function logname_of_net() {
   HOST_NAME="$1"
+  # FIXME put in ${DESTINATION_DIR}
   echo "${HOST_NAME}_net.log"
 }
 
