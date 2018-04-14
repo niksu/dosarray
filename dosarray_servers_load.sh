@@ -41,8 +41,7 @@ function logname_of_net() {
   echo "${HOST_NAME}_net.log"
 }
 
-# FIXME hardcoded list of machines
-for HOST_NAME in dedos01 dedos02 dedos03 dedos04 dedos05 dedos06 dedos07 dedos08
+for HOST_NAME in ${DOSARRAY_PHYSICAL_HOSTS_PUB[*]}
 do
   rm -f $(logname_of_load ${HOST_NAME})
   rm -f $(logname_of_mem ${HOST_NAME})
@@ -51,30 +50,26 @@ done
 
 for ROUND in `seq 0 ${NUM_ROUNDS}`
 do
-# FIXME hardcoded list of machines
-  for HOST_NAME in dedos01 dedos02 dedos03 dedos04 dedos05 dedos06 dedos07 dedos08
+  for HOST_NAME in ${DOSARRAY_PHYSICAL_HOSTS_PUB[*]}
   do
-# FIXME various hardcodings
-    ssh -n -i ~/.ssh/dedos_cluster_rsa nsultana@${HOST_NAME}.cis.upenn.edu -p 2324 \
-    bash -c "true
+    dosarray_execute_on "${HOST_NAME}" \
+    'bash -c "true
     eval H='\$(hostname)'
     eval D='\$(date +%s)'
     eval C='\$(cat /proc/loadavg)'
     eval echo "\$H \$D \$C"
-    " >> $(logname_of_load ${HOST_NAME}) &
+    "' >> $(logname_of_load ${HOST_NAME}) &
 
-# FIXME various hardcodings
-    ssh -n -i ~/.ssh/dedos_cluster_rsa nsultana@${HOST_NAME}.cis.upenn.edu -p 2324 \
-    bash -c "true
+    dosarray_execute_on "${HOST_NAME}" \
+    'bash -c "true
     eval H='\$(hostname)'
     eval D='\$(date +%s)'
     eval C='\$(grep Mem /proc/meminfo)'
     eval echo "\$H \$D \$C"
-    " >> $(logname_of_mem ${HOST_NAME}) &
+    "' >> $(logname_of_mem ${HOST_NAME}) &
 
-# FIXME various hardcodings
-    ssh -n -i ~/.ssh/dedos_cluster_rsa nsultana@${HOST_NAME}.cis.upenn.edu -p 2324 \
-    cat /proc/net/dev >> $(logname_of_net ${HOST_NAME}) &
+    dosarray_execute_on "${HOST_NAME}" \
+    "cat /proc/net/dev" >> $(logname_of_net ${HOST_NAME}) &
   done
 
   if [ "${ROUND}" -ne "${NUM_ROUNDS}" ]
