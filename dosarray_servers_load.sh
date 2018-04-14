@@ -5,6 +5,17 @@
 # Downloads load indicators from a collection of machines for $NUM_ROUNDS times,
 # sleeping $GAP_BETWEEN_ROUNDS between downloads.
 
+if [ -z "${DOSARRAY_SCRIPT_DIR}" ]
+then
+  echo "Need to configure DoSarray -- set \$DOSARRAY_SCRIPT_DIR" >&2
+  exit 1
+elif [ ! -e "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh" ]
+then
+  echo "Need to configure DoSarray -- could not find dosarray_config.sh at \$DOSARRAY_SCRIPT_DIR ($DOSARRAY_SCRIPT_DIR)" >&2
+  exit 1
+fi
+source "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh"
+
 if [ -z "${NUM_ROUNDS}" ]
 then
   echo "Need to define \$NUM_ROUNDS" >&2
@@ -41,8 +52,11 @@ function logname_of_net() {
   echo "${HOST_NAME}_net.log"
 }
 
-for HOST_NAME in ${DOSARRAY_PHYSICAL_HOSTS_PUB[*]}
+echo "Number of hosts: ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
+
+for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
 do
+  echo "Clearing logs of ${HOST_NAME}"
   rm -f $(logname_of_load ${HOST_NAME})
   rm -f $(logname_of_mem ${HOST_NAME})
   rm -f $(logname_of_net ${HOST_NAME})
@@ -50,26 +64,20 @@ done
 
 for ROUND in `seq 0 ${NUM_ROUNDS}`
 do
-  for HOST_NAME in ${DOSARRAY_PHYSICAL_HOSTS_PUB[*]}
+  for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
   do
+    echo "Logging round ${ROUND} of ${HOST_NAME}"
     dosarray_execute_on "${HOST_NAME}" \
-    'bash -c "true
-    eval H='\$(hostname)'
-    eval D='\$(date +%s)'
-    eval C='\$(cat /proc/loadavg)'
-    eval echo "\$H \$D \$C"
-    "' >> $(logname_of_load ${HOST_NAME}) &
+    "echo \$(hostname) \$(date +%s) \$(cat /proc/loadavg)" >> $(logname_of_load ${HOST_NAME}) &
+    echo "Load log: $(logname_of_load ${HOST_NAME})"
 
     dosarray_execute_on "${HOST_NAME}" \
-    'bash -c "true
-    eval H='\$(hostname)'
-    eval D='\$(date +%s)'
-    eval C='\$(grep Mem /proc/meminfo)'
-    eval echo "\$H \$D \$C"
-    "' >> $(logname_of_mem ${HOST_NAME}) &
+    echo "\$(hostname) \$(date +%s) \$(grep Mem /proc/meminfo)" >> $(logname_of_mem ${HOST_NAME}) &
+    echo "Mem log: $(logname_of_load ${HOST_NAME})"
 
     dosarray_execute_on "${HOST_NAME}" \
     "cat /proc/net/dev" >> $(logname_of_net ${HOST_NAME}) &
+    echo "Net log: $(logname_of_load ${HOST_NAME})"
   done
 
   if [ "${ROUND}" -ne "${NUM_ROUNDS}" ]
