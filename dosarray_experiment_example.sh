@@ -19,7 +19,7 @@ export ATTACK_LASTS_FOR=20
 # FIXME insert a manifest in the RESULT_DIR, describing the date at which the experiment was made, and a full dump of all configuration variables.
 
 EXPERIMENT_SET="test"
-RESULT_DIR_PREFIX=/home/nik/dosarray/results/apache_worker_
+RESULT_DIR_PREFIX=/Users/shilpi/Documents/repo/results/apache_worker_
 RESULT_DIR_SUFFIX=_10inst_2attackers
 # NOTE to vary no. of attackers, edit dosarray_run_http_experiment.sh
 

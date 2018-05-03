@@ -15,9 +15,6 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh"
 
-MIN_VIP=2
-MAX_VIP=$((DOSARRAY_VIRT_INSTANCES + 1))
-
 echo "Starting ${DOSARRAY_VIRT_INSTANCES} instances"
 for IDX in ${DOSARRAY_PHYSICAL_HOST_IDXS}
 do

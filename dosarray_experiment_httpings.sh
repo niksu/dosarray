@@ -15,12 +15,9 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh"
 
-MIN_VIP=2
-MAX_VIP=$((DOSARRAY_VIRT_INSTANCES + 1))
-
 # NOTE CURRENT_HOST_IP==2 since we skip the first host, where we run the target server.
 # FIXME horrible hack -- instead of hardcoding the initial IP use DOSARRAY_VIRT_NET_SUFFIX
-CURRENT_HOST_IP=3
+CURRENT_HOST_IP=2
 
 # NOTE the first host since we're running the server there.
 for IDX in `dosarray_physical_hosts_skip 1`
