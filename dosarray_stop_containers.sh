@@ -23,7 +23,7 @@ do
   echo "Stopping containers in $HOST_NAME (${HOST_IP})"
 
   printf " \
-for CURRENT_CONTAINER_IP in \$(seq $MIN_VIP $MAX_VIP) \n\
+for CURRENT_CONTAINER_IP in \$(seq $DOSARRAY_MIN_VIP $DOSARRAY_MAX_VIP) \n\
 do \n\
   CONTAINER_SUFFIX=${DOSARRAY_VIRT_NET_SUFFIX[${IDX}]}.\${CURRENT_CONTAINER_IP} \n\
   CONTAINER_NAME=\"c\${CONTAINER_SUFFIX}\" \n\
