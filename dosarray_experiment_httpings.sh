@@ -69,7 +69,7 @@ do \n\
   if ! is_attacker \"\$CONTAINER_NAME\" \n\
   then \n\
     docker container exec \${CONTAINER_NAME} \
-      killall httping & \n\
+      ${STOP_MEASUREMENT_COMMAND} & \n\
     echo -n \"\${CONTAINER_NAME} \" \n\
   fi \n\
 done \n\
