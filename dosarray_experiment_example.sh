@@ -29,11 +29,14 @@ echo "  Writing to ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}" # 
 DESTINATION_DIR=${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX} \
 TITLE="Apache worker, Slowloris, ${EXPERIMENT_SET}" \
 ./dosarray_run_http_experiment.sh apache_worker slowloris \
-> ${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stdout \
-2> ${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stderr
+> /tmp/${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stdout \
+2> /tmp/${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stderr
 
 echo "Finished at $(date)"
 
 ls -d ${RESULT_DIR_PREFIX}*${RESULT_DIR_SUFFIX}
+
+# Move simulation logs to RESULTS directory
+mv /tmp/${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.std* ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}/
 
 echo "Now do: open ${RESULT_DIR_PREFIX}*${RESULT_DIR_SUFFIX}/graph.png"
