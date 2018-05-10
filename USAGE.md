@@ -1,14 +1,14 @@
-
-### Prerequisites
+## Prerequisites
 * Python3
 * sudo privileges in the physical hosts
 * docker service in the physical hosts
 * gnuplot with pdf terminal support (install using --with-cairo option)
 
-###Setting up DoSArray
-
+## Setting up DoSArray
 The first and foremost step is to set the DosArray Script directory. Every script in DoSArray checks this variable on startup and is certain to exit with an error if this variable is not set.
- `export DOSARRAY_SCRIPT_DIR=<path-to-dosarray-scripts>`
+```
+export DOSARRAY_SCRIPT_DIR=<path-to-dosarray-scripts>
+```
 
 Next, we need to configure DoSArray to simulate experiments using the available resources (physical hosts). That involves setting the following variables in `dosarray_config.sh`
 * `DOSARRAY_PHYSICAL_HOSTS_PRIV`: Populate this list with the IP addresses of all the physical hosts. Please ensure the target physical host is the first element of the list (this will be elaborated on when discussing `DOSARRAY_CONTAINER_HOST_IDXS`) 
@@ -32,3 +32,32 @@ Next, we need to configure DoSArray to simulate experiments using the available 
 * `DOSARRAY_LOG_NAME_PREFIX`: Each container log is the same as the container name, which calls for the same container prefix. This could be changed to suit your needs.
 
 * `DOSARRAY_LOG_PATH_PREFIX`: This variable specified the location of all container logs within the physical hosts  
+
+## Using DoSArray
+An important consideration in DoSArray is to achieve address diversity in order to simulate larger networks in these experiments. This involves configuring each host in the physical network with the network info of the virtual network by modifying the rules for iptables, routes or for both, by using the -r option.
+
+```
+./dosarray_configure_network [-r] <physical-host-name>
+```
+
+After configuring the network, the next step is creating and starting docker containers in each of the physical hosts except the target. The following invokation of scripts creates containers in each of these host based on the values set in `dosarray_config.sh`
+
+```
+./dosarray_create_containers.sh
+./dosarray_start_containers.sh
+```
+
+Once we have the configuration in place, simulating the a DoS attack is just a few steps away. To ensure our environment setup correctly we can run the example experiment.
+```
+./dosarray_experiment_example.sh
+```
+
+This script simulates the slowloris attack on apache and compiles all the container logs, .stdout and .stderr logs and the final graph generated from the availability data in the results directory.
+
+Once we have gathered all our logs and results, DoSArray also facilitates clearing out the docker containers which we created for conducting the experiment. The following scripts stop and delete the containers we created in each phyical host except for the target.
+
+```
+./dosarray_stop_containers.sh
+./dosarray_delete_containers.sh
+```
+ 
