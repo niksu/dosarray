@@ -15,7 +15,7 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh"
 
-for IDX in ${DOSARRAY_PHYSICAL_HOST_IDXS}
+for IDX in ${DOSARRAY_CONTAINER_HOST_IDXS}
 do
   HOST_NAME="${DOSARRAY_PHYSICAL_HOSTS_PUB[${IDX}]}"
   echo "Gathering container logs from $HOST_NAME"
