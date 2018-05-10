@@ -2,10 +2,7 @@
 # Configuration for DoSarray
 # Nik Sultana, February 2018, UPenn
 #
-# Add reference to Apache 2.0 license      
-#
-# FIXME replace "dedos_" and "Winnow" with DoSarray
-# FIXME add another array for VIPs, to avoid using the implicit MIN_VIP-MAX_VIP range.
+# Use of this source code is governed by the Apache 2.0 license; see LICENSE
 
 export DOSARRAY_PHYSICAL_HOSTS_PRIV=( 192.168.0.2 192.168.0.3 192.168.0.4 192.168.0.5 192.168.0.6 192.168.0.7 192.168.0.8 192.168.0.9 )
 export DOSARRAY_VIRT_NET_SUFFIX=( 2 3 4 5 6 7 8 9 )
@@ -21,14 +18,15 @@ export -f dosarray_physical_hosts_skip
 export DOSARRAY_PHYSICAL_HOST_IDXS=`dosarray_physical_hosts_skip 0`
 export DOSARRAY_CONTAINER_HOST_IDXS=`dosarray_physical_hosts_skip 1`
 
-export DOSARRAY_VIRT_INSTANCES=10
 export DOSARRAY_SCRIPT_DIR="/Users/shilpi/Documents/repo"
+
+export DOSARRAY_VIRT_INSTANCES=10
 export DOSARRAY_MIN_VIP=2
 export DOSARRAY_MAX_VIP=$((DOSARRAY_VIRT_INSTANCES + (DOSARRAY_MIN_VIP - 1)))
 function dosarray_execute_on () {
   local HOST_NAME="$1"
   local CMD="$2"
-  ssh shilpi@${HOST_NAME}.cis.upenn.edu -p 2324 ${CMD}
+  ssh shilpi@${HOST_NAME}.<FULLY_QUALIFIED_NAME> -p <SSH_PORT> ${CMD}
 }
 export -f dosarray_execute_on
 
@@ -36,7 +34,7 @@ function dosarray_scp_from () {
   local HOST_NAME="$1"
   local FROM="$2"
   local TO="$3"
-  scp -r -P 2324 shilpi@${HOST_NAME}.cis.upenn.edu:${FROM} ${TO}
+  scp -r -P <SSH_PORT> shilpi@${HOST_NAME}.<FULLY_QUALIFIED_NAME>:${FROM} ${TO}
 
 }
 export -f dosarray_scp_from

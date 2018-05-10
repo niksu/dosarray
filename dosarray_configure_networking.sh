@@ -8,7 +8,7 @@
 # info of the virtual network.
 #
 # Usage:
-# ./dosarray_configure_networking.sh demo02 
+# ./dosarray_configure_networking.sh demo02
 # ./dosarray_configure_networking.sh demo03
 
 if [ -z "${DOSARRAY_SCRIPT_DIR}" ]
@@ -68,9 +68,9 @@ do
     HOST_IP=${DOSARRAY_PHYSICAL_HOSTS_PRIV[$IDX]}
     VIRTUAL_NETWORK="${DOSARRAY_VIRT_NETS[${IDX}]}0"
     if [ ${ADD_ROUTES} ]
-    then 
+    then
       CMD="${CMD} && sudo route add -net ${VIRTUAL_NETWORK} netmask 255.255.255.0 gw ${HOST_IP}"
-    else   
+    else
       CMD="${CMD}"
     fi
   fi

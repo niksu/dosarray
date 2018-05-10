@@ -4,14 +4,14 @@
 * docker service in the physical hosts
 * gnuplot with pdf terminal support (install using --with-cairo option)
 
-## Setting up DoSArray
-The first and foremost step is to set the DosArray Script directory. Every script in DoSArray checks this variable on startup and is certain to exit with an error if this variable is not set.
+## Setting up DoSarray
+The first and foremost step is to set the DoSarray Script directory. Every script in DoSarray checks this variable on startup and is certain to exit with an error if this variable is not set.
 ```
 export DOSARRAY_SCRIPT_DIR=<path-to-dosarray-scripts>
 ```
 
-Next, we need to configure DoSArray to simulate experiments using the available resources (physical hosts). That involves setting the following variables in `dosarray_config.sh`
-* `DOSARRAY_PHYSICAL_HOSTS_PRIV`: Populate this list with the IP addresses of all the physical hosts. Please ensure the target physical host is the first element of the list  
+Next, we need to configure DoSarray to simulate experiments using the available resources (physical hosts). That involves setting the following variables in `dosarray_config.sh`
+* `DOSARRAY_PHYSICAL_HOSTS_PRIV`: Populate this list with the IP addresses of all the physical hosts. Please ensure the target physical host is the first element of the list
 
 * `DOSARRAY_VIRT_NET_SUFFIX`: Populate this list with the last octet of every IP address in `DOSARRAY_PHYSICAL_HOSTS_PRIV`, in the same order as they appear in there.
 
@@ -31,10 +31,10 @@ Next, we need to configure DoSArray to simulate experiments using the available 
 
 * `DOSARRAY_LOG_NAME_PREFIX`: Each container log is the same as the container name, which calls for the same container prefix. This could be changed to suit your needs.
 
-* `DOSARRAY_LOG_PATH_PREFIX`: This variable specified the location of all container logs within the physical hosts  
+* `DOSARRAY_LOG_PATH_PREFIX`: This variable specified the location of all container logs within the physical hosts
 
-## Using DoSArray
-An important consideration in DoSArray is to achieve address diversity in order to simulate larger networks in these experiments. This involves configuring each host in the physical network with the network info of the virtual network by modifying the rules for iptables, routes or for both, by using the -r option.
+## Using DoSarray
+An important consideration in DoSarray is to achieve address diversity in order to simulate larger networks in these experiments. This involves configuring each host in the physical network with the network info of the virtual network by modifying the rules for iptables, routes or for both, by using the -r option.
 
 ```
 ./dosarray_configure_network [-r] <physical-host-name>
@@ -47,17 +47,17 @@ After configuring the network, the next step is creating and starting docker con
 ./dosarray_start_containers.sh
 ```
 
-Once we have the configuration in place, simulating the a DoS attack is just a few steps away. For starters, DoSArray also has a sample experiment which goes through the entire lifecycle of the experiment, starting from measurements before, after and during the attack and ending with graphing the data gathered during the experiment.
+Once we have the configuration in place, simulating the a DoS attack is just a few steps away. For starters, DoSarray also has a sample experiment which goes through the entire lifecycle of the experiment, starting from measurements before, after and during the attack and ending with graphing the data gathered during the experiment.
 ```
 ./dosarray_experiment_example.sh
 ```
 
 This script simulates the slowloris attack on apache and compiles all the container logs, .stdout and .stderr logs and the final graph generated from the availability data in the results directory. This is a good starting point for first-time users and we encourage you to adapt this script to suit your specific needs. For instance, `dosarray_setup_http_experiment.sh` can be further modified to configure various parameters such as type of server and attack, duration of attack and experiment and various measurement commmands.
- 
-Once we have gathered all our logs and results, DoSArray also facilitates clearing out the docker containers which we created for conducting the experiment. The following scripts stop and delete the containers we created in each phyical host except for the target.
+
+Once we have gathered all our logs and results, DoSarray also facilitates clearing out the docker containers which we created for conducting the experiment. The following scripts stop and delete the containers we created in each phyical host except for the target.
 
 ```
 ./dosarray_stop_containers.sh
 ./dosarray_delete_containers.sh
 ```
- 
+
