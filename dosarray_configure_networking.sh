@@ -77,5 +77,7 @@ do
 done
 
 echo "Running CMD=${CMD}"
+echo
+echo "Please enter sudo password for ${TARGET_PHYSICAL_HOST}"
 
 dosarray_execute_on "${TARGET_PHYSICAL_HOST}" "-t ${CMD}"
