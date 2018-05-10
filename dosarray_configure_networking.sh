@@ -8,7 +8,7 @@
 # info of the virtual network.
 #
 # Usage:
-# ./dosarray_configure_networking.sh demo02 
+# ./dosarray_configure_networking.sh demo02
 # ./dosarray_configure_networking.sh demo03
 
 if [ -z "${DOSARRAY_SCRIPT_DIR}" ]
@@ -21,6 +21,19 @@ then
   exit 1
 fi
 source "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh"
+
+while getopts ":r" opt; do
+  case ${opt} in
+    r )
+      ADD_ROUTES=true
+      ;;
+    ? )
+      echo "Usage: ./dosarray_configure_network [-r] <target-physical-host>"
+      exit 1
+      ;;
+  esac
+done
+shift $((OPTIND -1))
 
 TARGET_PHYSICAL_HOST=$1
 #VIRTUAL_NETWORK_NUMBER=$2 FIXME
@@ -54,12 +67,17 @@ do
   then
     HOST_IP=${DOSARRAY_PHYSICAL_HOSTS_PRIV[$IDX]}
     VIRTUAL_NETWORK="${DOSARRAY_VIRT_NETS[${IDX}]}0"
-    CMD="${CMD} \
-&& sudo route add -net ${VIRTUAL_NETWORK} netmask 255.255.255.0 gw ${HOST_IP}"
-#    CMD="${CMD}" FIXME
+    if [ ${ADD_ROUTES} ]
+    then
+      CMD="${CMD} && sudo route add -net ${VIRTUAL_NETWORK} netmask 255.255.255.0 gw ${HOST_IP}"
+    else
+      CMD="${CMD}"
+    fi
   fi
 done
 
 echo "Running CMD=${CMD}"
+echo
+echo "Please enter sudo password for ${TARGET_PHYSICAL_HOST}"
 
 dosarray_execute_on "${TARGET_PHYSICAL_HOST}" "-t ${CMD}"

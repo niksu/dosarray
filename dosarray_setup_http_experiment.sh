@@ -68,6 +68,7 @@ fi
 
 # NOTE could also us parameters "-G -s -S" for httping
 MEASUREMENT_COMMAND="httping -g http://${SERVER_IP} -p ${SERVER_PORT} -i 1 -t 1 -c ${EXPERIMENT_DURATION} -s"
+STOP_MEASUREMENT_COMMAND="killall httping"
 
 if [ "${ATTACK}" -eq "${ATTACK_Slowloris}" ]
 then
