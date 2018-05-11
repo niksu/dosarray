@@ -1,6 +1,7 @@
 ![Pax](doc/dosarray_logo.png)
 
-DoSarray is a system that facilitates carrying out DoS experiments.
+DoSarray is a system that facilitates carrying out experiments involving
+Denial-of-Service (DoS) attacks and mitigations.
 It is developed at the University of Pennsylvania as part of the [DeDOS project](http://dedos-project.net/).
 
 ## Getting started...
