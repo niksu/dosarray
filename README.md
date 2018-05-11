@@ -1,4 +1,5 @@
-## DoSarray v0.2
+![Pax](doc/dosarray_logo.png)
+
 DoSarray is a system to facilitate carrying out DoS experiments.
 It is developed at the University of Pennsylvania as part of the [DeDOS project](http://dedos-project.net/).
 
