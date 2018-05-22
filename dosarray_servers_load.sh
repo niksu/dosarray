@@ -16,6 +16,8 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh"
 
+# FIXME make $GAP_BETWEEN_ROUNDS as the main parameter to drive this,
+#       rather than $NUM_ROUNDS. Put in dosarray_config.sh
 if [ -z "${NUM_ROUNDS}" ]
 then
   echo "Need to define \$NUM_ROUNDS" >&2
