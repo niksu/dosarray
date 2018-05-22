@@ -61,3 +61,13 @@ Once we have gathered all our logs and results, DoSarray also facilitates cleari
 ./dosarray_delete_containers.sh
 ```
 
+## Load graphing
+Load data is gathered automatically during experiments, for offline analysis and graphing.
+Currently the graphing process is a bit inelegant, involving running snippets such as the following for each batch of measurements (for CPU load, memory use, and net rx/tx/etc transfer):
+```
+cp load_15s.data data && gnuplot load_graph.plot && mv load_graph.pdf load_15s.pdf
+cp load_30s.data data && gnuplot load_graph.plot && mv load_graph.pdf load_30s.pdf
+cp load_60s.data data && gnuplot load_graph.plot && mv load_graph.pdf load_60s.pdf
+cp load_120s.data data && gnuplot load_graph.plot && mv load_graph.pdf load_120s.pdf
+cp load_250s.data data && gnuplot load_graph.plot && mv load_graph.pdf load_250s.pdf
+```
