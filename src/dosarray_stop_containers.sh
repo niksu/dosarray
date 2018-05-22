@@ -1,4 +1,4 @@
-#/bin/sh -e
+#/bin/sh
 # Container setup for DoSarray
 # Nik Sultana, December 2017, UPenn
 #
@@ -15,27 +15,23 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh"
 
-MIN_VIP=2
-MAX_VIP=$((DOSARRAY_VIRT_INSTANCES + 1))
-
-echo "Creating ${DOSARRAY_VIRT_INSTANCES} instances"
-for IDX in ${DOSARRAY_PHYSICAL_HOST_IDXS}
+echo "Stopping ${DOSARRAY_VIRT_INSTANCES} instances"
+for IDX in ${DOSARRAY_CONTAINER_HOST_IDXS}
 do
   HOST_NAME="${DOSARRAY_PHYSICAL_HOSTS_PUB[${IDX}]}"
-  echo "Creating containers in $HOST_NAME"
+  HOST_IP="${DOSARRAY_PHYSICAL_HOSTS_PRIV[${IDX}]}"
+  echo "Stopping containers in $HOST_NAME (${HOST_IP})"
 
   printf " \
-for CURRENT_CONTAINER_IP in \$(seq $MIN_VIP $MAX_VIP) \n\
+for CURRENT_CONTAINER_IP in \$(seq $DOSARRAY_MIN_VIP $DOSARRAY_MAX_VIP) \n\
 do \n\
   CONTAINER_SUFFIX=${DOSARRAY_VIRT_NET_SUFFIX[${IDX}]}.\${CURRENT_CONTAINER_IP} \n\
-  CONTAINER_ADDRESS=${DOSARRAY_VIRT_NET_PREFIX}\${CONTAINER_SUFFIX} \n\
-  CONTAINER_NAME=\"c\${CONTAINER_SUFFIX}\" \n\
+  CONTAINER_NAME=\"${DOSARRAY_CONTAINER_PREFIX}\${CONTAINER_SUFFIX}\" \n\
   echo -n \"\${CONTAINER_NAME} \" \n\
-  docker container create -ti --name \${CONTAINER_NAME} --net=docker_bridge --ip=\${CONTAINER_ADDRESS} winnow_image & \n\
+  docker container stop \${CONTAINER_NAME} & \n\
 done \n\
 echo " | dosarray_execute_on "${HOST_NAME}" "" \
   > /dev/null
-
 done
 
 echo "Done"

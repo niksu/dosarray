@@ -1,7 +1,14 @@
-16th March 2018
+![Pax](doc/dosarray_logo.png)
 
-This is the initial release of DoSarray. More information and scripts
-will be added on demand and as development progresses further.
-For support please contact Nik Sultana at http://www.seas.upenn.edu/~nsultana
+DoSarray is a system that facilitates carrying out experiments involving
+[Denial-of-Service](https://en.wikipedia.org/wiki/Denial-of-service_attack) (DoS) attacks and mitigations.
+It is developed at the University of Pennsylvania as part of the [DeDOS project](http://dedos-project.net/).
 
-DoSarray is released under the Apache 2.0 license -- please see the file called LICENSE
+## Getting started...
+Please see our [usage guide](doc/USAGE.md)
+
+## Contributors
+Nik Sultana, Shilpi Bose. More contributors welcome!
+
+## License
+DoSarray is released under the [Apache 2.0 license](LICENSE)

@@ -15,11 +15,8 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh"
 
-MIN_VIP=2
-MAX_VIP=$((DOSARRAY_VIRT_INSTANCES + 1))
-
 # NOTE CURRENT_HOST_IP==2 since we skip the first physical machine (because we run the target on it).
-CURRENT_HOST_IP=2
+CURRENT_HOST_IP=${DOSARRAY_VIRT_NET_SUFFIX[0]}
 
 # NOTE excluding the first host since we're running the server there.
 for IDX in `dosarray_physical_hosts_skip 1`
@@ -30,10 +27,10 @@ do
 
   printf "\
 ${ATTACKERS} \n\
-for CURRENT_CONTAINER_IP in \$(seq $MIN_VIP $MAX_VIP) \n\
+for CURRENT_CONTAINER_IP in \$(seq $DOSARRAY_MIN_VIP $DOSARRAY_MAX_VIP) \n\
 do \n\
   CONTAINER_SUFFIX=${CURRENT_HOST_IP}.\${CURRENT_CONTAINER_IP} \n\
-  CONTAINER_NAME=\"c\${CONTAINER_SUFFIX}\" \n\
+  CONTAINER_NAME=\"${DOSARRAY_CONTAINER_PREFIX}\${CONTAINER_SUFFIX}\" \n\
   if ! is_attacker \"\$CONTAINER_NAME\" \n\
   then \n\
     docker container exec \${CONTAINER_NAME} \
