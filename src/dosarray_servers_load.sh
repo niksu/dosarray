@@ -16,45 +16,47 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh"
 
-# FIXME make $GAP_BETWEEN_ROUNDS as the main parameter to drive this,
-#       rather than $NUM_ROUNDS. Put in dosarray_config.sh
-if [ -z "${NUM_ROUNDS}" ]
+if [ -z "${DESTINATION_DIR}" ]
 then
-  echo "Need to define \$NUM_ROUNDS" >&2
+  echo "\$DESTINATION_DIR needs to be defined" >&2
+  exit 2
+fi
+
+if [ -z "$GAP_BETWEEN_ROUNDS}" ]
+then
+  echo "Need to define \$GAP_BETWEEN_ROUNDS" >&2
   exit 1
 fi
 
-echo "NUM_ROUNDS=${NUM_ROUNDS}"
+echo "GAP_BETWEEN_ROUNDS=${GAP_BETWEEN_ROUNDS}"
 
 if [ -n "${EXPERIMENT_DURATION}" ]
 then
   echo "EXPERIMENT_DURATION=${EXPERIMENT_DURATION}"
-  GAP_BETWEEN_ROUNDS=$(echo "${EXPERIMENT_DURATION} / ${NUM_ROUNDS}" | bc -l)
+  NUM_ROUNDS=$(echo "${EXPERIMENT_DURATION} / ${GAP_BETWEEN_ROUNDS}" | bc -l)
+  NUM_ROUNDS=$( printf "%.0f" ${NUM_ROUNDS} )
 fi
 
-if [ -z "${GAP_BETWEEN_ROUNDS}" ]
+if [ -z "${NUM_ROUNDS}" ]
 then
-  echo "Need to define \$GAP_BETWEEN_ROUNDS or \$EXPERIMENT_DURATION" >&2
+  echo "Need to define \$NUM_ROUNDS or \$EXPERIMENT_DURATION" >&2
   exit 1
 fi
-echo "GAP_BETWEEN_ROUNDS=${GAP_BETWEEN_ROUNDS}"
+echo "NUM_ROUNDS=${NUM_ROUNDS}"
 
 function logname_of_load() {
   HOST_NAME="$1"
-  # FIXME put in ${DESTINATION_DIR}
-  echo "${HOST_NAME}_load.log"
+  echo "${DESTINATION_DIR}/${HOST_NAME}_load.log"
 }
 
 function logname_of_mem() {
   HOST_NAME="$1"
-  # FIXME put in ${DESTINATION_DIR}
-  echo "${HOST_NAME}_mem.log"
+  echo "${DESTINATION_DIR}/${HOST_NAME}_mem.log"
 }
 
 function logname_of_net() {
   HOST_NAME="$1"
-  # FIXME put in ${DESTINATION_DIR}
-  echo "${HOST_NAME}_net.log"
+  echo "${DESTINATION_DIR}/${HOST_NAME}_net.log"
 }
 
 echo "Number of hosts: ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
