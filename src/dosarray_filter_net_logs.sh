@@ -1,8 +1,6 @@
 #/bin/sh -e
-# Experimental setup for the Winnow project.
+# Filter network load measurements to retain logs only for specific interfaces before generating graphing data
 # Shilpi Bose, May 2018, UPenn
-#
-# Filter network load measurements to dsiplay load on specific interfaces before genrating graphing data
 
 if [ -z "${DOSARRAY_SCRIPT_DIR}" ]
 then
