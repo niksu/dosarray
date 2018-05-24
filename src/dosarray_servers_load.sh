@@ -79,12 +79,12 @@ do
     echo "Load log: $(logname_of_load ${HOST_NAME})"
 
     dosarray_execute_on "${HOST_NAME}" \
-    echo "\$(hostname) \$(date +%s) \$(grep Mem /proc/meminfo)" >> $(logname_of_mem ${HOST_NAME}) &
-    echo "Mem log: $(logname_of_load ${HOST_NAME})"
+    "echo \$(hostname) \$(date +%s) \$(grep Mem /proc/meminfo)" >> $(logname_of_mem ${HOST_NAME}) &
+    echo "Mem log: $(logname_of_mem ${HOST_NAME})"
 
     dosarray_execute_on "${HOST_NAME}" \
     "cat /proc/net/dev" >> $(logname_of_net ${HOST_NAME}) &
-    echo "Net log: $(logname_of_load ${HOST_NAME})"
+    echo "Net log: $(logname_of_net ${HOST_NAME})"
   done
 
   if [ "${ROUND}" -ne "${NUM_ROUNDS}" ]
@@ -92,5 +92,7 @@ do
     sleep ${GAP_BETWEEN_ROUNDS}
   fi
 done
+
+./dosarray_filter_net_logs.sh
 
 echo "Done"
