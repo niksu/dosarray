@@ -64,7 +64,6 @@ set xlabel 'time (s)' \n\
 if [ ${TYPE} == "load" ]
 then
 MIDDLE="\
-set yrange [0:1] \n\
 set ylabel 'load (CPU)' \n\
 \n\
 "
