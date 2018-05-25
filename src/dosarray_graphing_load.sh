@@ -6,7 +6,7 @@
 #
 # Usage: ./dosarray_graphing_load.sh -i load_5s.data -o load_5s.pdf -t load -m dedos01:dedos02:dedos03:dedos04:dedos05:dedos06:dedos07:dedos08
 
-while getopts "i:o:t:m:" opt; do
+while getopts "i:o:t:m:u" opt; do
   case ${opt} in
     i )
       INPUT_FILE=$OPTARG
@@ -20,8 +20,12 @@ while getopts "i:o:t:m:" opt; do
     m )
       MACHINES_STRING=$OPTARG
       ;;
+    u )
+      # This only applies if "-t load", in which case the y-axis' range is limited to the range [0,1].
+      UNIT_LOAD=1
+      ;;
     ? )
-      echo "Usage: ./dosarray_configure_network -i <input-file> -o <output-file> -t load/mem/net -m <colon-separated-list-of-hosts>"
+      echo "Usage: ./dosarray_configure_network -i <input-file> -o <output-file> -t load/mem/net -m <colon-separated-list-of-hosts> [-u]"
       exit 1
       ;;
   esac
@@ -46,6 +50,11 @@ then
   exit 1
 fi
 
+if [ -z "${UNIT_LOAD}" ]
+then
+  UNIT_LOAD=0
+fi
+
 IFS=':'; MACHINES=($MACHINES_STRING); unset IFS;
 
 PREFIX="\
@@ -63,7 +72,12 @@ set xlabel 'time (s)' \n\
 
 if [ ${TYPE} == "load" ]
 then
-MIDDLE="\
+  PREMIDDLE=""
+  if [ "${UNIT_LOAD}" -eq "1" ]
+    PREMIDDLE="set yrange [0:1] \n"
+  fi
+
+  MIDDLE="${PREMIDDLE}\
 set ylabel 'load (CPU)' \n\
 \n\
 "
