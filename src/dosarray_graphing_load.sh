@@ -121,7 +121,7 @@ do
   else
     SUFFIX+=" , '' using ${PRE_COL}:$COL:${POST_COL} ti '${MACHINES[${IDX}]}' lt 1 lc rgb \"${COLORS[${IDX}]}\" "
   fi
-  COL=$(( ${COL} + 2))
+  COL=$(( ${COL} + 3))
 done
 
 printf "${PREFIX} ${MIDDLE} ${SUFFIX}" | gnuplot
