@@ -149,13 +149,18 @@ ${DOSARRAY_SCRIPT_DIR}/dosarray_gather_container_logs.sh
 LOG_COUNT=$(ls ${DOSARRAY_LOG_NAME_PREFIX}*.log | wc -l)
 echo "LOG_COUNT=${LOG_COUNT} (Does this look alright?)"
 
+#generate gnuplot data for contour and summary plot
 command time ${DOSARRAY_SCRIPT_DIR}/generate_availability_chart.py "${DOSARRAY_LOG_NAME_PREFIX}*.log" > ${DESTINATION_DIR}/availability.data
 
-# And finally we graph it.
+#generate availability data for 'availability over time' plot
+export DOSARRAY_NHIST_RESULT=1 
+python ${DOSARRAY_SCRIPT_DIR}/generate_availability_chart.py "${DOSARRAY_LOG_NAME_PREFIX}*.log" > ${DESTINATION_DIR}/availability_filtered.data
+
+# And finally we graph it to produce the summary plot, contour plot and availability plot respectively
 ${DOSARRAY_SCRIPT_DIR}/dosarray_graphing.sh -i "${DESTINATION_DIR}/availability.data" -o "${DESTINATION_DIR}/graph.pdf" "${TITLE}" "${ATTACK_STARTS_AT}" "$((ATTACK_STARTS_AT+ATTACK_LASTS_FOR))"
 export DOSARRAY_GRAPH_CONTOUR=1
 ${DOSARRAY_SCRIPT_DIR}/dosarray_graphing.sh -i "${DESTINATION_DIR}/availability.data" -o "${DESTINATION_DIR}/graph_contour.pdf" "${TITLE}" "${ATTACK_STARTS_AT}" "$((ATTACK_STARTS_AT+ATTACK_LASTS_FOR))"
-${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_availability.sh "${DESTINATION_DIR}" "${TITLE}" "10" "30"
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_availability.sh "${DESTINATION_DIR}" "${TITLE}" "${ATTACK_STARTS_AT}" "$((ATTACK_STARTS_AT+ATTACK_LASTS_FOR))"
 
 #Graphing load measurements
 ${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/load.data -o ${DESTINATION_DIR}/load.pdf -t load -m $(echo ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} | tr " " ":") 
