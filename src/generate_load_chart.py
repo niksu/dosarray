@@ -55,7 +55,7 @@ if args.t == 'load':
 elif args.t == 'mem':
   suffix = suffix_of_mem
   regex = regex_of_mem
-elif args.t == 'net_rx' or args.t == 'net_tx' or args.t == 'net_rxerrors' or args.t == 'net_rxerrors':
+elif args.t == 'net_rx' or args.t == 'net_tx' or args.t == 'net_txerrors' or args.t == 'net_rxerrors':
   suffix = suffix_of_net
   regex = regex_of_net
 else:
@@ -117,7 +117,7 @@ for path in args.p:
           mem_available = int(matcher.group(2))
           mem_usage = 1.0 - (float(mem_available) / float(mem_free))
           results[filepath].append({'mem_usage' : mem_usage})
-        elif args.t == 'net_rx' or args.t == 'net_tx' or args.t == 'net_rxerrors' or args.t == 'net_rxerrors':
+        elif args.t == 'net_rx' or args.t == 'net_tx' or args.t == 'net_txerrors' or args.t == 'net_rxerrors':
           rx_packets = int(matcher.group(1))
           rx_errors = int(matcher.group(2))
           tx_packets = int(matcher.group(3))
@@ -136,7 +136,7 @@ for path in args.p:
           sys.stderr.write('Unrecognised -t parameter: ' + args.t + '\n')
           exit(1)
 
-  if args.t == 'net_rx' or args.t == 'net_tx' or args.t == 'net_rxerrors' or args.t == 'net_rxerrors':
+  if args.t == 'net_rx' or args.t == 'net_tx' or args.t == 'net_txerrors' or args.t == 'net_rxerrors':
     sys.stderr.write('initial_packet_count: ' + str(initial_packet_count) + '\n')
 
 def extract_machine_name(filename):
