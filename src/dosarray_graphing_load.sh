@@ -4,7 +4,7 @@
 
 # Use of this source code is governed by the Apache 2.0 license; see LICENSE
 #
-# Usage: ./dosarray_graphing_load.sh -i load_5s.data -o load_5s.pdf -t load -m "dedos01 dedos02 dedos03 dedos04 dedos05 dedos06 dedos07 dedos08"
+# Usage: ./dosarray_graphing_load.sh -i load_5s.data -o load_5s.pdf -t load -m dedos01:dedos02:dedos03:dedos04:dedos05:dedos06:dedos07:dedos08
 
 while getopts "i:o:t:m:u" opt; do
   case ${opt} in
@@ -55,7 +55,7 @@ then
   UNIT_LOAD=0
 fi
 
-IFS=' '; MACHINES=($MACHINES_STRING); unset IFS;
+IFS=':'; MACHINES=($MACHINES_STRING); unset IFS;
 
 PREFIX="\
 set terminal pdfcairo \n\

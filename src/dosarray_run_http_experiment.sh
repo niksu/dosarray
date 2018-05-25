@@ -158,11 +158,11 @@ ${DOSARRAY_SCRIPT_DIR}/dosarray_graphing.sh -i "${DESTINATION_DIR}/availability.
 ${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_availability.sh "${DESTINATION_DIR}" "${TITLE}" "10" "30"
 
 #Graphing load measurements
-${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/load.data -o ${DESTINATION_DIR}/load.pdf -t load -m \"${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}\"
-${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_tx.data -o ${DESTINATION_DIR}/net_tx.pdf -t net -m \"${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}\"
-${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_rx.data -o ${DESTINATION_DIR}/net_rx.pdf -t net -m \"${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}\"
-${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_rxerrors.data -o ${DESTINATION_DIR}/net_rxerrors.pdf -t net -m \"${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}\"
-${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_txerrors.data -o ${DESTINATION_DIR}/net_txerrors.pdf -t net -m \"${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}\"
-${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/mem.data -o ${DESTINATION_DIR}/mem.pdf -t mem -m \"${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}\"
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/load.data -o ${DESTINATION_DIR}/load.pdf -t load -m $(echo ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} | tr " " ":") 
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_tx.data -o ${DESTINATION_DIR}/net_tx.pdf -t net -m $(echo ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} | tr " " ":")
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_rx.data -o ${DESTINATION_DIR}/net_rx.pdf -t net -m $(echo ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} | tr " " ":")
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_rxerrors.data -o ${DESTINATION_DIR}/net_rxerrors.pdf -t net -m $(echo ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} | tr " " ":")
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_txerrors.data -o ${DESTINATION_DIR}/net_txerrors.pdf -t net -m $(echo ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} | tr " " ":")
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/mem.data -o ${DESTINATION_DIR}/mem.pdf -t mem -m $(echo ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} | tr " " ":")
 
 cd ${CUR_DIR}
