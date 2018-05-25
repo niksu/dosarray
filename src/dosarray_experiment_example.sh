@@ -39,4 +39,4 @@ ls -d ${RESULT_DIR_PREFIX}*${RESULT_DIR_SUFFIX}
 # Move simulation logs to RESULTS directory
 mv /tmp/${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.std* ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}/
 
-echo "Now do: open ${RESULT_DIR_PREFIX}*${RESULT_DIR_SUFFIX}/graph.png"
+echo "Now do: open ${RESULT_DIR_PREFIX}*${RESULT_DIR_SUFFIX}/graph.pdf"
