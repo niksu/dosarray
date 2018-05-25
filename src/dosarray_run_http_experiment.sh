@@ -152,7 +152,10 @@ echo "LOG_COUNT=${LOG_COUNT} (Does this look alright?)"
 command time ${DOSARRAY_SCRIPT_DIR}/generate_availability_chart.py "${DOSARRAY_LOG_NAME_PREFIX}*.log" > ${DESTINATION_DIR}/availability.data
 
 # And finally we graph it.
-${DOSARRAY_SCRIPT_DIR}/dosarray_graphing.sh "${DESTINATION_DIR}" "${TITLE}" "${ATTACK_STARTS_AT}" "$((ATTACK_STARTS_AT+ATTACK_LASTS_FOR))"
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing.sh -i "${DESTINATION_DIR}/availability.data" -o "${DESTINATION_DIR}/graph.pdf" "${TITLE}" "${ATTACK_STARTS_AT}" "$((ATTACK_STARTS_AT+ATTACK_LASTS_FOR))"
+export DOSARRAY_GRAPH_CONTOUR=1
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing.sh -i "${DESTINATION_DIR}/availability.data" -o "${DESTINATION_DIR}/graph_contour.pdf" "${TITLE}" "${ATTACK_STARTS_AT}" "$((ATTACK_STARTS_AT+ATTACK_LASTS_FOR))"
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_availability.sh "${DESTINATION_DIR}" "${TITLE}" "10" "30"
 
 #Graphing load measurements
 ${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/load.data -o ${DESTINATION_DIR}/load.pdf -t load -m \"${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}\"
