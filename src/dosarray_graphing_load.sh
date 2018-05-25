@@ -74,6 +74,7 @@ if [ ${TYPE} == "load" ]
 then
   PREMIDDLE=""
   if [ "${UNIT_LOAD}" -eq "1" ]
+  then
     PREMIDDLE="set yrange [0:1] \n"
   fi
 
