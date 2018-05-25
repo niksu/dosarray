@@ -74,5 +74,5 @@ python generate_load_chart.py -p testdata/1 testdata/2 -i 5 -t load -o column -m
 
 The generated data files are input to the graphing script along with the measurement type (load, net, mem) followed by a colon seperated list of machines (host names).
 ```
-./dosarray_graphing_load.sh -i load_5s.data -o load_5s.pdf -t load -m dedos01:dedos02:dedos03:dedos04:dedos05:dedos06:dedos07:dedos08
+./dosarray_graphing_load.sh -i load_5s.data -o load_5s.pdf -t load -m "dedos01 dedos02 dedos03 dedos04 dedos05 dedos06 dedos07 dedos08"
 ```
