@@ -34,19 +34,19 @@ shift $((OPTIND -1))
 
 if [ -z ${INPUT_FILE} ]
 then
-  echo "Need to provide input file name"
+  echo "Need to provide input file name" >&2
   exit 1
 fi
 
 if [ -z ${OUTPUT_FILE} ]
 then
-  echo "Need to provide output file name"
+  echo "Need to provide output file name" >&2
   exit 1
 fi
 
 if [ -z ${TYPE} ]
 then
-  echo "Need to provide type of load measurement"
+  echo "Need to provide type of load measurement" >&2
   exit 1
 fi
 
@@ -107,7 +107,7 @@ COL=2
 
 if [ "${#MACHINES[@]}" -gt "${#COLORS[@]}" ]
 then
-  echo "#MACHINES (${#MACHINES[@]}) > #COLORS (${#COLORS[@]}): increase the number of colours available to display the load graph correctly."
+  echo "#MACHINES (${#MACHINES[@]}) > #COLORS (${#COLORS[@]}): increase the number of colours available to display the load graph correctly." >&2
   exit 1
 fi
 
