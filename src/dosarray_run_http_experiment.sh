@@ -154,4 +154,12 @@ command time ${DOSARRAY_SCRIPT_DIR}/generate_availability_chart.py "${DOSARRAY_L
 # And finally we graph it.
 ${DOSARRAY_SCRIPT_DIR}/dosarray_graphing.sh "${DESTINATION_DIR}" "${TITLE}" "${ATTACK_STARTS_AT}" "$((ATTACK_STARTS_AT+ATTACK_LASTS_FOR))"
 
+#Graphing load measurements
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/load.data -o ${DESTINATION_DIR}/load.pdf -t load -m \"${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}\"
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_tx.data -o ${DESTINATION_DIR}/net_tx.pdf -t net -m \"${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}\"
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_rx.data -o ${DESTINATION_DIR}/net_rx.pdf -t net -m \"${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}\"
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_rxerrors.data -o ${DESTINATION_DIR}/net_rxerrors.pdf -t net -m \"${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}\"
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_txerrors.data -o ${DESTINATION_DIR}/net_txerrors.pdf -t net -m \"${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}\"
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/mem.data -o ${DESTINATION_DIR}/mem.pdf -t mem -m \"${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}\"
+
 cd ${CUR_DIR}
