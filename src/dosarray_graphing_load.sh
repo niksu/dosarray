@@ -6,7 +6,7 @@
 # 
 # Usage: ./dosarray_graphing_load.sh -i load_5s.data -o load_5s.pdf -t load -m dedos01:dedos02:dedos03:dedos04:dedos05:dedos06:dedos07:dedos08
 
-while getopts ":i:o:t:m:" opt; do
+while getopts "i:o:t:m:" opt; do
   case ${opt} in
     i )
       INPUT_FILE=$OPTARG
