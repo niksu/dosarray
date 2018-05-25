@@ -16,6 +16,9 @@ export EXPERIMENT_DURATION=65
 export ATTACK_STARTS_AT=10
 export ATTACK_LASTS_FOR=20
 
+# FIXME hardcoded value, for dosarray_servers_load.sh and assuming that EXPERIMENT_DURATION=65
+export GAP_BETWEEN_ROUNDS=5
+
 # FIXME insert a manifest in the RESULT_DIR, describing the date at which the experiment was made, and a full dump of all configuration variables.
 
 EXPERIMENT_SET="test"

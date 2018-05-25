@@ -28,14 +28,14 @@ suffix_of_load = "_load.log"
 regex_of_load = "^.+? .+? (.+?) .+$" #e.g., dedos01 1519446241 0.28 0.07 0.02 2/270 54569
 suffix_of_mem = "_mem.log"
 regex_of_mem = "MemTotal: (.+?) kB .+ MemAvailable: (.+?) kB$" #e.g., dedos01 1519446241 MemTotal: 65725704 kB MemFree: 15001452 kB MemAvailable: 64497332 kB
-suffix_of_net = "_net.log"
+suffix_of_net = "_filtered_net.log"
 # RX packets errors, TX packets errors
 regex_of_net = "^.+: \d+ +(\d+) +(\d+) +\d+ +\d+ +\d+ +\d+ +\d+ +\d+ +(\d+) +(\d+)" #e.g., em1: 116098217270 542764389    0  470    0     0          0      3233 81890469046 548678573    0    0    0     0       0          0
 
 argparser = argparse.ArgumentParser(description = "Process load stats for graphing")
 argparser.add_argument('-p', help = "Path containing input files. Use multiple paths to contain files from different runs. The number of files in each path (and the naming policy) should be consistent", nargs = "+", required = True)
 argparser.add_argument('-i', help = "Sampling interval (in seconds)", type = int, required = True)
-argparser.add_argument('-t', help = "Type of log being processed {load, mem, net_rx, net_rx, net_txerrors, net_rxerrors}", required = True)
+argparser.add_argument('-t', help = "Type of log being processed {load, mem, net_rx, net_tx, net_txerrors, net_rxerrors}", required = True)
 argparser.add_argument('-o', help = "Type of output sought {column (default), row, dump}", default = "column")
 argparser.add_argument('-m', help = "Order in which to list the machines", nargs = "+", required = True)
 args = argparser.parse_args()
