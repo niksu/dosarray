@@ -33,9 +33,9 @@ then
   echo "Need to define \$EXPERIMENT_DURATION" >&2
   exit 1
 fi
-if [ -z "${NO_OF_INSTANCES}" ]
+if [ -z "${DOSARRAY_VIRT_INSTANCES}" ]
 then
-  echo "Need to define \$NO_OF_INSTANCES" >&2
+  echo "Need to define \$DOSARRAY_VIRT_INSTANCES" >&2
   exit 1
 fi
 if [ -z "${ATTACK_STARTS_AT}" ]
