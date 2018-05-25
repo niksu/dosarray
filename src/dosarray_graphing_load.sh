@@ -105,6 +105,12 @@ COLORS=( '#555555' '#777777' '#999999' '#BBBBBB' '#DDDDDD' '#FFFFFF' '#EEEEEE' '
 SUFFIX="plot"
 COL=2
 
+if [ "${#MACHINES[@]}" -gt "${#COLORS[@]}" ]
+then
+  echo "#MACHINES (${#MACHINES[@]}) > #COLORS (${#COLORS[@]}): increase the number of colours available to display the load graph correctly."
+  exit 1
+fi
+
 for (( IDX=0 ; IDX < ${#MACHINES[@]}; IDX++ ))
 do
   PRE_COL=$(( ${COL}+1 ))
