@@ -17,8 +17,8 @@ Next, we need to configure DoSarray to simulate experiments using the available 
 
 * `DOSARRAY_PHYSICAL_HOSTS_PUB`: Populate this list with the host names of all the physical machines, again in the same order as they appear in the former variable.
 
-* `DOSARRAY_HOST_INTERFACE_MAP`: Populate this list with the network interface to be measured for each physical host, in the same order as the former list
- 
+* `DOSARRAY_HOST_INTERFACE_MAP`: Populate this list with the network interface to be measured for each physical host, in the same order as the former list.
+
 * `DOSARRAY_VIRT_NET_PREFIX`: This is a string specifying the first two octets of your physical host IPs, eg - "192.168."
 
 * `DOSARRAY_VIRT_NETS`: This list is populated based on the previous entries to form the prefix of each containers' IP in the physical hosts
@@ -64,15 +64,15 @@ Once we have gathered all our logs and results, DoSarray also facilitates cleari
 ```
 
 ## Load graphing
-Load data is gathered automatically during experiments, for offline analysis and graphing. These logs can be accessed within the results dorectory. 
+Load data is gathered automatically during experiments, for offline analysis and graphing. These logs can be accessed within the results dorectory.
 To generate graphs using the various load measurements, we must first generate the graph data and then use this data to generate the graphs.
 
-To generate graphing data, the following script is invoked with parameters for logfile directory, load measurement duration, load type, chart type and list of machines. 
+To generate graphing data, the following script is invoked with parameters for logfile directory, load measurement duration, load type, chart type and list of machines (host names).
 ```
 python generate_load_chart.py -p testdata/1 testdata/2 -i 5 -t load -o column -m dedos01 dedos02 dedos03 dedos04 dedos05 dedos06 dedos07 dedos08
 ```
 
-The generated data files are input to the graphing script along with the measurement type (load, net, mem) followed by a colon seperated list of machines.
+The generated data files are input to the graphing script along with the measurement type (load, net, mem) followed by a colon seperated list of machines (host names).
 ```
 ./dosarray_graphing_load.sh -i load_5s.data -o load_5s.pdf -t load -m dedos01:dedos02:dedos03:dedos04:dedos05:dedos06:dedos07:dedos08
 ```
