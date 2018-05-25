@@ -86,9 +86,22 @@ set ylabel 'network traffic (in packets)' \n\
 "
 fi
 
-SUFFIX="\
-plot '${INPUT_FILE}' using 3:2:4:xtic(1) ti '${MACHINES[0]}' linecolor rgb \"#555555\", '' using 6:5:7 ti '${MACHINES[1]}' lt 1 lc rgb \"#777777\", '' using 9:8:10 ti '${MACHINES[2]}' lt 1 lc rgb \"#999999\", '' using 12:11:13 ti '${MACHINES[3]}' lt 1 lc rgb \"#BBBBBB\", '' using 15:14:16 ti '${MACHINES[4]}' lt 1 lc rgb \"#DDDDDD\", '' using 18:17:19 ti '${MACHINES[5]}' lt 1 lc rgb \"#FFFFFF\", '' using 21:20:22 ti '${MACHINES[6]}' lt 1 lc rgb \"#EEEEEE\", '' using 24:23:25 ti '${MACHINES[7]}' lt 1 lc rgb \"#AAAAAA\" \n\
-"
+COLORS=( '#555555' '#777777' '#999999' '#BBBBBB' '#DDDDDD' '#FFFFFF' '#EEEEEE' '#AAAAAA')
+SUFFIX="plot"
+COL=2
+
+for (( IDX=0 ; IDX < ${#MACHINES[@]}; IDX++ ))
+do
+  PRE_COL=$(( ${COL}+1 ))
+  POST_COL=$(( ${COL}+2 ))
+  if [ ${IDX} -eq 0 ]
+  then
+    SUFFIX+=" '${INPUT_FILE}' using ${PRE_COL}:$COL:${POST_COL}:xtic(1) ti '${MACHINES[${IDX}]}' linecolor rgb \"${COLORS[${IDX}]}\" "
+  else
+    SUFFIX+=" , '' using ${PRE_COL}:$COL:${POST_COL} ti '${MACHINES[${IDX}]}' lt 1 lc rgb \"${COLORS[${IDX}]}\" "
+  fi
+  COL=$(( ${COL} + 2))
+done
 
 printf "${PREFIX} ${MIDDLE} ${SUFFIX}" | gnuplot
 
