@@ -26,6 +26,7 @@ then
   echo "\$DESTINATION_DIR (${DESTINATION_DIR}) already exists" >&2
   exit 2
 fi
+mkdir -p ${DESTINATION_DIR}
 
 if [ -z "${TITLE}" ]
 then
@@ -133,7 +134,6 @@ source ${DOSARRAY_SCRIPT_DIR}/dosarray_setup_http_experiment.sh
 
 CUR_DIR=`pwd`
 
-mkdir -p ${DESTINATION_DIR}
 cd ${DESTINATION_DIR}
 
 LOG_COUNT=$(ls ${DOSARRAY_LOG_NAME_PREFIX}*.log | wc -l)
