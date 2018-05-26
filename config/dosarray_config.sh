@@ -19,8 +19,6 @@ export -f dosarray_physical_hosts_skip
 export DOSARRAY_PHYSICAL_HOST_IDXS=`dosarray_physical_hosts_skip 0`
 export DOSARRAY_CONTAINER_HOST_IDXS=`dosarray_physical_hosts_skip 1`
 
-export DOSARRAY_SCRIPT_DIR="/Users/shilpi/Documents/repo"
-
 export DOSARRAY_VIRT_INSTANCES=10
 export DOSARRAY_MIN_VIP=2
 export DOSARRAY_MAX_VIP=$((DOSARRAY_VIRT_INSTANCES + (DOSARRAY_MIN_VIP - 1)))
