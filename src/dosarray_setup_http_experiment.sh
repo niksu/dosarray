@@ -87,5 +87,5 @@ else
   exit 2
 fi
 
-source ./dosarray_experiment_httpings.sh
-#source ./dosarray_experiment_httpings_only.sh # Using this to run and stop the attacks interactively, while performance-tuning apache
+source ${DOSARRAY_SCRIPT_DIR}/src/dosarray_experiment_httpings.sh
+#source ${DOSARRAY_SCRIPT_DIR}/src/dosarray_experiment_httpings_only.sh # Using this to run and stop the attacks interactively, while performance-tuning apache
