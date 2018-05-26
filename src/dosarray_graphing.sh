@@ -4,10 +4,9 @@
 #
 # Use of this source code is governed by the Apache 2.0 license; see LICENSE
 #
-# FIXME input and output filenames are hardcoded
 # FIXME instead of having a bunch of different graphing scripts, could centralise them here and have parameters to influence what graph output is needed
 
-while getopts "i:o:t:m:u" opt; do
+while getopts "i:o:" opt; do
   case ${opt} in
     i )
       INPUT_FILE=$OPTARG
