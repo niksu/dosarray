@@ -93,6 +93,15 @@ do
   fi
 done
 
+sleep ${GAP_BETWEEN_ROUNDS}
+
 ./dosarray_filter_net_logs.sh
+
+python generate_load_chart.py -p ${DESTINATION_DIR} -i 5 -t load -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DESTINATION_DIR}/load.data
+python generate_load_chart.py -p ${DESTINATION_DIR} -i 5 -t mem -o column -m  ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DESTINATION_DIR}/mem.data
+python generate_load_chart.py -p ${DESTINATION_DIR} -i 5 -t net_rx -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DESTINATION_DIR}/net_rx.data
+python generate_load_chart.py -p ${DESTINATION_DIR} -i 5 -t net_tx -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DESTINATION_DIR}/net_tx.data
+python generate_load_chart.py -p ${DESTINATION_DIR} -i 5 -t net_rxerrors -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DESTINATION_DIR}/net_rxerrors.data
+python generate_load_chart.py -p ${DESTINATION_DIR} -i 5 -t net_txerrors -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DESTINATION_DIR}/net_txerrors.data
 
 echo "Done"

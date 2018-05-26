@@ -31,7 +31,7 @@ set xtics 0,10 \n\
  \n\
 set title '${TITLE}' \n\
 set output '${DATA_DIR}/graph_availability.pdf' \n\
-plot '${DATA_DIR}/availability.data' using 1:2 title 'availability' \n\
+plot '${DATA_DIR}/availability_filtered.data' using 1:2 title 'availability' \n\
 " | gnuplot
 
 echo "Done"

@@ -34,19 +34,19 @@ shift $((OPTIND -1))
 
 if [ -z ${INPUT_FILE} ]
 then
-  echo "Need to provide input file name"
+  echo "Need to provide input file name" >&2
   exit 1
 fi
 
 if [ -z ${OUTPUT_FILE} ]
 then
-  echo "Need to provide output file name"
+  echo "Need to provide output file name" >&2
   exit 1
 fi
 
 if [ -z ${TYPE} ]
 then
-  echo "Need to provide type of load measurement"
+  echo "Need to provide type of load measurement" >&2
   exit 1
 fi
 
@@ -107,7 +107,7 @@ COL=2
 
 if [ "${#MACHINES[@]}" -gt "${#COLORS[@]}" ]
 then
-  echo "#MACHINES (${#MACHINES[@]}) > #COLORS (${#COLORS[@]}): increase the number of colours available to display the load graph correctly."
+  echo "#MACHINES (${#MACHINES[@]}) > #COLORS (${#COLORS[@]}): increase the number of colours available to display the load graph correctly." >&2
   exit 1
 fi
 
@@ -121,7 +121,7 @@ do
   else
     SUFFIX+=" , '' using ${PRE_COL}:$COL:${POST_COL} ti '${MACHINES[${IDX}]}' lt 1 lc rgb \"${COLORS[${IDX}]}\" "
   fi
-  COL=$(( ${COL} + 2))
+  COL=$(( ${COL} + 3))
 done
 
 printf "${PREFIX} ${MIDDLE} ${SUFFIX}" | gnuplot

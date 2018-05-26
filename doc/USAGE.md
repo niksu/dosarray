@@ -36,7 +36,8 @@ Next, we need to configure DoSarray to simulate experiments using the available 
 * `DOSARRAY_LOG_PATH_PREFIX`: This variable specified the location of all container logs within the physical hosts
 
 ## Using DoSarray
-An important consideration in DoSarray is to achieve address diversity in order to simulate larger networks in these experiments. This involves configuring each host in the physical network with the network info of the virtual network by modifying the rules for iptables, routes or for both, by using the -r option.
+An important consideration in DoSarray is to achieve address diversity in order to simulate larger networks in these experiments. This involves configuring each host in the physical network with the network info of the virtual network by modifying the rules for iptables, routes or for both, by using the -r option. This script needs to be run only once during setup. However multiple re-runs of this script 
+is harmless and will simply produce a message 'iptables: No chain/target/match by that name.' indicating the the unnecessary routes have already been deleted.
 
 ```
 ./dosarray_configure_network [-r] <physical-host-name>
@@ -49,12 +50,13 @@ After configuring the network, the next step is creating and starting docker con
 ./dosarray_start_containers.sh
 ```
 
-Once we have the configuration in place, simulating the a DoS attack is just a few steps away. For starters, DoSarray also has a sample experiment which goes through the entire lifecycle of the experiment, starting from measurements before, after and during the attack and ending with graphing the data gathered during the experiment.
+Once we have the configuration in place, simulating the a DoS attack is just a few steps away. For starters, DoSarray also has a sample experiment which goes through the entire lifecycle of the experiment, starting from measurements before, after and during the attack and ending with graphing the data gathered during the experiment. To run the example experiment scirpt make sure to change to `RESULT_DIR` to store the location of the generated results.
+
 ```
 ./dosarray_experiment_example.sh
 ```
 
-This script simulates the slowloris attack on apache and compiles all the container logs, .stdout and .stderr logs and the final graph generated from the availability data in the results directory. This is a good starting point for first-time users and we encourage you to adapt this script to suit your specific needs. For instance, `dosarray_setup_http_experiment.sh` can be further modified to configure various parameters such as type of server and attack, duration of attack and experiment and various measurement commmands.
+This script simulates the slowloris attack on apache and compiles all the container logs, .stdout and .stderr logs and the final graph generated from the availability data in the results directory. It also collects load measurements on each physical host and plots them as column charts. An elaborate discussion on load graphing is included in the next section.This script is a good starting point for first-time users and we encourage you to adapt this script to suit your specific needs. For instance, `dosarray_setup_http_experiment.sh` can be further modified to configure various parameters such as type of server and attack, duration of attack and experiment and various measurement commmands.
 
 Once we have gathered all our logs and results, DoSarray also facilitates clearing out the docker containers which we created for conducting the experiment. The following scripts stop and delete the containers we created in each phyical host except for the target.
 
@@ -64,15 +66,14 @@ Once we have gathered all our logs and results, DoSarray also facilitates cleari
 ```
 
 ## Load graphing
-Load data is gathered automatically during experiments, for offline analysis and graphing. These logs can be accessed within the results dorectory.
-To generate graphs using the various load measurements, we must first generate the graph data and then use this data to generate the graphs.
+Load data is gathered automatically during experiments, for offline analysis and graphing. These logs and their corresponding graphs can be accessed within the results dorectory after the experiment has ended. The graphing scripts are flexible enough to produce diiferent types of graphs for different sampling intervals. To manually generate these graphs using the various load measurements, we must first generate the graph data and then use this data to plot the graphs.
+					
+To generate graphing data, the following script is invoked with parameters for logfile directory, load measurement duration, load type, chart type and list of machines (host names). Based on the parameter to '-t' option (eg. load), this script collects the corresponding logs (\*\_load.log) from the specified directory and outputs the plot data. It also accepts command-line parameters for the sampling intervals and order of the physical hosts on the graph.
+```
+python generate_load_chart.py -p testdata/1 -i 5 -t load -o column -m dedos01 dedos02 dedos03 dedos04 dedos05 dedos06 dedos07 dedos08 > load.data
+```
 
-To generate graphing data, the following script is invoked with parameters for logfile directory, load measurement duration, load type, chart type and list of machines (host names).
+The generated data files are input to the graphing script along with the measurement type (load, net, mem) followed by a colon seperated list of machines (host names). The order of physical host names provided to '-m' option must be the same used to generate plot data to maintain consistent results.
 ```
-python generate_load_chart.py -p testdata/1 testdata/2 -i 5 -t load -o column -m dedos01 dedos02 dedos03 dedos04 dedos05 dedos06 dedos07 dedos08
-```
-
-The generated data files are input to the graphing script along with the measurement type (load, net, mem) followed by a colon seperated list of machines (host names).
-```
-./dosarray_graphing_load.sh -i load_5s.data -o load_5s.pdf -t load -m dedos01:dedos02:dedos03:dedos04:dedos05:dedos06:dedos07:dedos08
+./dosarray_graphing_load.sh -i load.data -o load.pdf -t load -m dedos01:dedos02:dedos03:dedos04:dedos05:dedos06:dedos07:dedos08
 ```

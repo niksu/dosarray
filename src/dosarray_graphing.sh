@@ -4,13 +4,27 @@
 #
 # Use of this source code is governed by the Apache 2.0 license; see LICENSE
 #
-# FIXME input and output filenames are hardcoded
 # FIXME instead of having a bunch of different graphing scripts, could centralise them here and have parameters to influence what graph output is needed
 
-DATA_DIR=$1
-TITLE=$2
-ATTACK_STARTS_AT=$3
-ATTACK_ENDS_AT=$4
+while getopts "i:o:" opt; do
+  case ${opt} in
+    i )
+      INPUT_FILE=$OPTARG
+      ;;
+    o )
+      OUTPUT_FILE=$OPTARG
+      ;;
+    ? )
+      echo "Usage: ./dosarray_configure_network -i <input-file> -o <output-file>"
+      exit 1
+      ;;
+  esac
+done
+shift $((OPTIND -1))
+
+TITLE=$1
+ATTACK_STARTS_AT=$2
+ATTACK_ENDS_AT=$3
 
 PREFIX="\
 set terminal pdf \n\
@@ -45,8 +59,8 @@ set autoscale \n\
 #set xrange [0:60] \n\
  \n\
 set title '${TITLE}' \n\
-set output '${DATA_DIR}/graph.pdf' \n\
-splot '${DATA_DIR}/availability.data' using 1:2:3 title 'availability' \n\
+set output '${OUTPUT_FILE}' \n\
+splot '${INPUT_FILE}' using 1:2:3 title 'availability' \n\
 "
 
 # The next two blocks are mututally exclusive, for better look.

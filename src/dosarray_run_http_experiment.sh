@@ -149,9 +149,24 @@ ${DOSARRAY_SCRIPT_DIR}/dosarray_gather_container_logs.sh
 LOG_COUNT=$(ls ${DOSARRAY_LOG_NAME_PREFIX}*.log | wc -l)
 echo "LOG_COUNT=${LOG_COUNT} (Does this look alright?)"
 
+#generate gnuplot data for contour and summary plot
 command time ${DOSARRAY_SCRIPT_DIR}/generate_availability_chart.py "${DOSARRAY_LOG_NAME_PREFIX}*.log" > ${DESTINATION_DIR}/availability.data
 
-# And finally we graph it.
-${DOSARRAY_SCRIPT_DIR}/dosarray_graphing.sh "${DESTINATION_DIR}" "${TITLE}" "${ATTACK_STARTS_AT}" "$((ATTACK_STARTS_AT+ATTACK_LASTS_FOR))"
+#generate availability data for 'availability over time' plot
+DOSARRAY_NHIST_RESULT=1 python ${DOSARRAY_SCRIPT_DIR}/generate_availability_chart.py "${DOSARRAY_LOG_NAME_PREFIX}*.log" > ${DESTINATION_DIR}/availability_filtered.data
+
+# And finally we graph it to produce the summary plot, contour plot and availability plot respectively
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing.sh -i "${DESTINATION_DIR}/availability.data" -o "${DESTINATION_DIR}/graph.pdf" "${TITLE}" "${ATTACK_STARTS_AT}" "$((ATTACK_STARTS_AT+ATTACK_LASTS_FOR))"
+
+DOSARRAY_GRAPH_CONTOUR=1 ${DOSARRAY_SCRIPT_DIR}/dosarray_graphing.sh -i "${DESTINATION_DIR}/availability.data" -o "${DESTINATION_DIR}/graph_contour.pdf" "${TITLE}" "${ATTACK_STARTS_AT}" "$((ATTACK_STARTS_AT+ATTACK_LASTS_FOR))"
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_availability.sh "${DESTINATION_DIR}" "${TITLE}" "${ATTACK_STARTS_AT}" "$((ATTACK_STARTS_AT+ATTACK_LASTS_FOR))"
+
+#Graphing load measurements
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/load.data -o ${DESTINATION_DIR}/load.pdf -t load -m $(echo ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} | tr " " ":") 
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_tx.data -o ${DESTINATION_DIR}/net_tx.pdf -t net -m $(echo ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} | tr " " ":")
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_rx.data -o ${DESTINATION_DIR}/net_rx.pdf -t net -m $(echo ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} | tr " " ":")
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_rxerrors.data -o ${DESTINATION_DIR}/net_rxerrors.pdf -t net -m $(echo ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} | tr " " ":")
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/net_txerrors.data -o ${DESTINATION_DIR}/net_txerrors.pdf -t net -m $(echo ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} | tr " " ":")
+${DOSARRAY_SCRIPT_DIR}/dosarray_graphing_load.sh -i ${DESTINATION_DIR}/mem.data -o ${DESTINATION_DIR}/mem.pdf -t mem -m $(echo ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} | tr " " ":")
 
 cd ${CUR_DIR}
