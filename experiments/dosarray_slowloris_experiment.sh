@@ -1,7 +1,17 @@
 #/bin/sh -e
 # Example of using DoSarray
 # Nik Sultana, February 2018, UPenn
-# FIXME remove hardcoded paths? export path to config file   
+
+if [ -z "${DOSARRAY_SCRIPT_DIR}" ]
+then
+  echo "Need to configure DoSarray -- set \$DOSARRAY_SCRIPT_DIR" >&2
+  exit 1
+elif [ ! -e "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh" ]
+then
+  echo "Need to configure DoSarray -- could not find dosarray_config.sh at \$DOSARRAY_SCRIPT_DIR/config (${DOSARRAY_SCRIPT_DIR}/config)" >&2
+  exit 1
+fi
+source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
 echo "Started at $(date)"
 
@@ -29,15 +39,14 @@ echo "Running ${EXPERIMENT_TAG} at $(date)"
 echo "  Writing to ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}" # FIXME repeated below
 DESTINATION_DIR=${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX} \
 TITLE="Apache worker, Slowloris, ${EXPERIMENT_SET}" \
-./dosarray_run_http_experiment.sh apache_worker slowloris \
+${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_http_experiment.sh apache_worker slowloris \
 > /tmp/${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stdout \
 2> /tmp/${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stderr
-
-echo "Finished at $(date)"
-
-ls -d ${RESULT_DIR_PREFIX}*${RESULT_DIR_SUFFIX}
 
 # Move simulation logs to RESULTS directory
 mv /tmp/${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.std* ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}/
 
-echo "Now do: open ${RESULT_DIR_PREFIX}*${RESULT_DIR_SUFFIX}/graph.pdf"
+echo "Finished at $(date)"
+
+echo "Outputs:"
+ls -d ${RESULT_DIR_PREFIX}*${RESULT_DIR_SUFFIX}
