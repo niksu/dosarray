@@ -4,22 +4,20 @@
 
 source "${DOSARRAY_SCRIPT_DIR}/experiments/dosarray_experiment.sh"
 
-# Host where the target is run
-HOST_NAME=demo01
-
-INTER_EXPERIMENT_GAP=20
-
 export EXPERIMENT_DURATION=65
 export ATTACK_STARTS_AT=10
 export ATTACK_LASTS_FOR=20
 export GAP_BETWEEN_ROUNDS=5
 
-EXPERIMENT_SET="test"
 # FIXME to vary no. of attackers must edit dosarray_run_http_experiment.sh
 #       centralise the experiment config here.
 
-# Resetting the target
-EXPERIMENT_RESET_CMD="/home/nik/src/prefix/bin/apachectl -k restart"
-dosarray_execute_on "${HOST_NAME}" "${EXPERIMENT_RESET_CMD}"
-sleep ${INTER_EXPERIMENT_GAP}
+# FIXME for resetting the target:
+#HOST_NAME=demo01
+#INTER_EXPERIMENT_GAP=20
+#EXPERIMENT_RESET_CMD="/home/nik/src/prefix/bin/apachectl -k restart"
+#
+#dosarray_execute_on "${HOST_NAME}" "${EXPERIMENT_RESET_CMD}"
+#sleep ${INTER_EXPERIMENT_GAP}
+
 dosarray_http_experiment apache_worker slowloris "Default config" "$(pwd)/example_experiment"
