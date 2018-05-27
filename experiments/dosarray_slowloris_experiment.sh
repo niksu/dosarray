@@ -13,8 +13,6 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
-echo "Started at $(date)"
-
 # Host where the target is run
 HOST_NAME=demo01
 
@@ -41,26 +39,30 @@ function dosarray_tmp_file() {
   echo "${TMPFILE}"
 }
 
-RESULT_DIR_PREFIX=/Users/shilpi/Documents/repo/results/apache_worker_
-RESULT_DIR_SUFFIX=_10inst_2attackers
+function dosarray_http_experiment() {
+  TARGET=$1
+  ATTACK=$2
+  EXPERIMENT_SET=$3
+  echo "Started HTTP experiment at $(date): ${TARGET}, ${ATTACK}, ${EXPERIMENT_SET}"
+  export DESTINATION_DIR=$4
+  STD_OUT=`function dosarray_tmp_file stdout`
+  STD_ERR=`function dosarray_tmp_file stderr`
+  echo "  Writing to ${DESTINATION_DIR}"
+
+  TITLE="${TARGET}, ${ATTACK}, ${EXPERIMENT_SET}" \
+  ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_http_experiment.sh ${TARGET} ${ATTACK} \
+  > ${STD_OUT} \
+  2> ${STD_ERR}
+
+  # Move simulation logs to RESULTS directory
+  mv ${STD_OUT} ${DESTINATION_DIR}/stdout
+  mv ${STD_ERR} ${DESTINATION_DIR}/stderr
+
+  echo "Finished at $(date)"
+}
+
 # Resetting the target
 EXPERIMENT_RESET_CMD="/home/nik/src/prefix/bin/apachectl -k restart"
-EXPERIMENT_TAG=sl
-export DESTINATION_DIR=${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}
-STD_OUT=`function dosarray_tmp_file stdout`
-STD_ERR=`function dosarray_tmp_file stderr`
-echo "Running ${EXPERIMENT_TAG} at $(date)"
-echo "  Writing to ${DESTINATION_DIR}"
-TITLE="Apache worker, Slowloris, ${EXPERIMENT_SET}" \
-${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_http_experiment.sh apache_worker slowloris \
-> ${STD_OUT} \
-2> ${STD_ERR}
-
-# Move simulation logs to RESULTS directory
-mv ${STD_OUT} ${DESTINATION_DIR}/stdout
-mv ${STD_ERR} ${DESTINATION_DIR}/stderr
-
-echo "Finished at $(date)"
-
-echo "Outputs:"
-ls -d ${RESULT_DIR_PREFIX}*${RESULT_DIR_SUFFIX}
+dosarray_execute_on "${HOST_NAME}" "${EXPERIMENT_RESET_CMD}"
+sleep ${INTER_EXPERIMENT_GAP}
+dosarray_http_experiment apache_worker slowloris "Default config" "$(pwd)/example_experiment"
