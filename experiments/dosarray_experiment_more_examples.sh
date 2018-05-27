@@ -13,7 +13,7 @@ echo "Running ${EXPERIMENT_TAG} at $(date)"
 echo "  Writing to ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}" # FIXME repeated below
 DESTINATION_DIR=${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX} \
 TITLE="Apache worker, GoldenEye, ${EXPERIMENT_SET}" \
-./dosarray_run_experiment.sh apache_worker goldeneye \
+${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_experiment.sh apache_worker goldeneye \
 > ${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stdout \
 2> ${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stderr
 
@@ -25,7 +25,7 @@ echo "Running ${EXPERIMENT_TAG} at $(date)"
 echo "  Writing to ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}" # FIXME repeated below
 DESTINATION_DIR=${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX} \
 TITLE="Apache worker, Tors Hammer, ${EXPERIMENT_SET}" \
-./dosarray_run_experiment.sh apache_worker torshammer \
+${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_experiment.sh apache_worker torshammer \
 > ${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stdout \
 2> ${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stderr
 
@@ -37,7 +37,7 @@ echo "Running ${EXPERIMENT_TAG} at $(date)"
 echo "  Writing to ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}" # FIXME repeated below
 DESTINATION_DIR=${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX} \
 TITLE="Apache worker, baseline, ${EXPERIMENT_SET}" \
-./dosarray_run_experiment.sh apache_worker none \
+${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_experiment.sh apache_worker none \
 > ${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stdout \
 2> ${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stderr
 
