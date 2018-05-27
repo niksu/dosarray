@@ -30,3 +30,49 @@ ATTACK_Slowloris=1
 ATTACK_GoldenEye=2
 ATTACK_TorsHammer=3
 #ATTACK="${ATTACK_Slowloris}"
+
+function target_str() {
+  TARGET=$1
+  if [ "${TARGET}" == "nginx" ]
+  then
+    echo "Nginx"
+  elif [ "${TARGET}" == "apache_worker" ]
+  then
+    echo "Apache Worker"
+  elif [ "${TARGET}" == "apache_event" ]
+  then
+    echo "Apache Event"
+  elif [ "${TARGET}" == "lighttpd" ]
+  then
+    echo "lighttpd"
+  elif [ "${TARGET}" == "haproxy" ]
+  then
+    echo "HAproxy"
+  elif [ "${TARGET}" == "varnish" ]
+  then
+    echo "Varnish"
+  else
+    echo "Unknown target: '${TARGET}'" >&2
+    exit 1
+  fi
+}
+
+function attack_str() {
+  ATTACK=$1
+  if [ "${ATTACK}" == "slowloris" ]
+  then
+    echo "Slowloris"
+  elif [ "${ATTACK}" == "goldeneye" ]
+  then
+    echo "GoldenEye"
+  elif [ "${ATTACK}" == "torshammer" ]
+  then
+    echo "Tor's Hammer"
+  elif [ "${ATTACK}" == "none" ]
+  then
+    echo "No attack"
+  else
+    echo "Unknown attack choice: '${ATTACK}'" >&2
+    exit 1
+  fi
+}

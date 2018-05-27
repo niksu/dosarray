@@ -43,13 +43,16 @@ function dosarray_http_experiment() {
   TARGET=$1
   ATTACK=$2
   EXPERIMENT_SET=$3
-  echo "Started HTTP experiment at $(date): ${TARGET}, ${ATTACK}, ${EXPERIMENT_SET}"
   export DESTINATION_DIR=$4
+
+  source "${DOSARRAY_SCRIPT_DIR}/src/dosarray_http_experiment_options.sh"
+
+  echo "Started HTTP experiment at $(date): ${TARGET}, ${ATTACK}, ${EXPERIMENT_SET}"
   STD_OUT=`dosarray_tmp_file stdout`
   STD_ERR=`dosarray_tmp_file stderr`
   echo "  Writing to ${DESTINATION_DIR}"
 
-  TITLE="${TARGET}, ${ATTACK}, ${EXPERIMENT_SET}" \
+  TITLE="$(target_str ${TARGET}), $(attack_str ${ATTACK}), ${EXPERIMENT_SET}" \
   ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_http_experiment.sh ${TARGET} ${ATTACK} \
   > ${STD_OUT} \
   2> ${STD_ERR}
@@ -62,7 +65,7 @@ function dosarray_http_experiment() {
 }
 
 # Resetting the target
-#EXPERIMENT_RESET_CMD="/home/nik/src/prefix/bin/apachectl -k restart"
-#dosarray_execute_on "${HOST_NAME}" "${EXPERIMENT_RESET_CMD}"
-#sleep ${INTER_EXPERIMENT_GAP}
+EXPERIMENT_RESET_CMD="/home/nik/src/prefix/bin/apachectl -k restart"
+dosarray_execute_on "${HOST_NAME}" "${EXPERIMENT_RESET_CMD}"
+sleep ${INTER_EXPERIMENT_GAP}
 dosarray_http_experiment apache_worker slowloris "Default config" "$(pwd)/example_experiment"
