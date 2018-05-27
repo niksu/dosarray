@@ -28,7 +28,8 @@ export GAP_BETWEEN_ROUNDS=5
 # FIXME insert a manifest in the RESULT_DIR, describing the date at which the experiment was made, and a full dump of all configuration variables.
 
 EXPERIMENT_SET="test"
-# NOTE to vary no. of attackers, edit dosarray_run_http_experiment.sh
+# FIXME to vary no. of attackers must edit dosarray_run_http_experiment.sh
+#       centralise the experiment config here.
 
 function dosarray_tmp_file() {
   TAG="${1}"
@@ -44,20 +45,20 @@ RESULT_DIR_PREFIX=/Users/shilpi/Documents/repo/results/apache_worker_
 RESULT_DIR_SUFFIX=_10inst_2attackers
 # Resetting the target
 EXPERIMENT_RESET_CMD="/home/nik/src/prefix/bin/apachectl -k restart"
-export EXPERIMENT_TAG=sl
+EXPERIMENT_TAG=sl
+export DESTINATION_DIR=${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}
 STD_OUT=`function dosarray_tmp_file stdout`
 STD_ERR=`function dosarray_tmp_file stderr`
 echo "Running ${EXPERIMENT_TAG} at $(date)"
-echo "  Writing to ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}" # FIXME repeated below
-DESTINATION_DIR=${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX} \
+echo "  Writing to ${DESTINATION_DIR}"
 TITLE="Apache worker, Slowloris, ${EXPERIMENT_SET}" \
 ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_http_experiment.sh apache_worker slowloris \
 > ${STD_OUT} \
 2> ${STD_ERR}
 
 # Move simulation logs to RESULTS directory
-mv ${STD_OUT} ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}/stdout
-mv ${STD_ERR} ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}/stderr
+mv ${STD_OUT} ${DESTINATION_DIR}/stdout
+mv ${STD_ERR} ${DESTINATION_DIR}/stderr
 
 echo "Finished at $(date)"
 
