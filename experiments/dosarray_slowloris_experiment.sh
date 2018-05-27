@@ -32,17 +32,30 @@ RESULT_DIR_PREFIX=/Users/shilpi/Documents/repo/results/apache_worker_
 RESULT_DIR_SUFFIX=_10inst_2attackers
 # NOTE to vary no. of attackers, edit dosarray_run_http_experiment.sh
 
+function dosarray_tmp_file() {
+  TAG="${1}"
+  TMPFILE=`mktemp -q /tmp/dosarray.${TAG}.XXXXXX`
+  if [ $? -ne 0 ]; then
+    echo "DoSarray: Could not create temporary file"
+    exit 1
+  fi
+  echo "${TMPFILE}"
+}
+
 export EXPERIMENT_TAG=sl
+STD_OUT=`function dosarray_tmp_file stdout`
+STD_ERR=`function dosarray_tmp_file stderr`
 echo "Running ${EXPERIMENT_TAG} at $(date)"
 echo "  Writing to ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}" # FIXME repeated below
 DESTINATION_DIR=${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX} \
 TITLE="Apache worker, Slowloris, ${EXPERIMENT_SET}" \
 ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_http_experiment.sh apache_worker slowloris \
-> /tmp/${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stdout \
-2> /tmp/${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stderr
+> ${STD_OUT} \
+2> ${STD_ERR}
 
 # Move simulation logs to RESULTS directory
-mv /tmp/${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.std* ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}/
+mv ${STD_OUT} ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}/stdout
+mv ${STD_ERR} ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}/stderr
 
 echo "Finished at $(date)"
 
