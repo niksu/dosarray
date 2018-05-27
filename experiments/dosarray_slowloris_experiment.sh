@@ -1,6 +1,13 @@
 #/bin/sh -e
 # Example of using DoSarray
 # Nik Sultana, February 2018, UPenn
+#
+# Using DoSarray consists of setting the experiment's parameters
+# (such as the experiment's duration, and the attack interval), and then
+# calling the functions that applies an attack to a target.
+#
+# In this example the experiment consists of applying Slowloris
+# to the Apache web server.
 
 source "${DOSARRAY_SCRIPT_DIR}/experiments/dosarray_experiment.sh"
 
