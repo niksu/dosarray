@@ -8,12 +8,12 @@ if [ -z "${DOSARRAY_SCRIPT_DIR}" ]
 then
   echo "Need to configure DoSarray -- set \$DOSARRAY_SCRIPT_DIR" >&2
   exit 1
-elif [ ! -e "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh" ]
+elif [ ! -e "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh" ]
 then
-  echo "Need to configure DoSarray -- could not find dosarray_config.sh at \$DOSARRAY_SCRIPT_DIR ($DOSARRAY_SCRIPT_DIR)" >&2
+  echo "Need to configure DoSarray -- could not find dosarray_config.sh at \$DOSARRAY_SCRIPT_DIR/config (${DOSARRAY_SCRIPT_DIR}/config)" >&2
   exit 1
 fi
-source "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh"
+source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
 SERVER_IP="${DOSARRAY_PHYSICAL_HOSTS_PRIV[0]}"
 
@@ -30,3 +30,49 @@ ATTACK_Slowloris=1
 ATTACK_GoldenEye=2
 ATTACK_TorsHammer=3
 #ATTACK="${ATTACK_Slowloris}"
+
+function target_str() {
+  TARGET=$1
+  if [ "${TARGET}" == "nginx" ]
+  then
+    echo "Nginx"
+  elif [ "${TARGET}" == "apache_worker" ]
+  then
+    echo "Apache Worker"
+  elif [ "${TARGET}" == "apache_event" ]
+  then
+    echo "Apache Event"
+  elif [ "${TARGET}" == "lighttpd" ]
+  then
+    echo "lighttpd"
+  elif [ "${TARGET}" == "haproxy" ]
+  then
+    echo "HAproxy"
+  elif [ "${TARGET}" == "varnish" ]
+  then
+    echo "Varnish"
+  else
+    echo "Unknown target: '${TARGET}'" >&2
+    exit 1
+  fi
+}
+
+function attack_str() {
+  ATTACK=$1
+  if [ "${ATTACK}" == "slowloris" ]
+  then
+    echo "Slowloris"
+  elif [ "${ATTACK}" == "goldeneye" ]
+  then
+    echo "GoldenEye"
+  elif [ "${ATTACK}" == "torshammer" ]
+  then
+    echo "Tors Hammer"
+  elif [ "${ATTACK}" == "none" ]
+  then
+    echo "No attack"
+  else
+    echo "Unknown attack choice: '${ATTACK}'" >&2
+    exit 1
+  fi
+}
