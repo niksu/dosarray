@@ -16,5 +16,7 @@ experiment-specific (such as in the
 ## Contributors
 Nik Sultana, Shilpi Bose. More contributors welcome!
 
+## Version 0.2
+
 ## License
 DoSarray is released under the [Apache 2.0 license](LICENSE)
