@@ -5,40 +5,44 @@
 # Targetting Apache using various attacks
 # NOTE we can also easily change this to target Nginx and others.
 
-dosarray_execute_on "${HOST_NAME}" "${EXPERIMENT_RESET_CMD}"
-sleep ${INTER_EXPERIMENT_GAP}
+if [ -z "${DOSARRAY_SCRIPT_DIR}" ]
+then
+  echo "Need to configure DoSarray -- set \$DOSARRAY_SCRIPT_DIR" >&2
+  exit 1
+elif [ ! -e "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh" ]
+then
+  echo "Need to configure DoSarray -- could not find dosarray_config.sh at \$DOSARRAY_SCRIPT_DIR/config (${DOSARRAY_SCRIPT_DIR}/config)" >&2
+  exit 1
+fi
+source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
-export EXPERIMENT_TAG=ge
-echo "Running ${EXPERIMENT_TAG} at $(date)"
-echo "  Writing to ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}" # FIXME repeated below
-DESTINATION_DIR=${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX} \
-TITLE="Apache worker, GoldenEye, ${EXPERIMENT_SET}" \
-${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_experiment.sh apache_worker goldeneye \
-> ${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stdout \
-2> ${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stderr
+source "${DOSARRAY_SCRIPT_DIR}/experiments/dosarray_experiment.sh"
 
-dosarray_execute_on "${HOST_NAME}" "${EXPERIMENT_RESET_CMD}"
-sleep ${INTER_EXPERIMENT_GAP}
+export EXPERIMENT_DURATION=65
+export ATTACK_STARTS_AT=10
+export ATTACK_LASTS_FOR=20
+# FIXME rename GAP_BETWEEN_ROUNDS to clearer name, e.g., DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS
+export GAP_BETWEEN_ROUNDS=5
 
-export EXPERIMENT_TAG=th
-echo "Running ${EXPERIMENT_TAG} at $(date)"
-echo "  Writing to ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}" # FIXME repeated below
-DESTINATION_DIR=${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX} \
-TITLE="Apache worker, Tors Hammer, ${EXPERIMENT_SET}" \
-${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_experiment.sh apache_worker torshammer \
-> ${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stdout \
-2> ${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stderr
+# NOTE for resetting the target:
+HOST_NAME=dedos01
+INTER_EXPERIMENT_GAP=20
+EXPERIMENT_RESET_CMD="/bin/apachectl -k restart"
 
-dosarray_execute_on "${HOST_NAME}" "${EXPERIMENT_RESET_CMD}"
-sleep ${INTER_EXPERIMENT_GAP}
+EXPERIMENT_DESC="Default config"
+TARGETS=( apache_worker )
+ATTACKS=( slowloris goldeneye torshammer none )
 
-export EXPERIMENT_TAG=baseline
-echo "Running ${EXPERIMENT_TAG} at $(date)"
-echo "  Writing to ${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}" # FIXME repeated below
-DESTINATION_DIR=${RESULT_DIR_PREFIX}${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX} \
-TITLE="Apache worker, baseline, ${EXPERIMENT_SET}" \
-${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_experiment.sh apache_worker none \
-> ${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stdout \
-2> ${EXPERIMENT_TAG}${RESULT_DIR_SUFFIX}_output.stderr
-
-dosarray_execute_on "${HOST_NAME}" "${EXPERIMENT_RESET_CMD}"
+for TARGET in "${TARGETS[@]}"
+do
+  # FIXME currently target is started manually
+  for ATTACK in "${ATTACKS[@]}"
+  do
+    DESTINATION_DIR="$(pwd)/example_experiment_set_${TARGET}_${ATTACK}"
+    dosarray_http_experiment ${TARGET} ${ATTACK} "${EXPERIMENT_DESC}" ${DESTINATION_DIR}
+    # FIXME EXPERIMENT_RESET_CMD should depend on TARGET -- in this example we only have one.
+    dosarray_execute_on "${HOST_NAME}" "${EXPERIMENT_RESET_CMD}"
+    sleep ${INTER_EXPERIMENT_GAP}
+  done
+  # FIXME currently target is stopped manually
+done
