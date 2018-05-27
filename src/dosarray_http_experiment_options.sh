@@ -67,7 +67,7 @@ function attack_str() {
     echo "GoldenEye"
   elif [ "${ATTACK}" == "torshammer" ]
   then
-    echo "Tor's Hammer"
+    echo "Tors Hammer"
   elif [ "${ATTACK}" == "none" ]
   then
     echo "No attack"
