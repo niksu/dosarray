@@ -15,10 +15,10 @@ source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
 echo "Started at $(date)"
 
+# Host where the target is run
 HOST_NAME=demo01
 
 INTER_EXPERIMENT_GAP=20
-EXPERIMENT_RESET_CMD="/home/nik/src/prefix/bin/apachectl -k restart"
 
 export EXPERIMENT_DURATION=65
 export ATTACK_STARTS_AT=10
@@ -42,6 +42,8 @@ function dosarray_tmp_file() {
   echo "${TMPFILE}"
 }
 
+# Resetting the target
+EXPERIMENT_RESET_CMD="/home/nik/src/prefix/bin/apachectl -k restart"
 export EXPERIMENT_TAG=sl
 STD_OUT=`function dosarray_tmp_file stdout`
 STD_ERR=`function dosarray_tmp_file stderr`
