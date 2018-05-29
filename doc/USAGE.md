@@ -1,10 +1,8 @@
-## Prerequisites
-* Python3
-* sudo privileges in the physical hosts
-* docker service in the physical hosts
-* gnuplot with pdf terminal support (install using --with-cairo option)
+## Setting up the environment
+First you need to set up Docker and configure the network.
+This is explained in DoSarray's [setup instructions](SETUP.md).
 
-## Setting up DoSarray
+## Configuring DoSarray
 The first and foremost step is to set the DoSarray Script directory. Every script in DoSarray checks this variable on startup and is certain to exit with an error if this variable is not set.
 ```
 export DOSARRAY_SCRIPT_DIR=<path-to-dosarray-scripts>
@@ -67,7 +65,7 @@ Once we have gathered all our logs and results, DoSarray also facilitates cleari
 
 ## Load graphing
 Load data is gathered automatically during experiments, for offline analysis and graphing. These logs and their corresponding graphs can be accessed within the results dorectory after the experiment has ended. The graphing scripts are flexible enough to produce diiferent types of graphs for different sampling intervals. To manually generate these graphs using the various load measurements, we must first generate the graph data and then use this data to plot the graphs.
-					
+
 To generate graphing data, the following script is invoked with parameters for logfile directory, load measurement duration, load type, chart type and list of machines (host names). Based on the parameter to '-t' option (eg. load), this script collects the corresponding logs (\*\_load.log) from the specified directory and outputs the plot data. It also accepts command-line parameters for the sampling intervals and order of the physical hosts on the graph.
 ```
 python generate_load_chart.py -p testdata/1 -i 5 -t load -o column -m dedos01 dedos02 dedos03 dedos04 dedos05 dedos06 dedos07 dedos08 > load.data
