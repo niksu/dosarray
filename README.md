@@ -6,7 +6,7 @@ It is developed at the University of Pennsylvania as part of the [DeDOS project]
 
 ## Getting started...
 For a quick peek take a look at an
-[example](experiments/dosarray_slowloris_experiment.sh).
+[example experiment](experiments/dosarray_slowloris_experiment.sh).
 
 Please see our [usage guide](doc/USAGE.md), which explains how to set the two
 levels of configuration: [DoSarray-wide](config/dosarray_config.sh) and
