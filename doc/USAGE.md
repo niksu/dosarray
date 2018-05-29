@@ -2,6 +2,12 @@
 First you need to set up Docker and configure the network.
 This is explained in DoSarray's [setup instructions](SETUP.md).
 
+## Preparing the target
+The target consists of software whose availability will
+be challenged during the DoS experiment.
+Our approach to organising targets is documented in our [target
+preparation](TARGET.md).
+
 ## Configuring DoSarray
 The first and foremost step is to set the DoSarray Script directory. Every script in DoSarray checks this variable on startup and is certain to exit with an error if this variable is not set.
 ```
