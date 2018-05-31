@@ -4,6 +4,8 @@
 #
 # Use of this source code is governed by the Apache 2.0 license; see LICENSE
 
+export DOSARRAY_VERSION="0.2"
+
 export DOSARRAY_PHYSICAL_HOSTS_PRIV=( 192.168.0.2 192.168.0.3 192.168.0.4 192.168.0.5 192.168.0.6 192.168.0.7 192.168.0.8 192.168.0.9 )
 export DOSARRAY_VIRT_NET_SUFFIX=( 2 3 4 5 6 7 8 9 )
 export DOSARRAY_PHYSICAL_HOSTS_PUB=( dedos01 dedos02 dedos03 dedos04 dedos05 dedos06 dedos07 dedos08 )
