@@ -1,8 +1,10 @@
 ## Prerequisites
+* GNU bash (tested with version 3.2.57)
 * Python3
 * sudo privileges in the physical hosts
 * docker service in the physical hosts
 * gnuplot with pdf terminal support (install using --with-cairo option)
+* bc
 
 ## Installing Docker
 Docker is installed on each _host_ in the _network_ to create
