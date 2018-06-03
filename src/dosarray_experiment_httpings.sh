@@ -18,7 +18,6 @@ source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 ${DOSARRAY_SCRIPT_DIR}/src/dosarray_servers_load.sh &
 
 # NOTE skipping the first host since we're running the server there.
-
 for IDX in `dosarray_physical_hosts_skip 1`
 do
   CURRENT_HOST_IP=${DOSARRAY_VIRT_NET_SUFFIX[${IDX}]}

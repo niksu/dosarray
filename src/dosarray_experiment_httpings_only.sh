@@ -15,7 +15,7 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
-# NOTE CURRENT_HOST_IP==2 since we skip the first physical machine (because we run the target on it).
+# NOTE CURRENT_HOST_IP will skip the first physical machine (because we run the target on it). FIXME this assumption could be made flexible.
 CURRENT_HOST_IP=${DOSARRAY_VIRT_NET_SUFFIX[0]}
 
 # NOTE excluding the first host since we're running the server there.
