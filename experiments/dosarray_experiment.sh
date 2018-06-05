@@ -51,6 +51,7 @@ function dosarray_http_experiment() {
     TOTAL_RUNS=${NUM_RUNS}
   fi
 
+  # FIXME add script to combine + visualise data from multiple runs
   for RUN in `seq 1 ${TOTAL_RUNS}`
   do
     if [ "${TOTAL_RUNS}" -eq "1" ]
