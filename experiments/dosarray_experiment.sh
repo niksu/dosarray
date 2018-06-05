@@ -39,26 +39,45 @@ function dosarray_http_experiment() {
   TARGET=$1
   ATTACK=$2
   EXPERIMENT_SET=$3
-  export DESTINATION_DIR=$4
+  PRE_DESTINATION_DIR=$4
+  NUM_RUNS=$5
 
   source "${DOSARRAY_SCRIPT_DIR}/src/dosarray_http_experiment_options.sh"
 
-  echo "Started HTTP experiment at $(date): ${TARGET}, ${ATTACK}, ${EXPERIMENT_SET}"
-  STD_OUT=`dosarray_tmp_file stdout`
-  STD_ERR=`dosarray_tmp_file stderr`
-  echo "  Writing to ${DESTINATION_DIR}"
-  MANIFEST=`dosarray_tmp_file stderr`
-  dosarray_manifest ${MANIFEST}
+  if [ -z "${NUM_RUNS}" ]
+  then
+    TOTAL_RUNS=1
+  else
+    TOTAL_RUNS=${NUM_RUNS}
+  fi
 
-  TITLE="$(target_str ${TARGET}), $(attack_str ${ATTACK}), ${EXPERIMENT_SET}" \
-  ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_http_experiment.sh ${TARGET} ${ATTACK} \
-  > ${STD_OUT} \
-  2> ${STD_ERR}
+  for RUN in `seq 1 ${TOTAL_RUNS}`
+  do
+    if [ "${TOTAL_RUNS}" -eq "1" ]
+    then
+      export DESTINATION_DIR="${PRE_DESTINATION_DIR}/"
+    else
+      echo "Starting run ${RUN} of ${TOTAL_RUNS}"
+      export DESTINATION_DIR="${PRE_DESTINATION_DIR}/${RUN}/"
+    fi
 
-  # Move simulation logs to RESULTS directory
-  mv ${STD_OUT} ${DESTINATION_DIR}/stdout
-  mv ${STD_ERR} ${DESTINATION_DIR}/stderr
-  mv ${MANIFEST} ${DESTINATION_DIR}/dosarray.manifest
+    echo "Started HTTP experiment at $(date): ${TARGET}, ${ATTACK}, ${EXPERIMENT_SET}"
+    STD_OUT=`dosarray_tmp_file stdout`
+    STD_ERR=`dosarray_tmp_file stderr`
+    echo "  Writing to ${DESTINATION_DIR}"
+    MANIFEST=`dosarray_tmp_file stderr`
+    dosarray_manifest ${MANIFEST}
 
-  echo "Finished at $(date)"
+    TITLE="$(target_str ${TARGET}), $(attack_str ${ATTACK}), ${EXPERIMENT_SET}" \
+    ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_http_experiment.sh ${TARGET} ${ATTACK} \
+    > ${STD_OUT} \
+    2> ${STD_ERR}
+
+    # Move simulation logs to RESULTS directory
+    mv ${STD_OUT} ${DESTINATION_DIR}/stdout
+    mv ${STD_ERR} ${DESTINATION_DIR}/stderr
+    mv ${MANIFEST} ${DESTINATION_DIR}/dosarray.manifest
+
+    echo "Finished at $(date)"
+  done
 }
