@@ -21,4 +21,4 @@ export GAP_BETWEEN_ROUNDS=5
 
 # FIXME document the feature to make multiple runs of an experiment
 #       e.g., dosarray_http_experiment apache_worker slowloris "Default config" "$(pwd)/example_experiment_X4" 4
-dosarray_http_experiment apache_worker slowloris "Default config" "$(pwd)/example_experiment_X4" 4
+dosarray_http_experiment apache_worker slowloris "Default config" "$(pwd)/example_experiment"
