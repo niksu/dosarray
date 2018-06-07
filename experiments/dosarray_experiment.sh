@@ -107,6 +107,7 @@ function dosarray_http_experiment() {
     mv ${MANIFEST} ${DESTINATION_DIR}/dosarray.manifest
 
     # FIXME here could carry out post-experiment tasks, such as moving different kinds of experiment files into different directories (e.g., one for raw logs, another for processed logs, and another for graphs)
+    # FIXME additionally could convert graphs to different formats, as well as resize as needed.
 
     echo "Finished at $(date)"
   done
