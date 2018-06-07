@@ -42,6 +42,8 @@ Next, we need to configure DoSarray to simulate experiments using the available 
 ## Optional parameters
 * `DOSARRAY_INCLUDE_MANIFEST`: Setting this to any value (e.g., "1") will generate a file containing a dump of your environment variables. This is disabled by default to avoid potential unwanted disclosures of those variables' values, but it can be useful to activate during testing or to make the experiments more reproducible.
 
+* `DOSARRAY_INCLUDE_STDOUTERR`: Setting this to any value (e.g., "1") will generate a file containing the stdout and stderr output that takes place during the experiment. This is disabled by default but it can be useful to activate during testing or to make the experiments more reproducible.
+
 ## Using DoSarray
 An important consideration in DoSarray is to achieve address diversity in order to simulate larger networks in these experiments. This involves configuring each host in the physical network with the network info of the virtual network by modifying the rules for iptables, routes or for both, by using the -r option. This script needs to be run only once during setup. However multiple re-runs of this script 
 is harmless and will simply produce a message 'iptables: No chain/target/match by that name.' indicating the the unnecessary routes have already been deleted.
