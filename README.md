@@ -4,6 +4,8 @@ DoSarray is a system that facilitates carrying out experiments involving
 [Denial-of-Service](https://en.wikipedia.org/wiki/Denial-of-service_attack) (DoS) attacks and mitigations.
 It is developed at the University of Pennsylvania as part of the [DeDOS project](http://dedos-project.net/).
 
+[DoStbin](https://gitlab.com/niksu/dostbin/) is a sister project that shares the results from DoSarray experiments.
+
 ## Getting started...
 For a quick peek take a look at an
 [example experiment](experiments/dosarray_slowloris_experiment.sh).
