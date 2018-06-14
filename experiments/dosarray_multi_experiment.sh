@@ -31,6 +31,8 @@ EXPERIMENT_RESET_CMD="/bin/apachectl -k restart"
 
 EXPERIMENT_DESC="Default config"
 TARGETS=( apache_worker )
+# Examples of other targets that have been used:
+#   nginx, lighttpd, apache_event, varnish, haproxy.
 ATTACKS=( slowloris goldeneye torshammer none )
 
 for TARGET in "${TARGETS[@]}"
