@@ -27,7 +27,7 @@ export DOSARRAY_MAX_VIP=$((DOSARRAY_VIRT_INSTANCES + (DOSARRAY_MIN_VIP - 1)))
 function dosarray_execute_on () {
   local HOST_NAME="$1"
   local CMD="$2"
-  ssh shilpi@${HOST_NAME}.<FULLY_QUALIFIED_NAME> -p <SSH_PORT> ${CMD}
+  ssh <USERNAME>@${HOST_NAME}.<FULLY_QUALIFIED_NAME> -p <SSH_PORT> ${CMD}
 }
 export -f dosarray_execute_on
 
@@ -35,7 +35,7 @@ function dosarray_scp_from () {
   local HOST_NAME="$1"
   local FROM="$2"
   local TO="$3"
-  scp -r -P <SSH_PORT> shilpi@${HOST_NAME}.<FULLY_QUALIFIED_NAME>:${FROM} ${TO}
+  scp -r -P <SSH_PORT> <USERNAME>@${HOST_NAME}.<FULLY_QUALIFIED_NAME>:${FROM} ${TO}
 
 }
 export -f dosarray_scp_from
@@ -43,7 +43,7 @@ export -f dosarray_scp_from
 # FIXME update other scripts to use these:
 export DOSARRAY_CONTAINER_PREFIX="c"
 export DOSARRAY_LOG_NAME_PREFIX="${DOSARRAY_CONTAINER_PREFIX}"
-export DOSARRAY_LOG_PATH_PREFIX="/home/shilpi"
+export DOSARRAY_LOG_PATH_PREFIX="/home/<USERNAME>"
 
 # Set for dosrray_run_http_experiment.sh
 
