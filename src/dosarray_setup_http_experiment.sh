@@ -103,7 +103,7 @@ then
   fi
   STOP_ATTACK_COMMAND="killall python"
 else
-  echo "Unrecognised attack"
+  echo "Unrecognised attack" >&2
   exit 2
 fi
 
