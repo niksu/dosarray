@@ -16,6 +16,9 @@ export ATTACK_STARTS_AT=10
 export ATTACK_LASTS_FOR=20
 export GAP_BETWEEN_ROUNDS=5
 
+# NOTE uncomment this to run the attack over SSL.
+#export DOSARRAY_HTTP_SSL=1
+
 # FIXME to vary no. & placement of attackers must edit dosarray_run_http_experiment.sh
 #       Centralise the experiment config here.
 

@@ -66,21 +66,41 @@ then
   exit 1
 fi
 
+if [ -z "${DOSARRAY_HTTP_SSL}" ]
+then
 # NOTE could also us parameters "-G -s -S" for httping
-MEASUREMENT_COMMAND="httping -g http://${SERVER_IP} -p ${SERVER_PORT} -i 1 -t 1 -c ${EXPERIMENT_DURATION} -s"
+  MEASUREMENT_COMMAND="httping -g http://${SERVER_IP} -p ${SERVER_PORT} -i 1 -t 1 -c ${EXPERIMENT_DURATION} -s"
+else
+  MEASUREMENT_COMMAND="httping -l -g https://${SERVER_IP} -p ${SERVER_PORT} -i 1 -t 1 -c ${EXPERIMENT_DURATION} -s"
+fi
 STOP_MEASUREMENT_COMMAND="killall httping"
 
 if [ "${ATTACK}" -eq "${ATTACK_Slowloris}" ]
 then
-  ATTACK_COMMAND="perl /opt/attacks/sl/slowloris.pl -dns ${SERVER_IP} -port ${SERVER_PORT}"
+  if [ -z "${DOSARRAY_HTTP_SSL}" ]
+  then
+    ATTACK_COMMAND="perl /opt/attacks/sl/slowloris.pl -dns ${SERVER_IP} -port ${SERVER_PORT}"
+  else
+    ATTACK_COMMAND="perl /opt/attacks/sl/slowloris.pl -https -dns ${SERVER_IP} -port ${SERVER_PORT}"
+  fi
   STOP_ATTACK_COMMAND="killall perl"
 elif [ "${ATTACK}" -eq "${ATTACK_GoldenEye}" ]
 then
-  ATTACK_COMMAND="python /opt/attacks/GoldenEye/goldeneye.py http://${SERVER_IP}:${SERVER_PORT}"
+  if [ -z "${DOSARRAY_HTTP_SSL}" ]
+  then
+    ATTACK_COMMAND="python /opt/attacks/GoldenEye/goldeneye.py http://${SERVER_IP}:${SERVER_PORT}"
+  else
+    ATTACK_COMMAND="python /opt/attacks/GoldenEye/goldeneye.py https://${SERVER_IP}:${SERVER_PORT}"
+  fi
   STOP_ATTACK_COMMAND="killall python"
 elif [ "${ATTACK}" -eq "${ATTACK_TorsHammer}" ]
 then
-  ATTACK_COMMAND="python /opt/attacks/th/torshammer.py -t ${SERVER_IP} -p ${SERVER_PORT}"
+  if [ -z "${DOSARRAY_HTTP_SSL}" ]
+  then
+    ATTACK_COMMAND="python /opt/attacks/th/torshammer.py -t ${SERVER_IP} -p ${SERVER_PORT}"
+  else
+    echo "This attack script does not support SSL" >&2
+  fi
   STOP_ATTACK_COMMAND="killall python"
 else
   echo "Unrecognised attack"
