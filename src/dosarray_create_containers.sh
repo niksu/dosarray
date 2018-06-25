@@ -28,7 +28,7 @@ do \n\
   CONTAINER_ADDRESS=${DOSARRAY_VIRT_NET_PREFIX}\${CONTAINER_SUFFIX} \n\
   CONTAINER_NAME=\"${DOSARRAY_CONTAINER_PREFIX}\${CONTAINER_SUFFIX}\" \n\
   echo -n \"\${CONTAINER_NAME} \" \n\
-  docker container create -ti --name \${CONTAINER_NAME} --net=docker_bridge --ip=\${CONTAINER_ADDRESS} dosarray_image_v0.2a & \n\
+  docker container create -ti --name \${CONTAINER_NAME} --net=docker_bridge --ip=\${CONTAINER_ADDRESS} ${DOSARRAY_IMAGE} & \n\
 done \n\
 echo " | dosarray_execute_on "${HOST_NAME}" "" \
   > /dev/null

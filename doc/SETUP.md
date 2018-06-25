@@ -58,6 +58,8 @@ after having saved the image:
 ```
 docker save -o dosarray_image.tar dosarray_image
 ```
+If you change the image, remember to update the `DOSARRAY_IMAGE`
+variable in `dosarray_config.sh`.
 
 Run commands in containers by using this syntax:
 ```
