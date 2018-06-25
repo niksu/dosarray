@@ -26,8 +26,14 @@ sys.stderr.write('DOSARRAY_HIST_FOCUS:' + str(histogram_focus) + '\n')
 
 result = {}
 
+# Latency-related configuration parameters
 precision = 10.0 # where 1 = 1ms, 10 = 0.1ms, etc. Httping reports outputs in milliseconds, but in the experiments they tend to be less than 1ms.
 latency_cutoff = 1.0
+latency_offset = 0.0
+latency_scale = 10.0
+
+# Latency-related outputs
+average_latency = 0.0
 latency_cutoff_applied_times = 0 # Keeps track of how many times the cutoff was actually applied.
 
 min_seq_idx = -1
@@ -64,6 +70,11 @@ for filepath in glob.iglob(glob_of_logs):
 
           assert 0.0 < latency
 
+          average_latency = (average_latency + latency) / 2
+
+          latency -= latency_offset
+          latency /= latency_scale
+
           # NOTE this next bit is in place because of artefacts that occur sometimes.
           # assert latency < latency_cutoff
           if latency > latency_cutoff:
@@ -86,7 +97,7 @@ for filepath in glob.iglob(glob_of_logs):
           result[sequence_idx][latency_approx] += 1
 #          print(str(sequence_idx) + ", " + str(latency_approx))
 #          print(str(latency_approx))   # for bell curve for whole set of logs     
-#      else: print(line)      
+#      else: sys.stderr.write('unmatched line: "' + line + '"\n')
 
 sys.stderr.write('min_seq_idx: ' + str(min_seq_idx) + '\n')
 sys.stderr.write('max_seq_idx: ' + str(max_seq_idx) + '\n')
@@ -99,6 +110,9 @@ sys.stderr.write('Files processed: ' + str(filecount) + '\n')
 sys.stderr.write('Total lines processed: ' + str(linecount) + '\n')
 sys.stderr.write('Total echos received: ' + str(matchcount) + ', ~' + str((float(matchcount) / float(linecount)) * 100) + '% \n')
 sys.stderr.write('latency_cutoff_applied_times: ' + str(latency_cutoff_applied_times) + '\n')
+if latency_cutoff_applied_times > 0:
+  sys.stderr.write('WARNING! Non-zero latency_cutoff_applied_times\n')
+sys.stderr.write('average_latency: ' + str(average_latency) + '\n')
 
 # We'll use this to calculate the percentage of each column in the histogram,
 # rather than use absolute values. (e.g., "11%" rather than "17 instances").
