@@ -5,7 +5,7 @@
 # Use of this source code is governed by the Apache 2.0 license; see LICENSE
 #
 # command time ./generate_availability_chart.py 'exp1_evernbigger2/baseline_40s_for_ge/c*.log' > availability_chart.data_ge_base
-# and: DOSARRAY_NHIST_RESULT=1 python generate_availability_chart.py '/Users/nik/t/xoghol/Penn/bitbucket/dedos_docs/papers/chipchip/experiment/apache_worker_sl_40inst_winnow24_with_cache/c*.log'
+# and: DOSARRAY_NHIST_RESULT=1 python generate_availability_chart.py '/Users/nik/.../experiment/apache_worker_sl_40inst_24_with_cache/c*.log'
 
 import datetime
 import glob
