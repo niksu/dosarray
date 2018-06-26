@@ -45,7 +45,14 @@ else
   exit 1
 fi
 
-CMD="curl --silent -o /dev/null -w \"%{http_code}\" http://${DOSARRAY_PHYSICAL_HOSTS_PRIV[0]}:${PORT}"
+if [ -z "${DOSARRAY_HTTP_SSL}" ]
+then
+  CMD="curl --silent -o /dev/null -w \"%{http_code}\" http://${DOSARRAY_PHYSICAL_HOSTS_PRIV[0]}:${PORT}"
+else
+  # FIXME hardcoded URL below -- "index.html"
+  # FIXME using "--insecure", might want to make this configurable.
+  CMD="curl --insecure --silent -o /dev/null -w \"%{http_code}\" https://${DOSARRAY_PHYSICAL_HOSTS_PRIV[0]}:${PORT}/index.html"
+fi
 
 RESULT=$(dosarray_execute_on "${HOST_NAME}" "${CMD}")
 
