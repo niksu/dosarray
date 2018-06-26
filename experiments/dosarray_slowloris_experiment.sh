@@ -22,6 +22,6 @@ export GAP_BETWEEN_ROUNDS=5
 # FIXME to vary no. & placement of attackers must edit dosarray_run_http_experiment.sh
 #       Centralise the experiment config here.
 
-# FIXME document the feature to make multiple runs of an experiment
+# NOTE you can make multiple runs of an experiment by appending a number
 #       e.g., dosarray_http_experiment apache_worker slowloris "Default config" "$(pwd)/example_experiment_X4" 4
 dosarray_http_experiment apache_worker slowloris "Default config" "$(pwd)/example_experiment"
