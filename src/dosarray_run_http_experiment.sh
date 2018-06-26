@@ -73,6 +73,9 @@ then
 elif [ "${SERVER_CHOICE}" == "varnish" ]
 then
   SERVER_PORT="${PORT_Varnish}"
+elif [ "${SERVER_CHOICE}" == "dedos_web" ]
+then
+  SERVER_PORT="${PORT_DeDOS_HTTP}"
 else
   echo "Unknown server choice: '${SERVER_CHOICE}'" >&2
   exit 1
