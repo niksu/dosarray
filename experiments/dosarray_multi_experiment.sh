@@ -24,6 +24,26 @@ export ATTACK_LASTS_FOR=20
 # FIXME rename GAP_BETWEEN_ROUNDS to clearer name, e.g., DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS
 export GAP_BETWEEN_ROUNDS=5
 
+# We run an attack script in these containers.
+# NOTE don't include whitepace before newline.
+# NOTE this example can only have one attack at a time -- edit "dosarray_http_experiment" to mix attacks.
+export ATTACKERS="is_attacker() { \n\
+    grep -F -q -x \"\$1\" <<EOF\n\
+c3.2\n\
+c4.3\n\
+c5.4\n\
+c6.5\n\
+c7.6\n\
+NOc8.7\n\
+NOc6.4\n\
+NOc7.4\n\
+NOc8.4\n\
+NOc3.6\n\
+NOc4.2\n\
+NOc5.3\n\
+EOF\n\
+}\n"
+
 # NOTE for resetting the target:
 HOST_NAME=dedos01
 INTER_EXPERIMENT_GAP=20
