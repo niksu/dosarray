@@ -38,6 +38,7 @@ if [ -z "${ATTACKERS}" ]
 then
   echo "WARNING! This experiment does not involve any attackers." >&2
 fi
+echo "\$ATTACKERS: ${ATTACKERS}"
 
 if [ "${SERVER_CHOICE}" == "nginx" ]
 then
