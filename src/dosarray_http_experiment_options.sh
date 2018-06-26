@@ -29,6 +29,7 @@ PORT_HAproxy=8016
 ATTACK_Slowloris=1
 ATTACK_GoldenEye=2
 ATTACK_TorsHammer=3
+ATTACK_HULK=4
 #ATTACK="${ATTACK_Slowloris}"
 
 function target_str() {
@@ -68,6 +69,9 @@ function attack_str() {
   elif [ "${ATTACK}" == "torshammer" ]
   then
     echo "Tors Hammer"
+  elif [ "${ATTACK}" == "hulk" ]
+  then
+    echo "HULK"
   elif [ "${ATTACK}" == "none" ]
   then
     echo "No attack"
