@@ -82,6 +82,9 @@ then
 elif [ "${ATTACK_CHOICE}" == "torshammer" ]
 then
   ATTACK="${ATTACK_TorsHammer}"
+elif [ "${ATTACK_CHOICE}" == "hulk" ]
+then
+  ATTACK="${ATTACK_HULK}"
 elif [ "${ATTACK_CHOICE}" == "none" ]
 then
   ATTACK="${ATTACK_Slowloris}" # The actual attack doesn't matter since $ATTACKERS is set to empty predicate.

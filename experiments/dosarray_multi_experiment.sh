@@ -18,6 +18,9 @@ source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
 source "${DOSARRAY_SCRIPT_DIR}/experiments/dosarray_experiment.sh"
 
+# NOTE for HULK you might need to increase the experiment duration (e.g., 165
+# for this config when attacking Apache Event, since it takes a longer time
+# than usual to recover after the attack).
 export EXPERIMENT_DURATION=65
 export ATTACK_STARTS_AT=10
 export ATTACK_LASTS_FOR=20
@@ -47,13 +50,13 @@ EOF\n\
 # NOTE for resetting the target:
 HOST_NAME=dedos01
 INTER_EXPERIMENT_GAP=20
-EXPERIMENT_RESET_CMD="/bin/apachectl -k restart"
+EXPERIMENT_RESET_CMD="/home/nsultana/src/prefix/bin/apachectl -k restart"
 
 EXPERIMENT_DESC="Default config"
 TARGETS=( apache_worker )
 # Examples of other targets that have been used:
 #   nginx, lighttpd, apache_event, varnish, haproxy.
-ATTACKS=( slowloris goldeneye torshammer none )
+ATTACKS=( slowloris goldeneye torshammer hulk none )
 
 for TARGET in "${TARGETS[@]}"
 do
