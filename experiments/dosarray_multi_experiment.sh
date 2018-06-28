@@ -26,18 +26,11 @@ export GAP_BETWEEN_ROUNDS=5
 
 # NOTE for resetting the target:
 HOST_NAME=dedos01
-#START_TARGET_WAIT=10
-#STOP_TARGET_WAIT=10
-#START_TARGET_CMD="/home/nsultana/src/prefix/bin/apachectl -k restart"
-#START_TARGET_CMD="/home/nsultana/src/prefix/bin/apachectl -k restart"
-#
 INTER_EXPERIMENT_GAP=20
-#EXPERIMENT_RESET_CMD="/home/nsultana/src/prefix/bin/apachectl -k restart"
-EXPERIMENT_RESET_CMD="/home/nsultana/src/prefix_apache_event/bin/apachectl -k restart"
+EXPERIMENT_RESET_CMD="/home/nsultana/src/prefix/bin/apachectl -k restart"
 
 EXPERIMENT_DESC="Default config"
-#TARGETS=( apache_worker )
-TARGETS=( apache_event )
+TARGETS=( apache_worker )
 # Examples of other targets that have been used:
 #   nginx, lighttpd, apache_event, varnish, haproxy.
 ATTACKS=( slowloris goldeneye torshammer hulk none )
@@ -47,8 +40,7 @@ do
   # FIXME currently target is started manually
   for ATTACK in "${ATTACKS[@]}"
   do
-#    DESTINATION_DIR="$(pwd)/example_experiment_set_${TARGET}_${ATTACK}_connlimit3_2attackers"
-    DESTINATION_DIR="$(pwd)/example_experiment_set_${TARGET}_${ATTACK}_2attackers_2"
+    DESTINATION_DIR="$(pwd)/example_experiment_set_${TARGET}_${ATTACK}"
     dosarray_http_experiment ${TARGET} ${ATTACK} "${EXPERIMENT_DESC}" ${DESTINATION_DIR}
     # FIXME EXPERIMENT_RESET_CMD should depend on TARGET -- in this example we only have one.
     dosarray_execute_on "${HOST_NAME}" "${EXPERIMENT_RESET_CMD}"
