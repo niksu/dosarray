@@ -30,7 +30,7 @@ result = {}
 precision = 10.0 # where 1 = 1ms, 10 = 0.1ms, etc. Httping reports outputs in milliseconds, but in the experiments they tend to be less than 1ms.
 latency_cutoff = 1.0
 latency_offset = 0.0
-latency_scale = 10.0
+latency_scale = 1.0
 
 # Latency-related outputs
 average_latency = 0.0
