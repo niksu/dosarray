@@ -18,6 +18,9 @@ source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
 source "${DOSARRAY_SCRIPT_DIR}/experiments/dosarray_experiment.sh"
 
+# NOTE for HULK you might need to increase the experiment duration (e.g., 165
+# for this config when attacking Apache Event, since it takes a longer time
+# than usual to recover after the attack).
 export EXPERIMENT_DURATION=65
 export ATTACK_STARTS_AT=10
 export ATTACK_LASTS_FOR=20
