@@ -62,7 +62,7 @@ grep -F -q -x \"\$1\" <<EOF\n'
   VIRT_IDX=${DOSARRAY_MIN_VIP}
   while [ "${NO_ATTACKERS}" -gt 0 ]
   do
-    for PHYS_IDX in `seq ${SKIP} $(( ${#DOSARRAY_VIRT_NET_SUFFIX[@]} - 1 ))`
+    for PHYS_IDX in `seq ${SKIP} $(( ${#DOSARRAY_VIRT_NET_SUFFIX[@]} - 1 ))` # FIXME should the "- 1" be "- ${SKIP}"?
     do
       if [ "${NO_ATTACKERS}" -gt 0 ]
       then
