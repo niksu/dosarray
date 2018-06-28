@@ -39,6 +39,49 @@ NOc5.3\n\
 EOF\n\
 }\n"
 
+# Evenly allocate attackers among the virtual nodes on physical hosts.
+function dosarray_evenly_distribute_attackers() {
+  NO_ATTACKERS=$1
+  # One of the physical nodes is reserved for the target, and the rest for measurement/attack.
+  SKIP=1
+  NONTARGET_PHYS_NODES=$(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - ${SKIP} ))
+  AVAILABLE_NODES=$(( ${NONTARGET_PHYS_NODES} * ${DOSARRAY_VIRT_INSTANCES} ))
+
+  echo "NO_ATTACKERS=${NO_ATTACKERS}"
+  echo "NONTARGET_PHYS_NODES=${NONTARGET_PHYS_NODES}"
+  echo "AVAILABLE_NODES=${AVAILABLE_NODES}"
+
+  if [ "${NO_ATTACKERS}" -gt "${AVAILABLE_NODES}" ]
+  then
+    echo "\$NO_ATTACKERS(${NO_ATTACKERS}) > \$AVAILABLE_NODES(${AVAILABLE_NODES})" >&2
+    exit 1
+  fi
+
+  FN='export ATTACKERS="is_attacker() { \n\
+grep -F -q -x \"\$1\" <<EOF\n'
+  VIRT_IDX=${DOSARRAY_MIN_VIP}
+  while [ "${NO_ATTACKERS}" -gt 0 ]
+  do
+    for PHYS_IDX in `seq ${SKIP} $(( ${#DOSARRAY_VIRT_NET_SUFFIX[@]} - 1 ))`
+    do
+      if [ "${NO_ATTACKERS}" -gt 0 ]
+      then
+        FN+="c${PHYS_IDX}.${VIRT_IDX}\n"
+        NO_ATTACKERS=$(( ${NO_ATTACKERS} - 1 ))
+      else
+        break
+      fi
+    done
+
+    VIRT_IDX=$(( ${VIRT_IDX} + 1 ))
+  done
+
+  eval+='EOF\n}\n'
+  eval ${FN}
+}
+
+export ATTACKERS=dosarray_evenly_distribute_attackers 5
+
 # NOTE you can make multiple runs of an experiment by appending a number
 #       e.g., dosarray_http_experiment apache_worker slowloris "Default config" "$(pwd)/example_experiment_X4" 4
 dosarray_http_experiment apache_worker slowloris "Default config" "$(pwd)/example_experiment"
