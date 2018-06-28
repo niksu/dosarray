@@ -106,7 +106,7 @@ elif [ "${ATTACK}" -eq "${ATTACK_HULK}" ]
 then
   if [ -z "${DOSARRAY_HTTP_SSL}" ]
   then
-    ATTACK_COMMAND="python /opt/attacks/hulk.py ${SERVER_IP}:${SERVER_PORT}"
+    ATTACK_COMMAND="python /opt/attacks/hulk.py http://${SERVER_IP}:${SERVER_PORT}"
   else
     echo "This attack script does not support SSL" >&2
   fi
