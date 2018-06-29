@@ -34,26 +34,11 @@ then
   exit 2
 fi
 
-
-# We run an attack script in these containers.
-# NOTE don't include whitepace before newline.
-# NOTE we can only have one attack at a time -- can't yet mix attacks.
-ATTACKERS="is_attacker() { \n\
-    grep -F -q -x \"\$1\" <<EOF\n\
-c3.2\n\
-c4.3\n\
-c5.4\n\
-c6.5\n\
-c7.6\n\
-NOc8.7\n\
-NOc6.4\n\
-NOc7.4\n\
-NOc8.4\n\
-NOc3.6\n\
-NOc4.2\n\
-NOc5.3\n\
-EOF\n\
-}\n"
+if [ -z "${ATTACKERS}" ]
+then
+  echo "WARNING! This experiment does not involve any attackers." >&2
+fi
+echo "\$ATTACKERS: ${ATTACKERS}"
 
 if [ "${SERVER_CHOICE}" == "nginx" ]
 then
