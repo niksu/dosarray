@@ -61,6 +61,7 @@ then
 elif [ "${SERVER_CHOICE}" == "dedos_web" ]
 then
   if [ -z "${DOSARRAY_HTTP_SSL}" ]
+  then
     echo "This target (${SERVER_CHOICE}) only works over SSL. Set \$DOSARRAY_HTTP_SSL to enable HTTPS attacks.'" >&2
     exit 1
   fi
