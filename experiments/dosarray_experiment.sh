@@ -112,3 +112,44 @@ function dosarray_http_experiment() {
     echo "Finished at $(date)"
   done
 }
+
+# Evenly allocate attackers among the virtual nodes on physical hosts.
+function dosarray_evenly_distribute_attackers() {
+  NO_ATTACKERS=$1
+  # One of the physical nodes is reserved for the target, and the rest for measurement/attack.
+  SKIP=1
+  NONTARGET_PHYS_NODES=$(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - ${SKIP} ))
+  AVAILABLE_NODES=$(( ${NONTARGET_PHYS_NODES} * ${DOSARRAY_VIRT_INSTANCES} ))
+
+  #echo "NO_ATTACKERS=${NO_ATTACKERS}"
+  #echo "NONTARGET_PHYS_NODES=${NONTARGET_PHYS_NODES}"
+  #echo "AVAILABLE_NODES=${AVAILABLE_NODES}"
+
+  if [ "${NO_ATTACKERS}" -gt "${AVAILABLE_NODES}" ]
+  then
+    echo "\$NO_ATTACKERS(${NO_ATTACKERS}) > \$AVAILABLE_NODES(${AVAILABLE_NODES})" >&2
+    exit 1
+  fi
+
+  FN='export ATTACKERS="is_attacker() { \ngrep -F -q -x \"\$1\" <<EOF\n'
+  VIRT=${DOSARRAY_MIN_VIP}
+  while [ "${NO_ATTACKERS}" -gt 0 ]
+  do
+    for PHYS_IDX in `seq ${SKIP} $(( ${#DOSARRAY_VIRT_NET_SUFFIX[@]} - 1 ))`
+    do
+      if [ "${NO_ATTACKERS}" -gt 0 ]
+      then
+        FN+="c${DOSARRAY_VIRT_NET_SUFFIX[${PHYS_IDX}]}.${VIRT}\n"
+        NO_ATTACKERS=$(( ${NO_ATTACKERS} - 1 ))
+      else
+        break
+      fi
+    done
+
+    VIRT=$(( ${VIRT} + 1 ))
+  done
+
+  FN+='EOF\n}\n"'
+  #echo "FN=${FN}"
+  eval "${FN}"
+}

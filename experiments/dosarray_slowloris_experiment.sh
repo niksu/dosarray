@@ -19,9 +19,9 @@ export GAP_BETWEEN_ROUNDS=5
 # NOTE uncomment this to run the attack over SSL.
 #export DOSARRAY_HTTP_SSL=1
 
-# FIXME to vary no. & placement of attackers must edit dosarray_run_http_experiment.sh
-#       Centralise the experiment config here.
+## This function picks the containers from where the attacks are made.
+dosarray_evenly_distribute_attackers 5
 
-# FIXME document the feature to make multiple runs of an experiment
+# NOTE you can make multiple runs of an experiment by appending a number
 #       e.g., dosarray_http_experiment apache_worker slowloris "Default config" "$(pwd)/example_experiment_X4" 4
 dosarray_http_experiment apache_worker slowloris "Default config" "$(pwd)/example_experiment"
