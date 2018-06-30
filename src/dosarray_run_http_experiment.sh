@@ -69,7 +69,7 @@ ${DOSARRAY_SCRIPT_DIR}/src/dosarray_http_server_test.sh "${SERVER_CHOICE}"
 TEST_RESULT="$?"
 if [ "${TEST_RESULT}" -ne "200" ]
 then
-  echo "Server (${SERVER_CHOICE}) doesn't appear to be running"
+  echo "Server (${SERVER_CHOICE}) doesn't appear to be running" >&2
   exit 2
 fi
 
