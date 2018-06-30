@@ -19,7 +19,7 @@ export GAP_BETWEEN_ROUNDS=5
 # NOTE uncomment this to run the attack over SSL.
 #export DOSARRAY_HTTP_SSL=1
 
-## This function picks the containers from where the attacks are made.
+# This function picks the containers from where the attacks are made.
 dosarray_evenly_distribute_attackers 5
 
 # NOTE you can make multiple runs of an experiment by appending a number

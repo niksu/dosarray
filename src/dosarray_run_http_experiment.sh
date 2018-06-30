@@ -58,6 +58,14 @@ then
 elif [ "${SERVER_CHOICE}" == "varnish" ]
 then
   SERVER_PORT="${PORT_Varnish}"
+elif [ "${SERVER_CHOICE}" == "dedos_web" ]
+then
+  if [ -z "${DOSARRAY_HTTP_SSL}" ]
+  then
+    echo "This target (${SERVER_CHOICE}) only works over SSL. Set \$DOSARRAY_HTTP_SSL to enable HTTPS attacks.'" >&2
+    exit 1
+  fi
+  SERVER_PORT="${PORT_DeDOS_HTTP}"
 else
   echo "Unknown server choice: '${SERVER_CHOICE}'" >&2
   exit 1

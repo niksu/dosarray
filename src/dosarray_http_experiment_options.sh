@@ -23,6 +23,7 @@ PORT_Nginx=8012
 PORT_lighttpd=8014
 PORT_Varnish=8015
 PORT_HAproxy=8016
+PORT_DeDOS_HTTP=8081
 #SERVER_PORT="${PORT_Apache_Worker}"
 #SERVER_PORT="${PORT_Nginx}"
 
@@ -52,6 +53,9 @@ function target_str() {
   elif [ "${TARGET}" == "varnish" ]
   then
     echo "Varnish"
+  elif [ "${TARGET}" == "dedos_web" ]
+  then
+    echo "DeDOS"
   else
     echo "Unknown target: '${TARGET}'" >&2
     exit 1
