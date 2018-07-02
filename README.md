@@ -64,7 +64,7 @@ The output from this experiment can be seen in the
 Nik Sultana, Shilpi Bose. More contributors welcome!
 
 ## Current version
-DoSarray 0.2
+DoSarray 0.3
 
 ## License
 DoSarray is released under the [Apache 2.0 license](LICENSE)
