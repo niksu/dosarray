@@ -61,10 +61,12 @@ The output from this experiment can be seen in the
 [DoStbin archive](https://gitlab.com/niksu/dostbin/tree/master/results/2).
 
 ## Contributors
-Nik Sultana, Shilpi Bose. More contributors welcome!
+Nik Sultana, Shilpi Bose.
 
 ## Current version
 DoSarray 0.3
+
+View [CHANGELOG](CHANGELOG.md)
 
 ## License
 DoSarray is released under the [Apache 2.0 license](LICENSE)
