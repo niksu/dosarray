@@ -10,12 +10,12 @@ if [ -z "${DOSARRAY_SCRIPT_DIR}" ]
 then
   echo "Need to configure DoSarray -- set \$DOSARRAY_SCRIPT_DIR" >&2
   exit 1
-elif [ ! -e "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh" ]
+elif [ ! -e "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh" ]
 then
-  echo "Need to configure DoSarray -- could not find dosarray_config.sh at \$DOSARRAY_SCRIPT_DIR ($DOSARRAY_SCRIPT_DIR)" >&2
+  echo "Need to configure DoSarray -- could not find dosarray_config.sh at \$DOSARRAY_SCRIPT_DIR/config (${DOSARRAY_SCRIPT_DIR}/config)" >&2
   exit 1
 fi
-source "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh"
+source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
 SERVER_CHOICE=$1
 
@@ -40,12 +40,22 @@ then
 elif [ "${SERVER_CHOICE}" == "varnish" ]
 then
   PORT=8015
+elif [ "${SERVER_CHOICE}" == "dedos_web" ]
+then
+  PORT=8081
 else
   echo "Unknown server choice: '${SERVER_CHOICE}'" >&2
   exit 1
 fi
 
-CMD="curl --silent -o /dev/null -w \"%{http_code}\" http://${DOSARRAY_PHYSICAL_HOSTS_PRIV[0]}:${PORT}"
+if [ -z "${DOSARRAY_HTTP_SSL}" ]
+then
+  CMD="curl --silent -o /dev/null -w \"%{http_code}\" http://${DOSARRAY_PHYSICAL_HOSTS_PRIV[0]}:${PORT}"
+else
+  # FIXME hardcoded URL below -- "index.html"
+  # FIXME using "--insecure", might want to make this configurable.
+  CMD="curl --insecure --silent -o /dev/null -w \"%{http_code}\" https://${DOSARRAY_PHYSICAL_HOSTS_PRIV[0]}:${PORT}/index.html"
+fi
 
 RESULT=$(dosarray_execute_on "${HOST_NAME}" "${CMD}")
 

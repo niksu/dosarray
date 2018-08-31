@@ -15,12 +15,12 @@ if [ -z "${DOSARRAY_SCRIPT_DIR}" ]
 then
   echo "Need to configure DoSarray -- set \$DOSARRAY_SCRIPT_DIR" >&2
   exit 1
-elif [ ! -e "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh" ]
+elif [ ! -e "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh" ]
 then
-  echo "Need to configure DoSarray -- could not find dosarray_config.sh at \$DOSARRAY_SCRIPT_DIR ($DOSARRAY_SCRIPT_DIR)" >&2
+  echo "Need to configure DoSarray -- could not find dosarray_config.sh at \$DOSARRAY_SCRIPT_DIR/config (${DOSARRAY_SCRIPT_DIR}/config)" >&2
   exit 1
 fi
-source "${DOSARRAY_SCRIPT_DIR}/dosarray_config.sh"
+source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
 while getopts ":r" opt; do
   case ${opt} in
@@ -36,7 +36,6 @@ done
 shift $((OPTIND -1))
 
 TARGET_PHYSICAL_HOST=$1
-#VIRTUAL_NETWORK_NUMBER=$2 FIXME
 
 for IDX in ${DOSARRAY_PHYSICAL_HOST_IDXS}
 do
