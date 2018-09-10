@@ -1,9 +1,10 @@
 #/bin/sh -e
-# Experimental setup for the Winnow project.
+# Monitors the clusters' servers for various kinds of loads.
 # Nik Sultana, February 2018, UPenn
 #
-# Downloads load indicators from a collection of machines for $NUM_ROUNDS times,
-# sleeping $GAP_BETWEEN_ROUNDS between downloads.
+# Polls various kinds of load on a collection of machines for $NUM_ROUNDS times,
+# sleeping $GAP_BETWEEN_ROUNDS between polls. After downloading the results,
+# they're analysed and graphed.
 
 if [ -z "${DOSARRAY_SCRIPT_DIR}" ]
 then
