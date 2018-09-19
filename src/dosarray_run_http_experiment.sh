@@ -123,8 +123,12 @@ echo "DOSARRAY_VIRT_INSTANCES=${DOSARRAY_VIRT_INSTANCES}"
 echo "ATTACK_STARTS_AT=${ATTACK_STARTS_AT}"
 echo "ATTACK_LASTS_FOR=${ATTACK_LASTS_FOR}"
 
-# check that an attack doesn't last longer than the experiment.
-if [ $(( ${ATTACK_STARTS_AT} + ${ATTACK_LASTS_FOR} )) -gt ${EXPERIMENT_DURATION} ]
+# check that an attack duration lies between experiment duration
+if [ ${ATTACK_STARTS_AT} -gt ${EXPERIMENT_DURATION} ]
+then
+    printf "Attack must start before experiment ends\nAttack starts at=${ATTACK_STARTS_AT}\nExperiment duration=${EXPERIMENT_DURATION}" >&2
+    exit 1
+elif [ $(( ${ATTACK_STARTS_AT} + ${ATTACK_LASTS_FOR} )) -gt ${EXPERIMENT_DURATION} ]
 then
     printf "Attack lasts longer than experiment duration \nAttack ends at=$(( ${ATTACK_STARTS_AT} + ${ATTACK_LASTS_FOR} ))\nExperiment Duration=${EXPERIMENT_DURATION}" >&2
     exit 1
