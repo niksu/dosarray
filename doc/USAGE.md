@@ -68,7 +68,7 @@ After configuring the network, the next step is creating and starting docker con
 Once we have the configuration in place, simulating the a DoS attack is just a few steps away. For starters, DoSarray also has a sample experiment which goes through the entire lifecycle of the experiment, starting from measurements before, after and during the attack and ending with graphing the data gathered during the experiment. To run the example experiment scirpt make sure to change to `RESULT_DIR` to store the location of the generated results.
 
 ```
-./dosarray_experiment_example.sh
+./dosarray_slowloris_experiment.sh
 ```
 
 This script simulates the slowloris attack on apache and compiles all the container logs, .stdout and .stderr logs and the final graph generated from the availability data in the results directory. It also collects load measurements on each physical host and plots them as column charts. An elaborate discussion on load graphing is included in the next section.This script is a good starting point for first-time users and we encourage you to adapt this script to suit your specific needs. For instance, `dosarray_setup_http_experiment.sh` can be further modified to configure various parameters such as type of server and attack, duration of attack and experiment and various measurement commmands.
