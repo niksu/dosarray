@@ -5,6 +5,7 @@
 #
 # Use of this source code is governed by the Apache 2.0 license; see LICENSE
 #
+# generate_availability_chart.py requires version to be set if this script is run separately
 # $ export DOSARRAY_VERSION="0.3"
 # $ DOSARRAY_HIST_FOCUS=10 python generate_availability_chart.py '../example_experiment/c*log' > availability_focus.data
 # $ ./dosarray_graphing_focus.sh -i availability_focus.data -o focus_graph.pdf -t availability
