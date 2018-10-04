@@ -16,7 +16,7 @@ fi
 source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
 # FIXME hardocoded to assume that the SERVER_IP is always the first element of DOSARRAY_PHYSICAL_HOSTS_PRIV
-SERVER_IP="${DOSARRAY_PHYSICAL_HOSTS_PRIV[0]}"
+SERVER_IP="${DOSARRAY_PHYSICAL_HOSTS_PRIV[${DOSARRAY_TARGET_SERVER_INDEX}]}"
 
 if [ -z "${SERVER_PORT}" ]
 then
