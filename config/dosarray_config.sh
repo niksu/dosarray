@@ -38,6 +38,9 @@ function dosarray_physical_hosts_skip () {
   if [ ${DOSARRAY_TARGET_SERVER_INDEX} -eq 0 ]
   then
     echo `seq $(( ${DOSARRAY_TARGET_SERVER_INDEX} + 1)) $(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - 1 ))`
+  elif [ ${DOSARRAY_TARGET_SERVER_INDEX} -eq $(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - 1 )) ]
+  then
+    echo `seq 0 $(( ${DOSARRAY_TARGET_SERVER_INDEX} - 1))`
   else
     index=(`seq 0 $(( ${DOSARRAY_TARGET_SERVER_INDEX} - 1))` `seq $(( ${DOSARRAY_TARGET_SERVER_INDEX} + 1)) $(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - 1 ))`)
     echo ${index[@]}
