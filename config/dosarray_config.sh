@@ -34,6 +34,13 @@ then
   exit 1
 fi
 
+# Check if target index is within allowed range
+if [ ${DOSARRAY_TARGET_SERVER_INDEX} -ge  $(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - 1 )) ]
+then
+  printf "Check dosarray_config.sh for errors \nDOSARRAY_TARGET_SERVER_INDEX cannot exceed $(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - 1 ))"
+  exit 1
+fi
+
 function dosarray_physical_hosts_skip () {
   if [ ${DOSARRAY_TARGET_SERVER_INDEX} -eq 0 ]
   then
