@@ -54,7 +54,7 @@ function dosarray_physical_hosts_skip () {
   fi
 }
 export -f dosarray_physical_hosts_skip
-export DOSARRAY_PHYSICAL_HOST_IDXS=("${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}")
+export DOSARRAY_PHYSICAL_HOST_IDXS=("`seq 0 $(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - 1))`")
 export DOSARRAY_CONTAINER_HOST_IDXS=`dosarray_physical_hosts_skip`
 
 export DOSARRAY_VIRT_INSTANCES=10
