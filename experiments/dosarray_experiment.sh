@@ -139,7 +139,7 @@ function dosarray_evenly_distribute_attackers() {
     do
       if [ "${NO_ATTACKERS}" -gt 0 ]
       then
-        FN+="c${DOSARRAY_VIRT_NET_SUFFIX[${PHYS_IDX}]}.${VIRT}\n"
+        FN+="${DOSARRAY_CONTAINER_PREFIX}${DOSARRAY_VIRT_NET_SUFFIX[${PHYS_IDX}]}.${VIRT}\n"
         NO_ATTACKERS=$(( ${NO_ATTACKERS} - 1 ))
       else
         break
