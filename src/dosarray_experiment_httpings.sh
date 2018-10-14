@@ -17,8 +17,8 @@ source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
 ${DOSARRAY_SCRIPT_DIR}/src/dosarray_servers_load.sh &
 
-# NOTE skipping the first host since we're running the server there.
-for IDX in `dosarray_physical_hosts_skip 1`
+# NOTE skipping the host denoted by DOSARRAY_TARGET_SERVER_INDEX since we're running the server there.
+for IDX in ${DOSARRAY_CONTAINER_HOST_IDXS}
 do
   CURRENT_HOST_IP=${DOSARRAY_VIRT_NET_SUFFIX[${IDX}]}
   HOST_NAME="${DOSARRAY_PHYSICAL_HOSTS_PUB[${IDX}]}"

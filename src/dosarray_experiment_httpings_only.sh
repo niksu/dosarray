@@ -15,13 +15,9 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
-# NOTE CURRENT_HOST_IP will skip the first physical machine (because we run the target on it). FIXME this assumption could be made flexible.
-CURRENT_HOST_IP=${DOSARRAY_VIRT_NET_SUFFIX[0]}
-
-# NOTE excluding the first host since we're running the server there.
-for IDX in `dosarray_physical_hosts_skip 1`
+for IDX in {DOSARRAY_CONTAINER_HOST_IDXS}
 do
-  CURRENT_HOST_IP=$((CURRENT_HOST_IP + 1))
+  CURRENT_HOST_IP=${DOSARRAY_VIRT_NET_SUFFIX[${IDX}]}
   HOST_NAME="${DOSARRAY_PHYSICAL_HOSTS_PUB[${IDX}]}"
   echo "Starting httpings in $HOST_NAME"
 

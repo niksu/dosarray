@@ -3,7 +3,7 @@
 # Nik Sultana, February 2018, UPenn
 #
 # Polls various kinds of load on a collection of machines for $NUM_ROUNDS times,
-# sleeping $GAP_BETWEEN_ROUNDS between polls. After downloading the results,
+# sleeping $INTERVAL_BETWEEN_LOAD_POLLS between polls. After downloading the results,
 # they're analysed and graphed.
 
 if [ -z "${DOSARRAY_SCRIPT_DIR}" ]
@@ -23,18 +23,18 @@ then
   exit 2
 fi
 
-if [ -z "$GAP_BETWEEN_ROUNDS}" ]
+if [ -z "${INTERVAL_BETWEEN_LOAD_POLLS}" ]
 then
-  echo "Need to define \$GAP_BETWEEN_ROUNDS" >&2
+  echo "Need to define \$INTERVAL_BETWEEN_LOAD_POLLS" >&2
   exit 1
 fi
 
-echo "GAP_BETWEEN_ROUNDS=${GAP_BETWEEN_ROUNDS}"
+echo "INTERVAL_BETWEEN_LOAD_POLLS=${INTERVAL_BETWEEN_LOAD_POLLS}"
 
 if [ -n "${EXPERIMENT_DURATION}" ]
 then
   echo "EXPERIMENT_DURATION=${EXPERIMENT_DURATION}"
-  NUM_ROUNDS=$(echo "${EXPERIMENT_DURATION} / ${GAP_BETWEEN_ROUNDS}" | bc -l)
+  NUM_ROUNDS=$(echo "${EXPERIMENT_DURATION} / ${INTERVAL_BETWEEN_LOAD_POLLS}" | bc -l)
   NUM_ROUNDS=$( printf "%.0f" ${NUM_ROUNDS} )
 fi
 
@@ -90,11 +90,11 @@ do
 
   if [ "${ROUND}" -ne "${NUM_ROUNDS}" ]
   then
-    sleep ${GAP_BETWEEN_ROUNDS}
+    sleep ${INTERVAL_BETWEEN_LOAD_POLLS}
   fi
 done
 
-sleep ${GAP_BETWEEN_ROUNDS}
+sleep ${INTERVAL_BETWEEN_LOAD_POLLS}
 
 ${DOSARRAY_SCRIPT_DIR}/src/dosarray_filter_net_logs.sh
 

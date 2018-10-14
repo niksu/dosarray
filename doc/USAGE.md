@@ -23,6 +23,8 @@ Next, we need to configure DoSarray to simulate experiments using the available 
 
 * `DOSARRAY_HOST_INTERFACE_MAP`: Populate this list with the network interface to be measured for each physical host, in the same order as the former list.
 
+* `DOSARRAY_TARGET_SERVER_INDEX` : This is the index of the machine which will act as target on for DoS attacks
+
 * `DOSARRAY_VIRT_NET_PREFIX`: This is a string specifying the first two octets of your physical host IPs, eg - "192.168."
 
 * `DOSARRAY_VIRT_NETS`: This list is populated based on the previous entries to form the prefix of each containers' IP in the physical hosts

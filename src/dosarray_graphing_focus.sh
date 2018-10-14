@@ -5,13 +5,30 @@
 #
 # Use of this source code is governed by the Apache 2.0 license; see LICENSE
 #
-# $ DOSARRAY_HIST_FOCUS=10 python ../generate_availability_chart.py '../../exp4/sl_60total_start10_last20_apache_event/c*.log' > availability.data
-# $ ../dosarray_graphing_focus.sh . '' 10 30
+# generate_availability_chart.py requires version to be set if this script is run separately
+# $ export DOSARRAY_VERSION="0.3"
+# $ DOSARRAY_HIST_FOCUS=10 python generate_availability_chart.py '../example_experiment/c*log' > availability_focus.data
+# $ ./dosarray_graphing_focus.sh -i availability_focus.data -o focus_graph.pdf -t availability
 #
-# FIXME input and output filenames are hardcoded
 
-DATA_DIR=$1
-TITLE=$2
+while getopts "i:o:t:" opt; do
+  case ${opt} in
+    i )
+      INPUT_FILE=$OPTARG
+      ;;
+    o )
+      OUTPUT_FILE=$OPTARG
+      ;;
+    t )
+      TITLE=$OPTARG
+      ;;
+    ? )
+      echo "Usage: ./dosarray_graphing_focus -i <input-file> -o <output-file> -t <title>"
+      exit 1
+      ;;
+  esac
+done
+shift $((OPTIND -1))
 
 PREFIX="\
 set terminal pdf \n\
@@ -22,9 +39,8 @@ set ylabel 'instances (%%)' rotate parallel # number of instances, whose latency
 SUFFIX="\n\
 set yrange [0:100] \n\
 set style data lines \n\
-set title '${TITLE}' \n\
-set output '${DATA_DIR}/focus_graph.pdf' \n\
-plot '${DATA_DIR}/availability.data' using 2:3 smooth csplines title 'availability' \n\
+set output '${OUTPUT_FILE}' \n\
+plot '${INPUT_FILE}' using 2:3 smooth csplines title '${TITLE}'\n\
 "
 
 MIDDLE=""

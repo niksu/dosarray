@@ -14,7 +14,7 @@ source "${DOSARRAY_SCRIPT_DIR}/experiments/dosarray_experiment.sh"
 export EXPERIMENT_DURATION=65
 export ATTACK_STARTS_AT=10
 export ATTACK_LASTS_FOR=20
-export GAP_BETWEEN_ROUNDS=5
+export INTERVAL_BETWEEN_LOAD_POLLS=5
 
 # NOTE uncomment this to run the attack over SSL.
 #export DOSARRAY_HTTP_SSL=1

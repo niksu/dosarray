@@ -24,8 +24,7 @@ source "${DOSARRAY_SCRIPT_DIR}/experiments/dosarray_experiment.sh"
 export EXPERIMENT_DURATION=65
 export ATTACK_STARTS_AT=10
 export ATTACK_LASTS_FOR=20
-# FIXME rename GAP_BETWEEN_ROUNDS to clearer name, e.g., DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS
-export GAP_BETWEEN_ROUNDS=5
+export INTERVAL_BETWEEN_LOAD_POLLS=5
 
 # We run an attack script in these containers.
 # NOTE don't include whitepace before newline.
