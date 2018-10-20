@@ -172,7 +172,7 @@ echo "LOG_COUNT=${LOG_COUNT} (Does this look alright?)"
 if [ ${GRAPHING} ]
 then
   echo "Running graphing"
-  ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_experiment_graphing.sh
+  ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_experiment_graphing.sh ${DESTINATION_DIR}
 fi
 
 cd ${CUR_DIR}

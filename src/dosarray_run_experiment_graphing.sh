@@ -14,6 +14,7 @@ fi
 
 source ${DOSARRAY_SCRIPT_DIR}/src/dosarray_http_experiment_options.sh
 
+DESTINATION_DIR=$1
 if [ -z "${DESTINATION_DIR}" ]
 then
   echo "\$DESTINATION_DIR needs to be defined" >&2
