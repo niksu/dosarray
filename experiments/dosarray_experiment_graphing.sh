@@ -1,13 +1,13 @@
 #/bin/sh -e
-# Example of using DoSarray
-# Nik Sultana, February 2018, UPenn
+# Example of using DoSarray Graphing
+# Shilpi Bose, October 2018, UPenn
 #
-# Using DoSarray consists of setting the experiment's parameters
+# Using DoSarray graphing consists of setting the experiment's parameters
 # (such as the experiment's duration, and the attack interval), and then
-# calling the functions that applies an attack to a target.
+# calling the experiment graphing script with the destination directory of 
+# container logs
 #
-# In this example the experiment consists of applying Slowloris
-# to the Apache web server.
+# Usage: ./dosarray_experiment_graphing -a <attack> -d <destination-dir> -t <target>
 
 while getopts "a:d:t:" opt; do
   case ${opt} in
@@ -37,7 +37,5 @@ export ATTACK_STARTS_AT=10
 export ATTACK_LASTS_FOR=20
 export INTERVAL_BETWEEN_LOAD_POLLS=5
 export TITLE="${TARGET}, ${ATTACK}, ${EXPERIMENT_SET}"
-# NOTE uncomment this to run the attack over SSL.
-#export DOSARRAY_HTTP_SSL=1
 
 ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_experiment_graphing.sh ${DESTINATION}

@@ -4,6 +4,8 @@
 #
 # This script is uses collected logs to generate availability and load measurement graphs
 #
+# Usage: ./dosarray_run_experiment_graphing.sh <destination-dir>
+# 
 # Use of this source code is governed by the Apache 2.0 license; see LICENSE
 
 if [ -z "${DOSARRAY_SCRIPT_DIR}" ]
