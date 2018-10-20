@@ -6,6 +6,17 @@
 #
 # Usage: ./dosarray_graphing_load.sh -i load_5s.data -o load_5s.pdf -t load -m dedos01:dedos02:dedos03:dedos04:dedos05:dedos06:dedos07:dedos08
 
+if [ -z "${DOSARRAY_SCRIPT_DIR}" ]
+then
+  echo "Need to configure DoSarray -- set \$DOSARRAY_SCRIPT_DIR" >&2
+  exit 1
+elif [ ! -e "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh" ]
+then
+  echo "Need to configure DoSarray -- could not find dosarray_config.sh at \$DOSARRAY_SCRIPT_DIR/config (${DOSARRAY_SCRIPT_DIR}/config)" >&2
+  exit 1
+fi
+source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
+
 while getopts "i:o:t:m:u" opt; do
   case ${opt} in
     i )
@@ -101,13 +112,12 @@ set ylabel 'network traffic (in packets)' \n\
 "
 fi
 
-COLORS=( '#555555' '#777777' '#999999' '#BBBBBB' '#DDDDDD' '#FFFFFF' '#EEEEEE' '#AAAAAA')
 SUFFIX="plot"
 COL=2
 
-if [ "${#MACHINES[@]}" -gt "${#COLORS[@]}" ]
+if [ "${#MACHINES[@]}" -gt "${#DOSARRAY_HOST_COLORS[@]}" ]
 then
-  echo "#MACHINES (${#MACHINES[@]}) > #COLORS (${#COLORS[@]}): increase the number of colours available to display the load graph correctly." >&2
+  echo "#MACHINES (${#MACHINES[@]}) > #COLORS (${#DOSARRAY_HOST_COLORS[@]}): increase the number of colours available to display the load graph correctly." >&2
   exit 1
 fi
 
@@ -117,9 +127,9 @@ do
   POST_COL=$(( ${COL}+2 ))
   if [ ${IDX} -eq 0 ]
   then
-    SUFFIX+=" '${INPUT_FILE}' using ${PRE_COL}:$COL:${POST_COL}:xtic(1) ti '${MACHINES[${IDX}]}' linecolor rgb \"${COLORS[${IDX}]}\" "
+    SUFFIX+=" '${INPUT_FILE}' using ${PRE_COL}:$COL:${POST_COL}:xtic(1) ti '${MACHINES[${IDX}]}' linecolor rgb \"${DOSARRAY_HOST_COLORS[${IDX}]}\" "
   else
-    SUFFIX+=" , '' using ${PRE_COL}:$COL:${POST_COL} ti '${MACHINES[${IDX}]}' lt 1 lc rgb \"${COLORS[${IDX}]}\" "
+    SUFFIX+=" , '' using ${PRE_COL}:$COL:${POST_COL} ti '${MACHINES[${IDX}]}' lt 1 lc rgb \"${DOSARRAY_HOST_COLORS[${IDX}]}\" "
   fi
   COL=$(( ${COL} + 3))
 done
