@@ -14,8 +14,8 @@ The first and foremost step is to set the DoSarray Script directory. Every scrip
 export DOSARRAY_SCRIPT_DIR=<path-to-dosarray-scripts>
 ```
 
-Next, we need to configure DoSarray to simulate experiments using the available resources (physical hosts). That involves setting the following variables in `dosarray_config.sh`
-* `DOSARRAY_PHYSICAL_HOSTS_PRIV`: Populate this list with the IP addresses of all the physical hosts. Please ensure the target physical host is the first element of the list
+Next, we need to configure DoSarray to simulate experiments using the available resources (physical hosts). That involves setting the following variables in `config/dosarray_config.sh`
+* `DOSARRAY_PHYSICAL_HOSTS_PRIV`: Populate this list with the IP addresses of all the physical hosts.
 
 * `DOSARRAY_VIRT_NET_SUFFIX`: Populate this list with the last octet of every IP address in `DOSARRAY_PHYSICAL_HOSTS_PRIV`, in the same order as they appear in there.
 
@@ -35,7 +35,7 @@ Next, we need to configure DoSarray to simulate experiments using the available 
 
 * `DOSARRAY_MIN_VIP` : This specifies the last index for a container and its calculated for based on the previous two values.
 
-* `DOSARRAY_CONTAINER_PREFIX`: This is a string specifying the prefix for a container name.
+* `DOSARRAY_CONTAINER_PREFIX`: This is a string specifying the prefix for a container name. Please ensure that container prefix is not a prefix for any physical host name as it may intefere with the collection of container logs at the end of the experiment.
 
 * `DOSARRAY_LOG_NAME_PREFIX`: Each container log is the same as the container name, which calls for the same container prefix. This could be changed to suit your needs.
 
@@ -57,29 +57,35 @@ a message 'iptables: No chain/target/match by that name.' indicating the the
 unnecessary routes have already been deleted.
 
 ```
+<<<<<<< HEAD
 ./dosarray_configure_networking.sh [-r] <physical-host-name>
+=======
+./src/dosarray_configure_network [-r] <physical-host-name>
+>>>>>>> Updating doc with latest changes
 ```
 
 After configuring the network, the next step is creating and starting docker containers in each of the physical hosts except the target. The following invokation of scripts creates containers in each of these host based on the values set in `dosarray_config.sh`
 
 ```
-./dosarray_create_containers.sh
-./dosarray_start_containers.sh
+./src/dosarray_create_containers.sh
+./src/dosarray_start_containers.sh
 ```
 
 Once we have the configuration in place, simulating the a DoS attack is just a few steps away. For starters, DoSarray also has a sample experiment which goes through the entire lifecycle of the experiment, starting from measurements before, after and during the attack and ending with graphing the data gathered during the experiment. To run the example experiment scirpt make sure to change to `RESULT_DIR` to store the location of the generated results.
 
 ```
-./dosarray_slowloris_experiment.sh
+./experiments/dosarray_experiment_example.sh
 ```
 
-This script simulates the slowloris attack on apache and compiles all the container logs, .stdout and .stderr logs and the final graph generated from the availability data in the results directory. It also collects load measurements on each physical host and plots them as column charts. An elaborate discussion on load graphing is included in the next section.This script is a good starting point for first-time users and we encourage you to adapt this script to suit your specific needs. For instance, `dosarray_setup_http_experiment.sh` can be further modified to configure various parameters such as type of server and attack, duration of attack and experiment and various measurement commmands.
+This script simulates the slowloris attack on apache and compiles all the container logs, .stdout and .stderr logs and the final graph generated from the availability data in the results directory. It also collects load measurements on each physical host and plots them as column charts. An elaborate discussion on load graphing is included in the next section.This script is a good starting point for first-time users and we encourage you to adapt this script to suit your specific needs. For instance, `src/dosarray_setup_http_experiment.sh` can be further modified to configure various parameters such as type of server and attack, duration of attack and experiment and various measurement commmands.
+
+Another useful feature of DoSArray is the ability to run the attack, extract logs and generate graphs independently. When `src/dosarray_run_http_experiment` is invoked without any parameter, it runs the experiment and exits after extracting all the container logs. These logs can later be used to generate graphs using `experiments/dosarray_experiment_graphing.sh`. Alternately, we can also run the entire workflow comprising of the attack, logs extraction and graphing using `src/dosarray_run_http_experiment -g`. Note the use of '-g' to control the extent of the experiment run. 
 
 Once we have gathered all our logs and results, DoSarray also facilitates clearing out the docker containers which we created for conducting the experiment. The following scripts stop and delete the containers we created in each phyical host except for the target.
 
 ```
-./dosarray_stop_containers.sh
-./dosarray_delete_containers.sh
+./src/dosarray_stop_containers.sh
+./src/dosarray_delete_containers.sh
 ```
 
 ## Load graphing
