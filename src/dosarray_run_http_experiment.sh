@@ -16,7 +16,7 @@ while getopts ":g" opt; do
       GRAPHING=true
       ;;
     ? )
-      echo "Usage: ./dosarray_run_http_experiment [-g] <server-choice> <attack-choice>"
+      echo "Usage: ./dosarray_run_http_experiment [-g] <target-choice> <attack-choice>"
       exit 1
       ;;
   esac
