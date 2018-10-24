@@ -33,6 +33,10 @@ elif [ ${#DOSARRAY_HOST_INTERFACE_MAP[@]} -ne ${#DOSARRAY_VIRT_NETS[@]} ]
 then
   printf "Check dosarray_config.sh for errors \nDOSARRAY_HOST_INTERFACE_MAP=${#DOSARRAY_HOST_INTERFACE_MAP[@]} elements \nDOSARRAY_VIRT_NETS=${#DOSARRAY_VIRT_NETS[@]} elements\n" >&2
   exit 1
+elif [ ${#DOSARRAY_VIRT_NETS[@]} -ne ${#DOSARRAY_HOST_COLORS[@]} ]
+then
+  printf "Check dosarray_config.sh for errors \nDOSARRAY_VIRT_NETS=${#DOSARRAY_VIRT_NETS[@]} elements \nDOSARRAY_HOST_COLORS=${#DOSARRAY_HOST_COLORS[@]} elements\n" >&2
+  exit 1
 fi
 
 # Check if target index is within allowed range
