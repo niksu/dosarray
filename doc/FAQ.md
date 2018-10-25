@@ -12,7 +12,7 @@ on those machines.
 
 **2. My servers have single NICs and they're assigned public IP addresses. Do I need a separate NIC to set up the private network between them for DoSarray?**
 
-No. You can assign additional IPs to that NIC. On Ubuntu this would be done as follows:
+No. You can assign additional IPs to that NIC. On Ubuntu (tested on v16.04) this could be done as follows:
 ```
 $ sudo vim /etc/network/interfaces
 ```
