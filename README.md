@@ -29,6 +29,7 @@ Please see our [usage guide](doc/USAGE.md), which explains how to set the two
 levels of configuration: [DoSarray-wide](config/dosarray_config.sh) and
 experiment-specific (such as in the
 [example](experiments/dosarray_slowloris_experiment.sh) above).
+We also have an [FAQ](doc/FAQ.md).
 
 ## Multi-run experiments
 Multiple runs of an experiment can be made by giving an additional
