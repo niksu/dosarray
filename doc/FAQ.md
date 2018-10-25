@@ -1,6 +1,6 @@
 # FAQ
 
-1. I run a cluster. Can I exclude DoSarray from running on some machines?
+**1. I run a cluster. Can I exclude DoSarray from running on some machines?**
 
 Yes. Remove those machines from the appropriate fields in
 [dosarray_config.sh](../config/dosarray_config.sh), then restart images
@@ -10,7 +10,7 @@ followed by `src/dosarray_create_containers.sh` then
 affected machines if DoSarray is the only Docker-using system that's running
 on those machines.
 
-2. My servers have single NICs and they're assigned public IP addresses. Do I need a separate NIC to set up the private network between them for DoSarray?
+**2. My servers have single NICs and they're assigned public IP addresses. Do I need a separate NIC to set up the private network between them for DoSarray?**
 
 No. You can assign additional IPs to that NIC. On Ubuntu this would be done as follows:
 ```
