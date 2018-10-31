@@ -7,8 +7,17 @@
 export DOSARRAY_VERSION="0.3"
 export DOSARRAY_IMAGE="dosarray_image_v0.2a"
 
+# NOTE we only include cluster machines that participate in the experiment in
+#      one form or another. We exclude machines that are not to be touched
+#      by DoSarray. We do include machines running "targets" however -- DoSarray
+#      won't start containers on these machines, but it will poll their load.
 export DOSARRAY_PHYSICAL_HOSTS_PRIV=( 192.168.0.2 192.168.0.3 192.168.0.4 192.168.0.5 192.168.0.6 192.168.0.7 192.168.0.8 192.168.0.9 )
 export DOSARRAY_VIRT_NET_SUFFIX=( 2 3 4 5 6 7 8 9 )
+# NOTE names in DOSARRAY_PHYSICAL_HOSTS_PUB are "public" only as far as the
+#      access node is concerned. If there's no access node then they're
+#      expected to be public (i.e., directly accessible from the monitor),
+#      otherwise we need to hop through the access node. There may a sequence
+#      of access nodes we need to use, in general.
 export DOSARRAY_PHYSICAL_HOSTS_PUB=( dedos01 dedos02 dedos03 dedos04 dedos05 dedos06 dedos07 dedos08 )
 export DOSARRAY_HOST_INTERFACE_MAP=( em1 em1 em1 em1 em1 em1 em1 em1 )
 export DOSARRAY_VIRT_NET_PREFIX="192.168."
