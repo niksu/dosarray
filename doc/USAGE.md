@@ -60,7 +60,6 @@ unnecessary routes have already been deleted.
 
 ```
 ./src/dosarray_configure_network [-r] <physical-host-name>
-./src/dosarray_configure_network [-r] <physical-host-name>
 ```
 
 After configuring the network, the next step is creating and starting docker containers in each of the physical hosts except the target. The following invokation of scripts creates containers in each of these host based on the values set in `dosarray_config.sh`
