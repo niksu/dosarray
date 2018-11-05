@@ -31,18 +31,18 @@ export INTERVAL_BETWEEN_LOAD_POLLS=5
 # NOTE this example can only have one attack at a time -- edit "dosarray_http_experiment" to mix attacks.
 export ATTACKERS="is_attacker() { \n\
     grep -F -q -x \"\$1\" <<EOF\n\
-c3.2\n\
-c4.3\n\
-c5.4\n\
-c6.5\n\
-c7.6\n\
-NOc8.7\n\
-NOc6.4\n\
-NOc7.4\n\
-NOc8.4\n\
-NOc3.6\n\
-NOc4.2\n\
-NOc5.3\n\
+${DOSARRAY_CONTAINER_PREFIX}3.2\n\
+${DOSARRAY_CONTAINER_PREFIX}4.3\n\
+${DOSARRAY_CONTAINER_PREFIX}5.4\n\
+${DOSARRAY_CONTAINER_PREFIX}6.5\n\
+${DOSARRAY_CONTAINER_PREFIX}7.6\n\
+NO${DOSARRAY_CONTAINER_PREFIX}8.7\n\
+NO${DOSARRAY_CONTAINER_PREFIX}6.4\n\
+NO${DOSARRAY_CONTAINER_PREFIX}7.4\n\
+NO${DOSARRAY_CONTAINER_PREFIX}8.4\n\
+NO${DOSARRAY_CONTAINER_PREFIX}3.6\n\
+NO${DOSARRAY_CONTAINER_PREFIX}4.2\n\
+NO${DOSARRAY_CONTAINER_PREFIX}5.3\n\
 EOF\n\
 }\n"
 

@@ -77,7 +77,7 @@ function dosarray_http_experiment() {
     dosarray_manifest ${MANIFEST}
 
     TITLE="$(target_str ${TARGET}), $(attack_str ${ATTACK}), ${EXPERIMENT_SET}" \
-    ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_http_experiment.sh ${TARGET} ${ATTACK} \
+    ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_http_experiment.sh -g ${TARGET} ${ATTACK} \
     > ${STD_OUT} \
     2> ${STD_ERR}
 
