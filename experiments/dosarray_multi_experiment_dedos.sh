@@ -17,7 +17,7 @@ then
   echo "Need to configure DoSarray -- could not find dosarray_config.sh at \$DOSARRAY_SCRIPT_DIR/config (${DOSARRAY_SCRIPT_DIR}/config)" >&2
   exit 1
 fi
-source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
+
 
 source "${DOSARRAY_SCRIPT_DIR}/experiments/dosarray_experiment.sh"
 
@@ -46,8 +46,8 @@ do
   # FIXME currently target is started manually
   for ATTACK in "${ATTACKS[@]}"
   do
-    DESTINATION_DIR="$(pwd)/example_experiment_set_${TARGET}_${ATTACK}_${NUM_ATTACKERS}attackers"
-    dosarray_http_experiment ${TARGET} ${ATTACK} "${EXPERIMENT_DESC}" ${DESTINATION_DIR}
+    DOSARRAY_DESTINATION_DIR="$(pwd)/example_experiment_set_${TARGET}_${ATTACK}_${NUM_ATTACKERS}attackers"
+    dosarray_http_experiment ${TARGET} ${ATTACK} "${EXPERIMENT_DESC}" ${DOSARRAY_DESTINATION_DIR}
     # FIXME EXPERIMENT_RESET_CMD not being used
 #    dosarray_execute_on "${HOST_NAME}" "${EXPERIMENT_RESET_CMD}"
     sleep ${INTER_EXPERIMENT_GAP}

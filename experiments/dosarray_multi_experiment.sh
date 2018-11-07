@@ -62,8 +62,8 @@ do
   # FIXME currently target is started manually
   for ATTACK in "${ATTACKS[@]}"
   do
-    DESTINATION_DIR="$(pwd)/example_experiment_set_${TARGET}_${ATTACK}"
-    dosarray_http_experiment ${TARGET} ${ATTACK} "${EXPERIMENT_DESC}" ${DESTINATION_DIR}
+    DOSARRAY_DESTINATION_DIR="$(pwd)/example_experiment_set_${TARGET}_${ATTACK}"
+    dosarray_http_experiment ${TARGET} ${ATTACK} "${EXPERIMENT_DESC}" ${DOSARRAY_DESTINATION_DIR}
     # FIXME EXPERIMENT_RESET_CMD should depend on TARGET -- in this example we only have one.
     dosarray_execute_on "${HOST_NAME}" "${EXPERIMENT_RESET_CMD}"
     sleep ${INTER_EXPERIMENT_GAP}

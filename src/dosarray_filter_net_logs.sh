@@ -13,9 +13,9 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
-if [ -z "${DESTINATION_DIR}" ]
+if [ -z "${DOSARRAY_DESTINATION_DIR}" ]
 then
-  echo "\$DESTINATION_DIR needs to be defined" >&2
+  echo "\$DOSARRAY_DESTINATION_DIR needs to be defined" >&2
   exit 2
 fi
 
@@ -23,7 +23,7 @@ for (( x=0 ; x < ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]}; x++ ))
 do
   HOSTNAME=${DOSARRAY_PHYSICAL_HOSTS_PUB[$x]}
   INTERFACE=${DOSARRAY_HOST_INTERFACE_MAP[$x]}
-  grep "${INTERFACE}" ${DESTINATION_DIR}/${HOSTNAME}_net.log > ${DESTINATION_DIR}/${HOSTNAME}_filtered_net.log
+  grep "${INTERFACE}" ${DOSARRAY_DESTINATION_DIR}/${HOSTNAME}_net.log > ${DOSARRAY_DESTINATION_DIR}/${HOSTNAME}_filtered_net.log
 done
 
 echo 'Done'

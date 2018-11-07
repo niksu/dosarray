@@ -28,18 +28,18 @@ source ${DOSARRAY_SCRIPT_DIR}/src/dosarray_http_experiment_options.sh
 SERVER_CHOICE=$1
 ATTACK_CHOICE=$2
 
-if [ -z "${DESTINATION_DIR}" ]
+if [ -z "${DOSARRAY_DESTINATION_DIR}" ]
 then
-  echo "\$DESTINATION_DIR needs to be defined" >&2
+  echo "\$DOSARRAY_DESTINATION_DIR needs to be defined" >&2
   exit 2
 fi
 
-if [ -d "${DESTINATION_DIR}" ]
+if [ -d "${DOSARRAY_DESTINATION_DIR}" ]
 then
-  echo "\$DESTINATION_DIR (${DESTINATION_DIR}) already exists" >&2
+  echo "\$DOSARRAY_DESTINATION_DIR (${DOSARRAY_DESTINATION_DIR}) already exists" >&2
   exit 2
 fi
-mkdir -p ${DESTINATION_DIR}
+mkdir -p ${DOSARRAY_DESTINATION_DIR}
 
 if [ -z "${TITLE}" ]
 then
@@ -154,13 +154,13 @@ source ${DOSARRAY_SCRIPT_DIR}/src/dosarray_setup_http_experiment.sh
 
 CUR_DIR=`pwd`
 
-cd ${DESTINATION_DIR}
+cd ${DOSARRAY_DESTINATION_DIR}
 
 LOG_COUNT=$(ls ${DOSARRAY_LOG_NAME_PREFIX}*.log | wc -l)
 
 if [ "${LOG_COUNT}" -gt "0" ]
 then
-  echo "There already appear to be logs in ${DESTINATION_DIR}" >&2
+  echo "There already appear to be logs in ${DOSARRAY_DESTINATION_DIR}" >&2
   exit 2
 fi
 
@@ -172,7 +172,7 @@ echo "LOG_COUNT=${LOG_COUNT} (Does this look alright?)"
 if [ ${GRAPHING} ]
 then
   echo "Running graphing"
-  ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_experiment_graphing.sh ${DESTINATION_DIR}
+  ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_experiment_graphing.sh ${DOSARRAY_DESTINATION_DIR}
 fi
 
 cd ${CUR_DIR}
