@@ -17,6 +17,7 @@ then
   echo "Need to configure DoSarray -- could not find dosarray_config.sh at \$DOSARRAY_SCRIPT_DIR/config (${DOSARRAY_SCRIPT_DIR}/config)" >&2
   exit 1
 fi
+source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
 source "${DOSARRAY_SCRIPT_DIR}/experiments/dosarray_experiment.sh"
 
