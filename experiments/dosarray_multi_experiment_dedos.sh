@@ -18,7 +18,6 @@ then
   exit 1
 fi
 
-
 source "${DOSARRAY_SCRIPT_DIR}/experiments/dosarray_experiment.sh"
 
 export DOSARRAY_EXPERIMENT_DURATION=165

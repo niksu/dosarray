@@ -1,4 +1,4 @@
-
+#/bin/sh -e
 # Example of using DoSarray
 # Nik Sultana, February 2018, UPenn
 #
