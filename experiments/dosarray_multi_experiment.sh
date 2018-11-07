@@ -24,7 +24,7 @@ source "${DOSARRAY_SCRIPT_DIR}/experiments/dosarray_experiment.sh"
 export DOSARRAY_EXPERIMENT_DURATION=65
 export DOSARRAY_ATTACK_STARTS_AT=10
 export DOSARRAY_ATTACK_LASTS_FOR=20
-export INTERVAL_BETWEEN_LOAD_POLLS=5
+export DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS=5
 
 # We run an attack script in these containers.
 # NOTE don't include whitepace before newline.
