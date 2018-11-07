@@ -38,7 +38,7 @@ echo \n\
 " | dosarray_execute_on "${HOST_NAME}" "" &
 done
 
-DOUBLE_EXPERIMENT_DURATION=$(echo "2 * ${EXPERIMENT_DURATION}" | bc -l)
+DOUBLE_EXPERIMENT_DURATION=$(echo "2 * ${DOSARRAY_EXPERIMENT_DURATION}" | bc -l)
 sleep ${DOUBLE_EXPERIMENT_DURATION}
 
 echo "Done"

@@ -119,31 +119,31 @@ else
 fi
 
 # Units are "seconds"
-[ -z "${EXPERIMENT_DURATION}" ] && EXPERIMENT_DURATION=60
+[ -z "${DOSARRAY_EXPERIMENT_DURATION}" ] && DOSARRAY_EXPERIMENT_DURATION=60
 # Number of instances on each machine
 [ -z "${DOSARRAY_VIRT_INSTANCES}" ] && DOSARRAY_VIRT_INSTANCES=40
 
 # All units are "seconds"
-[ -z "${ATTACK_STARTS_AT}" ] && ATTACK_STARTS_AT=10
-# NOTE The attack can end before $ATTACK_LASTS_FOR has elapsed -- it depends on
+[ -z "${DOSARRAY_ATTACK_STARTS_AT}" ] && DOSARRAY_ATTACK_STARTS_AT=10
+# NOTE The attack can end before $DOSARRAY_ATTACK_LASTS_FOR has elapsed -- it depends on
 #      the attack script -- but the attack cannot last longer than
-#      $ATTACK_LASTS_FOR.
-[ -z "${ATTACK_LASTS_FOR}" ] && ATTACK_LASTS_FOR=20
+#      $DOSARRAY_ATTACK_LASTS_FOR.
+[ -z "${DOSARRAY_ATTACK_LASTS_FOR}" ] && DOSARRAY_ATTACK_LASTS_FOR=20
 
 
-echo "EXPERIMENT_DURATION=${EXPERIMENT_DURATION}"
+echo "DOSARRAY_EXPERIMENT_DURATION=${DOSARRAY_EXPERIMENT_DURATION}"
 echo "DOSARRAY_VIRT_INSTANCES=${DOSARRAY_VIRT_INSTANCES}"
-echo "ATTACK_STARTS_AT=${ATTACK_STARTS_AT}"
-echo "ATTACK_LASTS_FOR=${ATTACK_LASTS_FOR}"
+echo "DOSARRAY_ATTACK_STARTS_AT=${DOSARRAY_ATTACK_STARTS_AT}"
+echo "DOSARRAY_ATTACK_LASTS_FOR=${DOSARRAY_ATTACK_LASTS_FOR}"
 
 # check that an attack duration lies between experiment duration
-if [ ${ATTACK_STARTS_AT} -gt ${EXPERIMENT_DURATION} ]
+if [ ${DOSARRAY_ATTACK_STARTS_AT} -gt ${DOSARRAY_EXPERIMENT_DURATION} ]
 then
-    printf "Attack must start before experiment ends\nAttack starts at=${ATTACK_STARTS_AT}\nExperiment duration=${EXPERIMENT_DURATION}" >&2
+    printf "Attack must start before experiment ends\nAttack starts at=${DOSARRAY_ATTACK_STARTS_AT}\nExperiment duration=${DOSARRAY_EXPERIMENT_DURATION}" >&2
     exit 1
-elif [ $(( ${ATTACK_STARTS_AT} + ${ATTACK_LASTS_FOR} )) -gt ${EXPERIMENT_DURATION} ]
+elif [ $(( ${DOSARRAY_ATTACK_STARTS_AT} + ${DOSARRAY_ATTACK_LASTS_FOR} )) -gt ${DOSARRAY_EXPERIMENT_DURATION} ]
 then
-    printf "Attack lasts longer than experiment duration \nAttack ends at=$(( ${ATTACK_STARTS_AT} + ${ATTACK_LASTS_FOR} ))\nExperiment Duration=${EXPERIMENT_DURATION}" >&2
+    printf "Attack lasts longer than experiment duration \nAttack ends at=$(( ${DOSARRAY_ATTACK_STARTS_AT} + ${DOSARRAY_ATTACK_LASTS_FOR} ))\nExperiment Duration=${DOSARRAY_EXPERIMENT_DURATION}" >&2
     exit 1
 fi
 

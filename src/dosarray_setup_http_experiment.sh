@@ -27,9 +27,9 @@ then
   echo "Need to define \$ATTACK" >&2
   exit 1
 fi
-if [ -z "${EXPERIMENT_DURATION}" ]
+if [ -z "${DOSARRAY_EXPERIMENT_DURATION}" ]
 then
-  echo "Need to define \$EXPERIMENT_DURATION" >&2
+  echo "Need to define \$DOSARRAY_EXPERIMENT_DURATION" >&2
   exit 1
 fi
 if [ -z "${DOSARRAY_VIRT_INSTANCES}" ]
@@ -37,26 +37,26 @@ then
   echo "Need to define \$DOSARRAY_VIRT_INSTANCES" >&2
   exit 1
 fi
-if [ -z "${ATTACK_STARTS_AT}" ]
+if [ -z "${DOSARRAY_ATTACK_STARTS_AT}" ]
 then
-  echo "Need to define \$ATTACK_STARTS_AT" >&2
+  echo "Need to define \$DOSARRAY_ATTACK_STARTS_AT" >&2
   exit 1
 fi
-if [ -z "${ATTACK_LASTS_FOR}" ]
+if [ -z "${DOSARRAY_ATTACK_LASTS_FOR}" ]
 then
-  echo "Need to define \$ATTACK_LASTS_FOR" >&2
+  echo "Need to define \$DOSARRAY_ATTACK_LASTS_FOR" >&2
   exit 1
 fi
 
 if [ "${SERVER_PORT}" == "${PORT_Nginx}" ]
 then
-  ATTACK_ACTUALLY_LASTS_FOR=$(echo "1 * ${ATTACK_LASTS_FOR}" | bc -l)  # NOTE use for nginx
+  ATTACK_ACTUALLY_LASTS_FOR=$(echo "1 * ${DOSARRAY_ATTACK_LASTS_FOR}" | bc -l)  # NOTE use for nginx
 else
-  ATTACK_ACTUALLY_LASTS_FOR=$(echo "2 * ${ATTACK_LASTS_FOR}" | bc -l)
+  ATTACK_ACTUALLY_LASTS_FOR=$(echo "2 * ${DOSARRAY_ATTACK_LASTS_FOR}" | bc -l)
 fi
 
-ATTACK_END_TIME=$(echo "${ATTACK_STARTS_AT} + ${ATTACK_ACTUALLY_LASTS_FOR}" | bc -l)
-POST_ATTACK_PERIOD=$(echo "${EXPERIMENT_DURATION} - (${ATTACK_END_TIME} - ${ATTACK_LASTS_FOR})" | bc -l)
+ATTACK_END_TIME=$(echo "${DOSARRAY_ATTACK_STARTS_AT} + ${ATTACK_ACTUALLY_LASTS_FOR}" | bc -l)
+POST_ATTACK_PERIOD=$(echo "${DOSARRAY_EXPERIMENT_DURATION} - (${ATTACK_END_TIME} - ${DOSARRAY_ATTACK_LASTS_FOR})" | bc -l)
 
 
 if [ -z "${ATTACKERS}" ]
@@ -68,9 +68,9 @@ fi
 if [ -z "${DOSARRAY_HTTP_SSL}" ]
 then
 # NOTE could also us parameters "-G -s -S" for httping
-  MEASUREMENT_COMMAND="httping -g http://${SERVER_IP} -p ${SERVER_PORT} -i 1 -t 1 -c ${EXPERIMENT_DURATION} -s"
+  MEASUREMENT_COMMAND="httping -g http://${SERVER_IP} -p ${SERVER_PORT} -i 1 -t 1 -c ${DOSARRAY_EXPERIMENT_DURATION} -s"
 else
-  MEASUREMENT_COMMAND="httping -l -g https://${SERVER_IP} -p ${SERVER_PORT} -i 1 -t 1 -c ${EXPERIMENT_DURATION} -s"
+  MEASUREMENT_COMMAND="httping -l -g https://${SERVER_IP} -p ${SERVER_PORT} -i 1 -t 1 -c ${DOSARRAY_EXPERIMENT_DURATION} -s"
 fi
 STOP_MEASUREMENT_COMMAND="killall httping"
 

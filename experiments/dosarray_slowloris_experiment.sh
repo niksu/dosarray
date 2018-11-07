@@ -1,4 +1,4 @@
-#/bin/sh -e
+
 # Example of using DoSarray
 # Nik Sultana, February 2018, UPenn
 #
@@ -11,9 +11,9 @@
 
 source "${DOSARRAY_SCRIPT_DIR}/experiments/dosarray_experiment.sh"
 
-export EXPERIMENT_DURATION=65
-export ATTACK_STARTS_AT=10
-export ATTACK_LASTS_FOR=20
+export DOSARRAY_EXPERIMENT_DURATION=65
+export DOSARRAY_ATTACK_STARTS_AT=10
+export DOSARRAY_ATTACK_LASTS_FOR=20
 export INTERVAL_BETWEEN_LOAD_POLLS=5
 
 # NOTE uncomment this to run the attack over SSL.
