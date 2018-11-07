@@ -131,7 +131,7 @@ function dosarray_evenly_distribute_attackers() {
     exit 1
   fi
 
-  FN='export ATTACKERS="is_attacker() { \ngrep -F -q -x \"\$1\" <<EOF\n'
+  FN='export DOSARRAY_ATTACKERS="is_attacker() { \ngrep -F -q -x \"\$1\" <<EOF\n'
   VIRT=${DOSARRAY_MIN_VIP}
   while [ "${NO_ATTACKERS}" -gt 0 ]
   do

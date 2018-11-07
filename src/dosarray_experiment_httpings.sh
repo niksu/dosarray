@@ -26,7 +26,7 @@ do
   echo "Starting httpings in $HOST_NAME (${HOST_IP})"
 
   printf "\
-${ATTACKERS} \n\
+${DOSARRAY_ATTACKERS} \n\
 for CURRENT_CONTAINER_IP in \$(seq $DOSARRAY_MIN_VIP $DOSARRAY_MAX_VIP) \n\
 do \n\
   CONTAINER_SUFFIX=${CURRENT_HOST_IP}.\${CURRENT_CONTAINER_IP} \n\

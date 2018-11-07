@@ -59,9 +59,9 @@ ATTACK_END_TIME=$(echo "${DOSARRAY_ATTACK_STARTS_AT} + ${ATTACK_ACTUALLY_LASTS_F
 POST_ATTACK_PERIOD=$(echo "${DOSARRAY_EXPERIMENT_DURATION} - (${ATTACK_END_TIME} - ${DOSARRAY_ATTACK_LASTS_FOR})" | bc -l)
 
 
-if [ -z "${ATTACKERS}" ]
+if [ -z "${DOSARRAY_ATTACKERS}" ]
 then
-  echo "Need to define \$ATTACKERS" >&2
+  echo "Need to define \$DOSARRAY_ATTACKERS" >&2
   exit 1
 fi
 

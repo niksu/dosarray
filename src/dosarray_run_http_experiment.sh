@@ -47,11 +47,11 @@ then
   exit 2
 fi
 
-if [ -z "${ATTACKERS}" ]
+if [ -z "${DOSARRAY_ATTACKERS}" ]
 then
   echo "WARNING! This experiment does not involve any attackers." >&2
 fi
-echo "\$ATTACKERS: ${ATTACKERS}"
+echo "\$DOSARRAY_ATTACKERS: ${DOSARRAY_ATTACKERS}"
 
 if [ "${SERVER_CHOICE}" == "nginx" ]
 then
@@ -108,8 +108,8 @@ then
   ATTACK="${ATTACK_HULK}"
 elif [ "${ATTACK_CHOICE}" == "none" ]
 then
-  ATTACK="${ATTACK_Slowloris}" # The actual attack doesn't matter since $ATTACKERS is set to empty predicate.
-ATTACKERS="is_attacker() { \n\
+  ATTACK="${ATTACK_Slowloris}" # The actual attack doesn't matter since $DOSARRAY_ATTACKERS is set to empty predicate.
+DOSARRAY_ATTACKERS="is_attacker() { \n\
     grep -F -q -x \"\$1\" <<EOF\n\
 EOF\n\
 }\n"

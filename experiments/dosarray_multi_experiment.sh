@@ -29,7 +29,7 @@ export DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS=5
 # We run an attack script in these containers.
 # NOTE don't include whitepace before newline.
 # NOTE this example can only have one attack at a time -- edit "dosarray_http_experiment" to mix attacks.
-export ATTACKERS="is_attacker() { \n\
+export DOSARRAY_ATTACKERS="is_attacker() { \n\
     grep -F -q -x \"\$1\" <<EOF\n\
 ${DOSARRAY_CONTAINER_PREFIX}3.2\n\
 ${DOSARRAY_CONTAINER_PREFIX}4.3\n\
