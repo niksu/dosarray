@@ -68,7 +68,7 @@ do
     VIRTUAL_NETWORK="${DOSARRAY_VIRT_NETS[${IDX}]}0"
     if [ ${ADD_ROUTES} ]
     then
-      CMD="${CMD} && sudo route add -net ${VIRTUAL_NETWORK} netmask 255.255.255.0 gw ${HOST_IP}"
+      CMD="${CMD} ; sudo route add -net ${VIRTUAL_NETWORK} netmask 255.255.255.0 gw ${HOST_IP}"
     else
       CMD="${CMD}"
     fi
@@ -79,4 +79,4 @@ echo "Running CMD=${CMD}"
 echo
 echo "Please enter sudo password for ${TARGET_PHYSICAL_HOST} when prompted"
 
-dosarray_execute_on "${TARGET_PHYSICAL_HOST}" "-t ${CMD}"
+dosarray_execute_on "${TARGET_PHYSICAL_HOST}" "${CMD}"
