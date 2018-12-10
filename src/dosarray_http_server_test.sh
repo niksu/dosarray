@@ -58,6 +58,7 @@ else
 fi
 
 RESULT=$(dosarray_execute_on "${HOST_NAME}" "${CMD}")
+RESULT=${RESULT/Connection to * closed*/}
 
 echo $RESULT
 
