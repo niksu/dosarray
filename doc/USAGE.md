@@ -49,6 +49,8 @@ Next, we need to configure DoSarray to simulate experiments using the available 
 * `DOSARRAY_INCLUDE_STDOUTERR`: Setting this to any value (e.g., "1") will generate a file containing the stdout and stderr output that takes place during the experiment. This is disabled by default but it can be useful to activate during testing or to make the experiments more reproducible.
 
 ## Using DoSarray
+
+### Configuring network
 An important consideration in DoSarray is to achieve address diversity in order
 to simulate larger networks in these experiments. This involves configuring
 each host in the physical network with the network info of the virtual network
@@ -62,6 +64,10 @@ unnecessary routes have already been deleted.
 ./src/dosarray_configure_networking.sh [-r] <physical-host-name>
 ```
 
+NOTE: Configure network on the target machine with the -r option to route packets correctly 
+Applied changes to iptables can be viewed by running `sudo iptable -S`. Similarly, the newly added routes can be viewed by running `ip route show`
+
+### Container setup
 After configuring the network, the next step is creating and starting docker containers in each of the physical hosts except the target. The following invokation of scripts creates containers in each of these host based on the values set in `dosarray_config.sh`
 
 ```
@@ -69,6 +75,7 @@ After configuring the network, the next step is creating and starting docker con
 ./src/dosarray_start_containers.sh
 ```
 
+### Running the example experiment
 Once we have the configuration in place, simulating the a DoS attack is just a few steps away. For starters, DoSarray also has a sample experiment which goes through the entire lifecycle of the experiment, starting from measurements before, after and during the attack and ending with graphing the data gathered during the experiment. To run the example experiment scirpt make sure to change to `RESULT_DIR` to store the location of the generated results.
 
 ```
@@ -79,6 +86,7 @@ This script simulates the slowloris attack on apache and compiles all the contai
 
 Another useful feature of DoSArray is the ability to run the attack, extract logs and generate graphs independently. When `src/dosarray_run_http_experiment` is invoked without any parameter, it runs the experiment and exits after extracting all the container logs. These logs can later be used to generate graphs using `experiments/dosarray_experiment_graphing.sh`. Alternately, we can also run the entire workflow comprising of the attack, logs extraction and graphing using `src/dosarray_run_http_experiment -g`. Note the use of '-g' to control the extent of the experiment run. 
 
+### Container removal
 Once we have gathered all our logs and results, DoSarray also facilitates clearing out the docker containers which we created for conducting the experiment. The following scripts stop and delete the containers we created in each phyical host except for the target.
 
 ```
