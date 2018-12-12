@@ -31,7 +31,17 @@ fi
 
 echo "DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS=${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}"
 
+<<<<<<< HEAD
 if [ -n "${DOSARRAY_EXPERIMENT_DURATION}" ]
+=======
+if [ -z ${EXPERIMENT_DURATION} ]
+then
+  echo "Need to define \$EXPERIMENT_DURATION" >&2
+  exit 1
+fi
+
+if [ -n "${EXPERIMENT_DURATION}" ]
+>>>>>>> Preliminary changes to load measurement
 then
   echo "DOSARRAY_EXPERIMENT_DURATION=${DOSARRAY_EXPERIMENT_DURATION}"
   NUM_ROUNDS=$(echo "${DOSARRAY_EXPERIMENT_DURATION} / ${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}" | bc -l)
@@ -47,31 +57,44 @@ echo "NUM_ROUNDS=${NUM_ROUNDS}"
 
 function logname_of_load() {
   HOST_NAME="$1"
+<<<<<<< HEAD
   echo "${DOSARRAY_DESTINATION_DIR}/${HOST_NAME}_load.log"
+=======
+  echo "${HOST_NAME}_load.log"
+>>>>>>> Preliminary changes to load measurement
 }
 
 function logname_of_mem() {
   HOST_NAME="$1"
+<<<<<<< HEAD
   echo "${DOSARRAY_DESTINATION_DIR}/${HOST_NAME}_mem.log"
+=======
+  echo "${HOST_NAME}_mem.log"
+>>>>>>> Preliminary changes to load measurement
 }
 
 function logname_of_net() {
   HOST_NAME="$1"
+<<<<<<< HEAD
   echo "${DOSARRAY_DESTINATION_DIR}/${HOST_NAME}_net.log"
+=======
+  echo "${HOST_NAME}_net.log"
+>>>>>>> Preliminary changes to load measurement
 }
 
 echo "Number of hosts: ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
+echo `pwd` >&2
+LOAD_MEASURE_SCRIPT="dosarray_measure_load.sh"
 
 for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
 do
-  echo "Clearing logs of ${HOST_NAME}"
-  rm -f $(logname_of_load ${HOST_NAME})
-  rm -f $(logname_of_mem ${HOST_NAME})
-  rm -f $(logname_of_net ${HOST_NAME})
+  echo "Copying ${LOAD_MEASURE_SCRIPT} to ${HOST_NAME}"
+  dosarray_scp_to ${HOST_NAME} src/${LOAD_MEASURE_SCRIPT} ${DOSARRAY_LOG_PATH_PREFIX}
 done
 
-for ROUND in `seq 0 ${NUM_ROUNDS}`
+for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
 do
+<<<<<<< HEAD
   for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
   do
     echo "Logging round ${ROUND} of ${HOST_NAME}"
@@ -95,6 +118,22 @@ do
 done
 
 sleep ${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}
+=======
+  echo "Executing ${LOAD_MEASURE_SCRIPT} on ${HOST_NAME}"
+  dosarray_execute_on ${HOST_NAME} "\"nohup ./${LOAD_MEASURE_SCRIPT} ${INTERVAL_BETWEEN_LOAD_POLLS} ${EXPERIMENT_DURATION} ${NUM_ROUNDS} &\""
+done
+
+sleep ${EXPERIMENT_DURATION}
+
+for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
+do
+  echo "Copying ${LOAD_MEASURE_SCRIPT} to ${HOST_NAME}"
+  dosarray_scp_from ${HOST_NAME} "${DOSARRAY_LOG_PATH_PREFIX}/$(logname_of_load ${HOST_NAME})" .
+  dosarray_scp_from ${HOST_NAME} "${DOSARRAY_LOG_PATH_PREFIX}/$(logname_of_mem ${HOST_NAME})" .
+  dosarray_scp_from ${HOST_NAME} "${DOSARRAY_LOG_PATH_PREFIX}/$(logname_of_net ${HOST_NAME})" .
+  dosarray_execute_on ${HOST_NAME} "rm ${DOSARRAY_LOG_PATH_PREFIX}/${LOAD_MEASURE_SCRIPT}"
+done
+>>>>>>> Preliminary changes to load measurement
 
 ${DOSARRAY_SCRIPT_DIR}/src/dosarray_filter_net_logs.sh
 
