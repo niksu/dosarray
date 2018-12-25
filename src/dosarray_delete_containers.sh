@@ -23,13 +23,15 @@ do
   echo "Deleting containers in $HOST_NAME (${HOST_IP})"
 
   printf " \
+echo \"\$(date) starting dosarray_delete_containers.sh\" >> /tmp/dosarray.stdout \n\
 for CURRENT_CONTAINER_IP in \$(seq $DOSARRAY_MIN_VIP $DOSARRAY_MAX_VIP) \n\
 do \n\
   CONTAINER_SUFFIX=${DOSARRAY_VIRT_NET_SUFFIX[${IDX}]}.\${CURRENT_CONTAINER_IP} \n\
   CONTAINER_NAME=\"${DOSARRAY_CONTAINER_PREFIX}\${CONTAINER_SUFFIX}\" \n\
-  echo -n \"\${CONTAINER_NAME} \" \n\
-  docker container rm \${CONTAINER_NAME} & \n\
+  echo \"  deleting \${CONTAINER_NAME}\" >> /tmp/dosarray.stdout \n\
+  docker container rm \${CONTAINER_NAME} >> /tmp/dosarray.stdout 2>> /tmp/dosarray.stderr & \n\
 done \n\
+echo \"\$(date) finishing dosarray_delete_containers.sh\" >> /tmp/dosarray.stdout \n\
 echo " | dosarray_execute_on "${HOST_NAME}" "" \
   > /dev/null
 
