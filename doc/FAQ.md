@@ -45,7 +45,7 @@ eno49:1   Link encap:Ethernet  HWaddr XX:XX:XX:XX:XX:XX
 
 Yes, this involves changing the functions `dosarray_execute_on()` and `dosarray_scp_from()` to do the necessary "hops" through the access nodes. *We're currently working on an example of doing this.*
 
-**5. I cannot delete instances using `dosarray_delete_containers.sh`. What's wrong? **
+**5. I cannot delete instances using `dosarray_delete_containers.sh`. What's wrong?**
 
 Make sure you first *stop* the containers, otherwise they won't be deleted.
 Inspect the host-based logs, since the controller output doesn't report failures:
@@ -103,7 +103,7 @@ Tue Dec 25 18:11:20 EST 2018 starting dosarray_delete_containers.sh
 Tue Dec 25 18:11:20 EST 2018 finishing dosarray_delete_containers.sh
 ```
 
-**6. I'm not getting graphs of results. What's wrong? **
+**6. I'm not getting graphs of results. What's wrong?**
 
 There might be several causes for this, so start by following out [checklist](CHECKLIST.md).
 
@@ -125,6 +125,6 @@ connect time out
 ```
 This indicates a connectivity problem between the container and the target.
 
-**7. I checked the target's logs, and it mentions IP addresses of the physical hosts. Shouldn't it mention containers' IPs? **
+**7. I checked the target's logs, and it mentions IP addresses of the physical hosts. Shouldn't it mention containers' IPs?**
 
 Yes -- it appears that the physical machines are NATting the containers. Check the iptables configuration. Look at the [network configuration script](../dosarray_configure_networking.sh)
