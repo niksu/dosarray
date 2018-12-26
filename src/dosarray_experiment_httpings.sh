@@ -26,7 +26,7 @@ do
   echo "Starting httpings in $HOST_NAME (${HOST_IP})"
 
   printf "\
-${ATTACKERS} \n\
+${DOSARRAY_ATTACKERS} \n\
 for CURRENT_CONTAINER_IP in \$(seq $DOSARRAY_MIN_VIP $DOSARRAY_MAX_VIP) \n\
 do \n\
   CONTAINER_SUFFIX=${CURRENT_HOST_IP}.\${CURRENT_CONTAINER_IP} \n\
@@ -38,7 +38,7 @@ do \n\
       ${MEASUREMENT_COMMAND} \
       > \${CONTAINER_NAME}.log & \n\
   else \n\
-    docker container exec \${CONTAINER_NAME} bash -c \"sleep ${ATTACK_STARTS_AT} ; ${ATTACK_COMMAND}\" & \n\
+    docker container exec \${CONTAINER_NAME} bash -c \"sleep ${DOSARRAY_ATTACK_STARTS_AT} ; ${ATTACK_COMMAND}\" & \n\
     echo -n \"!\${CONTAINER_NAME} \" \n\
   fi \n\
 done \n\
@@ -75,7 +75,7 @@ echo \n\
 " | dosarray_execute_on "${HOST_NAME}" "" &
 done
 
-DOUBLE_EXPERIMENT_DURATION=$(echo "2 * ${EXPERIMENT_DURATION}" | bc -l)
+DOUBLE_EXPERIMENT_DURATION=$(echo "2 * ${DOSARRAY_EXPERIMENT_DURATION}" | bc -l)
 sleep ${DOUBLE_EXPERIMENT_DURATION}
 
 echo "Done"

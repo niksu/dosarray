@@ -3,7 +3,7 @@
 # Nik Sultana, February 2018, UPenn
 #
 # Polls various kinds of load on a collection of machines for $NUM_ROUNDS times,
-# sleeping $INTERVAL_BETWEEN_LOAD_POLLS between polls. After downloading the results,
+# sleeping $DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS between polls. After downloading the results,
 # they're analysed and graphed.
 
 if [ -z "${DOSARRAY_SCRIPT_DIR}" ]
@@ -17,47 +17,47 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
-if [ -z "${DESTINATION_DIR}" ]
+if [ -z "${DOSARRAY_DESTINATION_DIR}" ]
 then
-  echo "\$DESTINATION_DIR needs to be defined" >&2
+  echo "\$DOSARRAY_DESTINATION_DIR needs to be defined" >&2
   exit 2
 fi
 
-if [ -z "${INTERVAL_BETWEEN_LOAD_POLLS}" ]
+if [ -z "${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}" ]
 then
-  echo "Need to define \$INTERVAL_BETWEEN_LOAD_POLLS" >&2
+  echo "Need to define \$DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS" >&2
   exit 1
 fi
 
-echo "INTERVAL_BETWEEN_LOAD_POLLS=${INTERVAL_BETWEEN_LOAD_POLLS}"
+echo "DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS=${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}"
 
-if [ -n "${EXPERIMENT_DURATION}" ]
+if [ -n "${DOSARRAY_EXPERIMENT_DURATION}" ]
 then
-  echo "EXPERIMENT_DURATION=${EXPERIMENT_DURATION}"
-  NUM_ROUNDS=$(echo "${EXPERIMENT_DURATION} / ${INTERVAL_BETWEEN_LOAD_POLLS}" | bc -l)
+  echo "DOSARRAY_EXPERIMENT_DURATION=${DOSARRAY_EXPERIMENT_DURATION}"
+  NUM_ROUNDS=$(echo "${DOSARRAY_EXPERIMENT_DURATION} / ${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}" | bc -l)
   NUM_ROUNDS=$( printf "%.0f" ${NUM_ROUNDS} )
 fi
 
 if [ -z "${NUM_ROUNDS}" ]
 then
-  echo "Need to define \$NUM_ROUNDS or \$EXPERIMENT_DURATION" >&2
+  echo "Need to define \$NUM_ROUNDS or \$DOSARRAY_EXPERIMENT_DURATION" >&2
   exit 1
 fi
 echo "NUM_ROUNDS=${NUM_ROUNDS}"
 
 function logname_of_load() {
   HOST_NAME="$1"
-  echo "${DESTINATION_DIR}/${HOST_NAME}_load.log"
+  echo "${DOSARRAY_DESTINATION_DIR}/${HOST_NAME}_load.log"
 }
 
 function logname_of_mem() {
   HOST_NAME="$1"
-  echo "${DESTINATION_DIR}/${HOST_NAME}_mem.log"
+  echo "${DOSARRAY_DESTINATION_DIR}/${HOST_NAME}_mem.log"
 }
 
 function logname_of_net() {
   HOST_NAME="$1"
-  echo "${DESTINATION_DIR}/${HOST_NAME}_net.log"
+  echo "${DOSARRAY_DESTINATION_DIR}/${HOST_NAME}_net.log"
 }
 
 echo "Number of hosts: ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
@@ -90,19 +90,19 @@ do
 
   if [ "${ROUND}" -ne "${NUM_ROUNDS}" ]
   then
-    sleep ${INTERVAL_BETWEEN_LOAD_POLLS}
+    sleep ${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}
   fi
 done
 
-sleep ${INTERVAL_BETWEEN_LOAD_POLLS}
+sleep ${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}
 
 ${DOSARRAY_SCRIPT_DIR}/src/dosarray_filter_net_logs.sh
 
-python ${DOSARRAY_SCRIPT_DIR}/src/generate_load_chart.py -p ${DESTINATION_DIR} -i 5 -t load -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DESTINATION_DIR}/load.data
-python ${DOSARRAY_SCRIPT_DIR}/src/generate_load_chart.py -p ${DESTINATION_DIR} -i 5 -t mem -o column -m  ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DESTINATION_DIR}/mem.data
-python ${DOSARRAY_SCRIPT_DIR}/src/generate_load_chart.py -p ${DESTINATION_DIR} -i 5 -t net_rx -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DESTINATION_DIR}/net_rx.data
-python ${DOSARRAY_SCRIPT_DIR}/src/generate_load_chart.py -p ${DESTINATION_DIR} -i 5 -t net_tx -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DESTINATION_DIR}/net_tx.data
-python ${DOSARRAY_SCRIPT_DIR}/src/generate_load_chart.py -p ${DESTINATION_DIR} -i 5 -t net_rxerrors -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DESTINATION_DIR}/net_rxerrors.data
-python ${DOSARRAY_SCRIPT_DIR}/src/generate_load_chart.py -p ${DESTINATION_DIR} -i 5 -t net_txerrors -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DESTINATION_DIR}/net_txerrors.data
+python ${DOSARRAY_SCRIPT_DIR}/src/generate_load_chart.py -p ${DOSARRAY_DESTINATION_DIR} -i 5 -t load -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DOSARRAY_DESTINATION_DIR}/load.data
+python ${DOSARRAY_SCRIPT_DIR}/src/generate_load_chart.py -p ${DOSARRAY_DESTINATION_DIR} -i 5 -t mem -o column -m  ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DOSARRAY_DESTINATION_DIR}/mem.data
+python ${DOSARRAY_SCRIPT_DIR}/src/generate_load_chart.py -p ${DOSARRAY_DESTINATION_DIR} -i 5 -t net_rx -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DOSARRAY_DESTINATION_DIR}/net_rx.data
+python ${DOSARRAY_SCRIPT_DIR}/src/generate_load_chart.py -p ${DOSARRAY_DESTINATION_DIR} -i 5 -t net_tx -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DOSARRAY_DESTINATION_DIR}/net_tx.data
+python ${DOSARRAY_SCRIPT_DIR}/src/generate_load_chart.py -p ${DOSARRAY_DESTINATION_DIR} -i 5 -t net_rxerrors -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DOSARRAY_DESTINATION_DIR}/net_rxerrors.data
+python ${DOSARRAY_SCRIPT_DIR}/src/generate_load_chart.py -p ${DOSARRAY_DESTINATION_DIR} -i 5 -t net_txerrors -o column -m ${DOSARRAY_PHYSICAL_HOSTS_PUB[@]} > ${DOSARRAY_DESTINATION_DIR}/net_txerrors.data
 
 echo "Done"

@@ -28,18 +28,18 @@ source ${DOSARRAY_SCRIPT_DIR}/src/dosarray_http_experiment_options.sh
 SERVER_CHOICE=$1
 ATTACK_CHOICE=$2
 
-if [ -z "${DESTINATION_DIR}" ]
+if [ -z "${DOSARRAY_DESTINATION_DIR}" ]
 then
-  echo "\$DESTINATION_DIR needs to be defined" >&2
+  echo "\$DOSARRAY_DESTINATION_DIR needs to be defined" >&2
   exit 2
 fi
 
-if [ -d "${DESTINATION_DIR}" ]
+if [ -d "${DOSARRAY_DESTINATION_DIR}" ]
 then
-  echo "\$DESTINATION_DIR (${DESTINATION_DIR}) already exists" >&2
+  echo "\$DOSARRAY_DESTINATION_DIR (${DOSARRAY_DESTINATION_DIR}) already exists" >&2
   exit 2
 fi
-mkdir -p ${DESTINATION_DIR}
+mkdir -p ${DOSARRAY_DESTINATION_DIR}
 
 if [ -z "${TITLE}" ]
 then
@@ -47,11 +47,11 @@ then
   exit 2
 fi
 
-if [ -z "${ATTACKERS}" ]
+if [ -z "${DOSARRAY_ATTACKERS}" ]
 then
   echo "WARNING! This experiment does not involve any attackers." >&2
 fi
-echo "\$ATTACKERS: ${ATTACKERS}"
+echo "\$DOSARRAY_ATTACKERS: ${DOSARRAY_ATTACKERS}"
 
 if [ "${SERVER_CHOICE}" == "nginx" ]
 then
@@ -108,8 +108,8 @@ then
   ATTACK="${ATTACK_HULK}"
 elif [ "${ATTACK_CHOICE}" == "none" ]
 then
-  ATTACK="${ATTACK_Slowloris}" # The actual attack doesn't matter since $ATTACKERS is set to empty predicate.
-ATTACKERS="is_attacker() { \n\
+  ATTACK="${ATTACK_Slowloris}" # The actual attack doesn't matter since $DOSARRAY_ATTACKERS is set to empty predicate.
+DOSARRAY_ATTACKERS="is_attacker() { \n\
     grep -F -q -x \"\$1\" <<EOF\n\
 EOF\n\
 }\n"
@@ -119,31 +119,31 @@ else
 fi
 
 # Units are "seconds"
-[ -z "${EXPERIMENT_DURATION}" ] && EXPERIMENT_DURATION=60
+[ -z "${DOSARRAY_EXPERIMENT_DURATION}" ] && DOSARRAY_EXPERIMENT_DURATION=60
 # Number of instances on each machine
 [ -z "${DOSARRAY_VIRT_INSTANCES}" ] && DOSARRAY_VIRT_INSTANCES=40
 
 # All units are "seconds"
-[ -z "${ATTACK_STARTS_AT}" ] && ATTACK_STARTS_AT=10
-# NOTE The attack can end before $ATTACK_LASTS_FOR has elapsed -- it depends on
+[ -z "${DOSARRAY_ATTACK_STARTS_AT}" ] && DOSARRAY_ATTACK_STARTS_AT=10
+# NOTE The attack can end before $DOSARRAY_ATTACK_LASTS_FOR has elapsed -- it depends on
 #      the attack script -- but the attack cannot last longer than
-#      $ATTACK_LASTS_FOR.
-[ -z "${ATTACK_LASTS_FOR}" ] && ATTACK_LASTS_FOR=20
+#      $DOSARRAY_ATTACK_LASTS_FOR.
+[ -z "${DOSARRAY_ATTACK_LASTS_FOR}" ] && DOSARRAY_ATTACK_LASTS_FOR=20
 
 
-echo "EXPERIMENT_DURATION=${EXPERIMENT_DURATION}"
+echo "DOSARRAY_EXPERIMENT_DURATION=${DOSARRAY_EXPERIMENT_DURATION}"
 echo "DOSARRAY_VIRT_INSTANCES=${DOSARRAY_VIRT_INSTANCES}"
-echo "ATTACK_STARTS_AT=${ATTACK_STARTS_AT}"
-echo "ATTACK_LASTS_FOR=${ATTACK_LASTS_FOR}"
+echo "DOSARRAY_ATTACK_STARTS_AT=${DOSARRAY_ATTACK_STARTS_AT}"
+echo "DOSARRAY_ATTACK_LASTS_FOR=${DOSARRAY_ATTACK_LASTS_FOR}"
 
 # check that an attack duration lies between experiment duration
-if [ ${ATTACK_STARTS_AT} -gt ${EXPERIMENT_DURATION} ]
+if [ ${DOSARRAY_ATTACK_STARTS_AT} -gt ${DOSARRAY_EXPERIMENT_DURATION} ]
 then
-    printf "Attack must start before experiment ends\nAttack starts at=${ATTACK_STARTS_AT}\nExperiment duration=${EXPERIMENT_DURATION}" >&2
+    printf "Attack must start before experiment ends\nAttack starts at=${DOSARRAY_ATTACK_STARTS_AT}\nExperiment duration=${DOSARRAY_EXPERIMENT_DURATION}" >&2
     exit 1
-elif [ $(( ${ATTACK_STARTS_AT} + ${ATTACK_LASTS_FOR} )) -gt ${EXPERIMENT_DURATION} ]
+elif [ $(( ${DOSARRAY_ATTACK_STARTS_AT} + ${DOSARRAY_ATTACK_LASTS_FOR} )) -gt ${DOSARRAY_EXPERIMENT_DURATION} ]
 then
-    printf "Attack lasts longer than experiment duration \nAttack ends at=$(( ${ATTACK_STARTS_AT} + ${ATTACK_LASTS_FOR} ))\nExperiment Duration=${EXPERIMENT_DURATION}" >&2
+    printf "Attack lasts longer than experiment duration \nAttack ends at=$(( ${DOSARRAY_ATTACK_STARTS_AT} + ${DOSARRAY_ATTACK_LASTS_FOR} ))\nExperiment Duration=${DOSARRAY_EXPERIMENT_DURATION}" >&2
     exit 1
 fi
 
@@ -154,13 +154,13 @@ source ${DOSARRAY_SCRIPT_DIR}/src/dosarray_setup_http_experiment.sh
 
 CUR_DIR=`pwd`
 
-cd ${DESTINATION_DIR}
+cd ${DOSARRAY_DESTINATION_DIR}
 
 LOG_COUNT=$(ls ${DOSARRAY_LOG_NAME_PREFIX}*.log | wc -l)
 
 if [ "${LOG_COUNT}" -gt "0" ]
 then
-  echo "There already appear to be logs in ${DESTINATION_DIR}" >&2
+  echo "There already appear to be logs in ${DOSARRAY_DESTINATION_DIR}" >&2
   exit 2
 fi
 
@@ -172,7 +172,7 @@ echo "LOG_COUNT=${LOG_COUNT} (Does this look alright?)"
 if [ ${GRAPHING} ]
 then
   echo "Running graphing"
-  ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_experiment_graphing.sh ${DESTINATION_DIR}
+  ${DOSARRAY_SCRIPT_DIR}/src/dosarray_run_experiment_graphing.sh ${DOSARRAY_DESTINATION_DIR}
 fi
 
 cd ${CUR_DIR}
