@@ -17,6 +17,13 @@
 * Added HULK attack, and DeDOS target.
 * Further bug fixes.
 
+0.4:
+* Improved stability, and deployed to another cluster.
+* Made more modular -- so experiment and rendering phases can be (re)run separately.
+* Added checks to ensure configuration arrays are consistently sized, and that the attack times don't outlast the experiment.
+* Improved coding style (e.g., removed hard-codings, added parameters).
+* Improved documentation, and added FAQ and diagnosis checklist.
+
 ## DoSarray image
 * 0.1/0.2: Initial image containing various attacks scripts.
 * 0.2a: added dependencies for Slowloris over SSL.

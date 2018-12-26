@@ -65,7 +65,7 @@ The output from this experiment can be seen in the
 Nik Sultana, Shilpi Bose.
 
 ## Current version
-DoSarray 0.3
+DoSarray 0.4
 
 View [CHANGELOG](CHANGELOG.md)
 
