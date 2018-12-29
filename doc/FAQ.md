@@ -128,3 +128,43 @@ This indicates a connectivity problem between the container and the target.
 **7. I checked the target's logs, and it mentions IP addresses of the physical hosts. Shouldn't it mention containers' IPs?**
 
 Yes -- it appears that the physical machines are NATting the containers. Check the iptables configuration. Look at the [network configuration script](../dosarray_configure_networking.sh)
+
+The lack of address diversity is the tell-tale sign that networking isn't configured correctly. For example:
+```
+192.168.0.5 - - [26/Nov/2018:00:50:08 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.5 - - [26/Nov/2018:00:50:08 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.5 - - [26/Nov/2018:00:50:08 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.5 - - [26/Nov/2018:00:50:08 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.5 - - [26/Nov/2018:00:50:08 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.5 - - [26/Nov/2018:00:50:08 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.7 - - [26/Nov/2018:00:50:08 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.5 - - [26/Nov/2018:00:50:08 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.7 - - [26/Nov/2018:00:50:08 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.7 - - [26/Nov/2018:00:49:47 -0500] "GET / HTTP/1.1" 408 221
+192.168.0.5 - - [26/Nov/2018:00:50:10 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.5 - - [26/Nov/2018:00:50:10 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.5 - - [26/Nov/2018:00:50:10 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.7 - - [26/Nov/2018:00:50:10 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.5 - - [26/Nov/2018:00:50:10 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.5 - - [26/Nov/2018:00:50:10 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.5 - - [26/Nov/2018:00:50:10 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.5 - - [26/Nov/2018:00:50:10 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.7 - - [26/Nov/2018:00:50:10 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.0.7 - - [26/Nov/2018:00:50:10 -0500] "GET / HTTP/1.1" 400 226
+192.168.0.7 - - [26/Nov/2018:00:50:10 -0500] "GET / HTTP/1.1" 400 226
+```
+
+You should be seeing the IP addresses of containers mentioned in the logs instead. For example:
+```
+192.168.5.9 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.5.6 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.5.5 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.5.10 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.5.8 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.5.11 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.7.4 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.7.6 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.7.7 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.7.8 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
+192.168.7.10 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
+```
