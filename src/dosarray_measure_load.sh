@@ -1,4 +1,4 @@
-#/bin/sh -e
+#!/bin/bash -e
 # Collects the load on each host by executing in the host
 # Shilpi Bose, December 2018, UPenn
 #
@@ -53,7 +53,7 @@ do
 
   echo "$(hostname) $(date +%s) $(cat /proc/loadavg)" >> "${HOST_NAME}_load.log" &
   echo "$(hostname) $(date +%s) $(grep Mem /proc/meminfo)" >> "${HOST_NAME}_mem.log" &
-  echo "cat /proc/net/dev" >> "${HOST_NAME}_net.log" &
+  cat /proc/net/dev >> "${HOST_NAME}_net.log" &
 
   if [ "${ROUND}" -ne "${NUM_ROUNDS}" ]
   then
