@@ -58,6 +58,8 @@ else
 fi
 
 RESULT=$(dosarray_execute_on "${HOST_NAME}" "${CMD}")
+
+# A success code 200 is returned when the server is up. However, some environments involving multiple hops to the server machine may return an output "200Connection to host@xzy.com is closed". This trims away the appended message and returns 200
 RESULT=${RESULT/Connection to * closed*/}
 
 echo $RESULT
