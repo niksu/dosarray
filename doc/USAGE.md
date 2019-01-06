@@ -68,12 +68,12 @@ NOTE: Configure network on the target machine with the -r option to route packet
 
 The output of the network configuration script displays all the commands executed in the host. Changes applied to iptables and routes can be viewed by running `sudo iptable -S`. Similarly, the newly added routes can be viewed by running `ip route show`
 
-Take for example the following route modification command - `sudo route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.0.1`. On executing `ip route show`, this new route will be displayed as follows in the output:
+Take for example the following route modification command: `sudo route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.0.1`. On executing `ip route show`, this new route will be displayed as follows in the output:
 
 ```
 192.168.1.0/24 via 192.168.0.1 dev em1
 ```
-Alternatively, if you run 'ip route get 192.168.1.0' on the host, a correct output would look like:
+Alternatively, if you run `ip route get 192.168.1.0` on the host, a correct output would look like:
 ```
 192.168.1.0 via 192.168.0.1 dev eno1  src 192.168.0.11
     cache
@@ -85,7 +85,7 @@ However, if you see something like the following output:
 ```
 The required routes haven't been added because we aren't routing packets via 192.168.0.1 as specified by the route we intended to add.   
 
-Even iptable modifications such as - `sudo iptables -A FORWARD -o docker_bridge -j ACCEPT` can be viewed by executing `sudo iptables -S` to output the following::
+Even iptable modifications such as `sudo iptables -A FORWARD -o docker_bridge -j ACCEPT` can be viewed by executing `sudo iptables -S` to output the following::
 
 ```
 -A FORWARD -o docker_bridge -j ACCEPT
