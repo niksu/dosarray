@@ -73,6 +73,17 @@ Take for example the following route modification command - `sudo route add -net
 ```
 192.168.1.0/24 via 192.168.0.1 dev em1
 ```
+Alternatively, if you run 'ip route get 192.168.1.0' on the host, a correct output would look like:
+```
+192.168.1.0 via 192.168.0.1 dev eno1  src 192.168.0.11
+    cache
+```
+However, if you see something like the following output:
+```
+192.168.1.0 via 209.148.46.1 dev eno4  src 209.148.46.30
+    cache
+```
+The required routes haven't been added because we aren't routing packets via 192.168.0.1 as specified by the route we intended to add.   
 
 Even iptable modifications such as - `sudo iptables -A FORWARD -o docker_bridge -j ACCEPT` can be viewed by executing `sudo iptables -S` to output the following::
 
