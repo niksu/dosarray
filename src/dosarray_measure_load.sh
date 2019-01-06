@@ -51,8 +51,8 @@ for ROUND in `seq 0 ${NUM_ROUNDS}`
 do
   echo "Logging round ${ROUND} of ${HOST_NAME}"
 
-  echo "$(hostname) $(date +%s) $(cat /proc/loadavg)" >> "${HOST_NAME}_load.log" &
-  echo "$(hostname) $(date +%s) $(grep Mem /proc/meminfo)" >> "${HOST_NAME}_mem.log" &
+  echo $(hostname) $(date +%s) $(cat /proc/loadavg) >> "${HOST_NAME}_load.log" &
+  echo $(hostname) $(date +%s) $(grep Mem /proc/meminfo) >> "${HOST_NAME}_mem.log" &
   cat /proc/net/dev >> "${HOST_NAME}_net.log" &
 
   if [ "${ROUND}" -ne "${NUM_ROUNDS}" ]
