@@ -58,15 +58,28 @@ by modifying the rules for iptables, and additionally the route configuration
 by using the `-r` option. This script needs to be run only once during setup.
 However multiple re-runs of this script are harmless and should simply produce
 a message 'iptables: No chain/target/match by that name.' indicating the the
-unnecessary routes have already been deleted.
+unnecessary rules have already been deleted.
 
 ```
 ./src/dosarray_configure_networking.sh [-r] <physical-host-name>
 ```
 
 NOTE: Configure network on the target machine with the -r option to route packets correctly 
-Applied changes to iptables can be viewed by running `sudo iptable -S`. Similarly, the newly added routes can be viewed by running `ip route show`
 
+The output of the network configuration script displays all the commands executed in the host. Changes applied to iptables and routes can be viewed by running `sudo iptable -S`. Similarly, the newly added routes can be viewed by running `ip route show`
+
+Take for example the following route modification command - `sudo route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.0.1`. On executing `ip route show`, this new route will be displayed as follows in the output:
+
+```
+192.168.1.0/24 via 192.168.0.1 dev em1
+```
+
+Even iptable modifications such as - `sudo iptables -A FORWARD -o docker_bridge -j ACCEPT` can be viewed by executing `sudo iptables -S` to output the following::
+
+```
+-A FORWARD -o docker_bridge -j ACCEPT
+```
+ 
 ### Container setup
 After configuring the network, the next step is creating and starting docker containers in each of the physical hosts except the target. The following invokation of scripts creates containers in each of these host based on the values set in `dosarray_config.sh`
 
