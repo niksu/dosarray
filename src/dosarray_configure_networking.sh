@@ -79,4 +79,4 @@ echo "Running CMD=${CMD}"
 echo
 echo "Please enter sudo password for ${TARGET_PHYSICAL_HOST} when prompted"
 
-dosarray_execute_on "${TARGET_PHYSICAL_HOST}" "${CMD}"
+dosarray_execute_on "${TARGET_PHYSICAL_HOST}" "${CMD}" "-t"
