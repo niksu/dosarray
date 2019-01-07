@@ -73,17 +73,24 @@ Take for example the following route modification command: `sudo route add -net 
 ```
 192.168.1.0/24 via 192.168.0.1 dev em1
 ```
-Alternatively, if you run `ip route get 192.168.1.0` on the host, a correct output would look like:
+Alternatively, if you run `ip route get 192.168.1.0` on the host, a correct output without any cache entry would look like:
 ```
 192.168.1.0 via 192.168.0.1 dev eno1  src 192.168.0.11
     cache
 ```
+
+If the route has been cached, the route would also show cache details as follows:
+```
+192.168.1.0 via 192.168.0.1 dev eno1  src 192.168.0.11
+    cache users 1 used 326 age 12sec mtu 1500 advmss 1460
+```
+
 However, if you see something like the following output:
 ```
 192.168.1.0 via 209.148.46.1 dev eno4  src 209.148.46.30
     cache
 ```
-The required routes haven't been added because we aren't routing packets via 192.168.0.1 as specified by the route we intended to add.   
+the required routes haven't been added because we aren't routing packets via 192.168.0.1 as specified by the route we intended to add. For more details on how routes are configures, refer to [this useful link](http://linux-ip.net/html/tools-ip-route.html)
 
 Even iptable modifications such as `sudo iptables -A FORWARD -o docker_bridge -j ACCEPT` can be viewed by executing `sudo iptables -S` to output the following::
 
