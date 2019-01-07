@@ -74,6 +74,8 @@ export DOSARRAY_CONTAINER_HOST_IDXS=`dosarray_physical_hosts_skip`
 export DOSARRAY_VIRT_INSTANCES=10
 export DOSARRAY_MIN_VIP=2
 export DOSARRAY_MAX_VIP=$((DOSARRAY_VIRT_INSTANCES + (DOSARRAY_MIN_VIP - 1)))
+
+# -t is required to execute network configuration commands with sudo
 function dosarray_execute_on () {
   local HOST_NAME="$1"
   local CMD="$2"
