@@ -15,6 +15,7 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
+mkdir ${DOSARRAY_SCRIPT_DIR}/host_logs
 echo "Deleting ${DOSARRAY_VIRT_INSTANCES} instances"
 for IDX in ${DOSARRAY_CONTAINER_HOST_IDXS}
 do
@@ -34,6 +35,11 @@ done \n\
 echo \"\$(date) finishing dosarray_delete_containers.sh\" >> /tmp/dosarray.stdout \n\
 echo " | dosarray_execute_on "${HOST_NAME}" "" \
   > /dev/null
+
+  echo "Gathering stdout and stderr logs from $HOST_NAME"
+  dosarray_scp_from "${HOST_NAME}" "/tmp/dosarray.stdout" "${DOSARRAY_SCRIPT_DIR}/host_logs/dosarray_${HOST_NAME}.stdout"
+  dosarray_scp_from "${HOST_NAME}" "/tmp/dosarray.stderr" "${DOSARRAY_SCRIPT_DIR}/host_logs/dosarray_${HOST_NAME}.stderr"
+  dosarray_execute_on "${HOST_NAME}" "rm /tmp/dosarray.std*"
 
 done
 
