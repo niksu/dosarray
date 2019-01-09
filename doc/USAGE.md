@@ -86,6 +86,8 @@ Once we have gathered all our logs and results, DoSarray also facilitates cleari
 ./src/dosarray_delete_containers.sh
 ```
 
+Along with container deletion, DoSArray also supports host-based logging. After deleting the containers, these logs are copied out of the hosts into ` ${DOSARRAY_SCRIPT_DIR}/host_logs/`to detect issues with deletion, if any.
+
 ## Load graphing
 Load data is gathered automatically during experiments, for offline analysis and graphing. These logs and their corresponding graphs can be accessed within the results dorectory after the experiment has ended. The graphing scripts are flexible enough to produce diiferent types of graphs for different sampling intervals. To manually generate these graphs using the various load measurements, we must first generate the graph data and then use this data to plot the graphs.
 
