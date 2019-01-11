@@ -31,6 +31,12 @@ fi
 
 echo "DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS=${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}"
 
+if [ -z ${DOSARRAY_EXPERIMENT_DURATION} ]
+then
+  echo "Need to define \$EXPERIMENT_DURATION" >&2
+  exit 1
+fi
+
 if [ -n "${DOSARRAY_EXPERIMENT_DURATION}" ]
 then
   echo "DOSARRAY_EXPERIMENT_DURATION=${DOSARRAY_EXPERIMENT_DURATION}"
@@ -47,54 +53,41 @@ echo "NUM_ROUNDS=${NUM_ROUNDS}"
 
 function logname_of_load() {
   HOST_NAME="$1"
-  echo "${DOSARRAY_DESTINATION_DIR}/${HOST_NAME}_load.log"
+  echo "${HOST_NAME}_load.log"
 }
 
 function logname_of_mem() {
   HOST_NAME="$1"
-  echo "${DOSARRAY_DESTINATION_DIR}/${HOST_NAME}_mem.log"
+  echo "${HOST_NAME}_mem.log"
 }
 
 function logname_of_net() {
   HOST_NAME="$1"
-  echo "${DOSARRAY_DESTINATION_DIR}/${HOST_NAME}_net.log"
+  echo "${HOST_NAME}_net.log"
 }
 
-echo "Number of hosts: ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
+LOAD_MEASURE_SCRIPT="dosarray_measure_load.sh"
 
 for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
 do
-  echo "Clearing logs of ${HOST_NAME}"
-  rm -f $(logname_of_load ${HOST_NAME})
-  rm -f $(logname_of_mem ${HOST_NAME})
-  rm -f $(logname_of_net ${HOST_NAME})
+  dosarray_scp_to ${HOST_NAME} src/${LOAD_MEASURE_SCRIPT} ${DOSARRAY_LOG_PATH_PREFIX}
 done
 
-for ROUND in `seq 0 ${NUM_ROUNDS}`
+for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
 do
-  for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
-  do
-    echo "Logging round ${ROUND} of ${HOST_NAME}"
-    dosarray_execute_on "${HOST_NAME}" \
-    "echo \$(hostname) \$(date +%s) \$(cat /proc/loadavg)" >> $(logname_of_load ${HOST_NAME}) &
-    echo "Load log: $(logname_of_load ${HOST_NAME})"
-
-    dosarray_execute_on "${HOST_NAME}" \
-    "echo \$(hostname) \$(date +%s) \$(grep Mem /proc/meminfo)" >> $(logname_of_mem ${HOST_NAME}) &
-    echo "Mem log: $(logname_of_mem ${HOST_NAME})"
-
-    dosarray_execute_on "${HOST_NAME}" \
-    "cat /proc/net/dev" >> $(logname_of_net ${HOST_NAME}) &
-    echo "Net log: $(logname_of_net ${HOST_NAME})"
-  done
-
-  if [ "${ROUND}" -ne "${NUM_ROUNDS}" ]
-  then
-    sleep ${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}
-  fi
+  dosarray_execute_on ${HOST_NAME} "nohup ${DOSARRAY_LOG_PATH_PREFIX}/${LOAD_MEASURE_SCRIPT} ${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS} ${DOSARRAY_EXPERIMENT_DURATION} ${NUM_ROUNDS} > /dev/null 2>&1 &"
 done
 
-sleep ${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}
+sleep ${DOSARRAY_EXPERIMENT_DURATION}
+
+for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
+do
+  dosarray_scp_from ${HOST_NAME} "${DOSARRAY_LOG_PATH_PREFIX}/$(logname_of_load ${HOST_NAME})" ${DOSARRAY_DESTINATION_DIR}
+  dosarray_scp_from ${HOST_NAME} "${DOSARRAY_LOG_PATH_PREFIX}/$(logname_of_mem ${HOST_NAME})" ${DOSARRAY_DESTINATION_DIR}
+  dosarray_scp_from ${HOST_NAME} "${DOSARRAY_LOG_PATH_PREFIX}/$(logname_of_net ${HOST_NAME})" ${DOSARRAY_DESTINATION_DIR}
+  dosarray_execute_on ${HOST_NAME} "rm ${DOSARRAY_LOG_PATH_PREFIX}/${LOAD_MEASURE_SCRIPT}"
+  dosarray_execute_on ${HOST_NAME} "rm ${DOSARRAY_LOG_PATH_PREFIX}/${HOST_NAME}_*.log"
+done
 
 ${DOSARRAY_SCRIPT_DIR}/src/dosarray_filter_net_logs.sh
 
