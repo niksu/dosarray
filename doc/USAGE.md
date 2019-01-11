@@ -49,6 +49,8 @@ Next, we need to configure DoSarray to simulate experiments using the available 
 * `DOSARRAY_INCLUDE_STDOUTERR`: Setting this to any value (e.g., "1") will generate a file containing the stdout and stderr output that takes place during the experiment. This is disabled by default but it can be useful to activate during testing or to make the experiments more reproducible.
 
 ## Using DoSarray
+
+### Configuring network
 An important consideration in DoSarray is to achieve address diversity in order
 to simulate larger networks in these experiments. This involves configuring
 each host in the physical network with the network info of the virtual network
@@ -56,12 +58,47 @@ by modifying the rules for iptables, and additionally the route configuration
 by using the `-r` option. This script needs to be run only once during setup.
 However multiple re-runs of this script are harmless and should simply produce
 a message 'iptables: No chain/target/match by that name.' indicating the the
-unnecessary routes have already been deleted.
+unnecessary rules have already been deleted.
 
 ```
 ./src/dosarray_configure_networking.sh [-r] <physical-host-name>
 ```
 
+NOTE: Configure network on the target machine with the -r option to route packets correctly 
+
+The output of the network configuration script displays all the commands executed in the host. Changes applied to iptables and routes can be viewed by running `sudo iptable -S`. Similarly, the newly added routes can be viewed by running `ip route show`
+
+Take for example the following route modification command: `sudo route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.0.1`. On executing `ip route show`, this new route will be displayed as follows in the output:
+
+```
+192.168.1.0/24 via 192.168.0.1 dev em1
+```
+Alternatively, if you run `ip route get 192.168.1.0` on the host, a correct output without any cache entry would look like:
+```
+192.168.1.0 via 192.168.0.1 dev eno1  src 192.168.0.11
+    cache
+```
+
+If the route has been cached, the route would also show cache details as follows:
+```
+192.168.1.0 via 192.168.0.1 dev eno1  src 192.168.0.11
+    cache users 1 used 326 age 12sec mtu 1500 advmss 1460
+```
+
+However, if you see something like the following output:
+```
+192.168.1.0 via 209.148.46.1 dev eno4  src 209.148.46.30
+    cache
+```
+the required routes haven't been added because we aren't routing packets via 192.168.0.1 as specified by the route we intended to add. For more details on how routes are configures, refer to [this useful link](http://linux-ip.net/html/tools-ip-route.html)
+
+Even iptable modifications such as `sudo iptables -A FORWARD -o docker_bridge -j ACCEPT` can be viewed by executing `sudo iptables -S` to output the following::
+
+```
+-A FORWARD -o docker_bridge -j ACCEPT
+```
+ 
+### Container setup
 After configuring the network, the next step is creating and starting docker containers in each of the physical hosts except the target. The following invokation of scripts creates containers in each of these host based on the values set in `dosarray_config.sh`
 
 ```
@@ -69,6 +106,7 @@ After configuring the network, the next step is creating and starting docker con
 ./src/dosarray_start_containers.sh
 ```
 
+### Running the example experiment
 Once we have the configuration in place, simulating the a DoS attack is just a few steps away. For starters, DoSarray also has a sample experiment which goes through the entire lifecycle of the experiment, starting from measurements before, after and during the attack and ending with graphing the data gathered during the experiment. To run the example experiment scirpt make sure to change to `RESULT_DIR` to store the location of the generated results.
 
 ```
@@ -79,6 +117,7 @@ This script simulates the slowloris attack on apache and compiles all the contai
 
 Another useful feature of DoSArray is the ability to run the attack, extract logs and generate graphs independently. When `src/dosarray_run_http_experiment` is invoked without any parameter, it runs the experiment and exits after extracting all the container logs. These logs can later be used to generate graphs using `experiments/dosarray_experiment_graphing.sh`. Alternately, we can also run the entire workflow comprising of the attack, logs extraction and graphing using `src/dosarray_run_http_experiment -g`. Note the use of '-g' to control the extent of the experiment run. 
 
+### Container removal
 Once we have gathered all our logs and results, DoSarray also facilitates clearing out the docker containers which we created for conducting the experiment. The following scripts stop and delete the containers we created in each phyical host except for the target.
 
 ```

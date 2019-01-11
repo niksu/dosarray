@@ -77,7 +77,8 @@ export DOSARRAY_MAX_VIP=$((DOSARRAY_VIRT_INSTANCES + (DOSARRAY_MIN_VIP - 1)))
 function dosarray_execute_on () {
   local HOST_NAME="$1"
   local CMD="$2"
-  ssh <USERNAME>@${HOST_NAME}.<FULLY_QUALIFIED_NAME> -p <SSH_PORT> ${CMD}
+  local SSH_PARAM="$3"
+  ssh <USERNAME>@${HOST_NAME}.<FULLY_QUALIFIED_NAME> -p <SSH_PORT> ${SSH_PARAM} ${CMD}
 }
 export -f dosarray_execute_on
 
