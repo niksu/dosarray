@@ -78,7 +78,7 @@ function dosarray_execute_on () {
   local HOST_NAME="$1"
   local CMD="$2"
   local SSH_PARAM="$3"
-  ssh <USERNAME>@${HOST_NAME}.<FULLY_QUALIFIED_NAME> -p <SSH_PORT> ${SSH_PARAM} ${CMD}
+  ssh <USERNAME>@${HOST_NAME}.<FULLY_QUALIFIED_NAME> -p <SSH_PORT> ${SSH_PARAM} "${CMD}"
 }
 export -f dosarray_execute_on
 
