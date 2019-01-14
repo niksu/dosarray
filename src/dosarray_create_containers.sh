@@ -30,7 +30,7 @@ do \n\
   echo -n \"\${CONTAINER_NAME} \" \n\
   docker container create -ti --name \${CONTAINER_NAME} --net=docker_bridge --ip=\${CONTAINER_ADDRESS} ${DOSARRAY_IMAGE} & \n\
 done \n\
-echo " | dosarray_execute_on "${HOST_NAME}" "" \
+echo " | dosarray_execute_on "${HOST_NAME}" "" "" \
   > /dev/null
 
 done
