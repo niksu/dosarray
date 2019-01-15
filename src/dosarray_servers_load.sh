@@ -70,31 +70,35 @@ do
   rm -f $(logname_of_net ${HOST_NAME})
 done
 
-for ROUND in `seq 0 ${NUM_ROUNDS}`
-do
-  for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
+if [ ${DOSARRAY_MODE} = "simple" ]
+then
+  echo "In simple mode" > /tmp/load.log
+  for ROUND in `seq 0 ${NUM_ROUNDS}`
   do
-    echo "Logging round ${ROUND} of ${HOST_NAME}"
-    dosarray_execute_on "${HOST_NAME}" \
-    "echo \$(hostname) \$(date +%s) \$(cat /proc/loadavg)" >> $(logname_of_load ${HOST_NAME}) &
-    echo "Load log: $(logname_of_load ${HOST_NAME})"
+    for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
+    do
+      echo "Logging round ${ROUND} of ${HOST_NAME}"
+      dosarray_execute_on "${HOST_NAME}" \
+      "echo \$(hostname) \$(date +%s) \$(cat /proc/loadavg)" >> $(logname_of_load ${HOST_NAME}) &
+      echo "Load log: $(logname_of_load ${HOST_NAME})"
 
-    dosarray_execute_on "${HOST_NAME}" \
-    "echo \$(hostname) \$(date +%s) \$(grep Mem /proc/meminfo)" >> $(logname_of_mem ${HOST_NAME}) &
-    echo "Mem log: $(logname_of_mem ${HOST_NAME})"
+      dosarray_execute_on "${HOST_NAME}" \
+      "echo \$(hostname) \$(date +%s) \$(grep Mem /proc/meminfo)" >> $(logname_of_mem ${HOST_NAME}) &
+      echo "Mem log: $(logname_of_mem ${HOST_NAME})"
 
-    dosarray_execute_on "${HOST_NAME}" \
-    "cat /proc/net/dev" >> $(logname_of_net ${HOST_NAME}) &
-    echo "Net log: $(logname_of_net ${HOST_NAME})"
+      dosarray_execute_on "${HOST_NAME}" \
+      "cat /proc/net/dev" >> $(logname_of_net ${HOST_NAME}) &
+      echo "Net log: $(logname_of_net ${HOST_NAME})"
+    done
+
+    if [ "${ROUND}" -ne "${NUM_ROUNDS}" ]
+    then
+      sleep ${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}
+    fi
   done
 
-  if [ "${ROUND}" -ne "${NUM_ROUNDS}" ]
-  then
-    sleep ${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}
-  fi
-done
-
-sleep ${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}
+  sleep ${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS}
+fi
 
 ${DOSARRAY_SCRIPT_DIR}/src/dosarray_filter_net_logs.sh
 
