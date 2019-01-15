@@ -41,7 +41,9 @@ Next, we need to configure DoSarray to simulate experiments using the available 
 
 * `DOSARRAY_LOG_NAME_PREFIX`: Each container log is the same as the container name, which calls for the same container prefix. This could be changed to suit your needs.
 
-* `DOSARRAY_LOG_PATH_PREFIX`: This variable specified the location of all container logs within the physical hosts
+* `DOSARRAY_LOG_PATH_PREFIX`: This variable specifies the location of all container logs within the physical hosts
+
+* `DOSARRAY_MODE`: This variable specifies the mode for load meaurement. Simple mode generates load logs locally by executing the remote command querying the load on each host machine.
 
 ## Optional parameters
 * `DOSARRAY_INCLUDE_MANIFEST`: Setting this to any value (e.g., "1") will generate a file containing a dump of your environment variables. This is disabled by default to avoid potential unwanted disclosures of those variables' values, but it can be useful to activate during testing or to make the experiments more reproducible.
