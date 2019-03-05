@@ -91,7 +91,7 @@ function dosarray_scp_from () {
 export -f dosarray_scp_from
 
 function dosarray_scp_to () {
-	local HOST_NAME="$1"
+  local HOST_NAME="$1"
   local FILE="$2"
   local TO="$3"
   scp ${FILE} <USERNAME>@${HOST_NAME}.<FULLY_QUALIFIED_NAME>:${TO}
