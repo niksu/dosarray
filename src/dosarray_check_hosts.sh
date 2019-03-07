@@ -30,14 +30,12 @@ do
   HOST_NAME="${DOSARRAY_PHYSICAL_HOSTS_PUB[${IDX}]}"
   HOST_IP="${DOSARRAY_PHYSICAL_HOSTS_PRIV[${IDX}]}"
   tput setaf 4
-  #tput smul
   echo -n "Checking "
   tput smso
   echo -n "$HOST_NAME"
   tput rmso
   echo -n " (${HOST_IP})"
   tput sgr0
-  #tput rmul
   echo ""
 
 #  echo -n "  Checking host reachable: "
