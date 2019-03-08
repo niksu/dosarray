@@ -48,7 +48,7 @@ done
 
 if [ -z "${TARGET_IDX}" ]
 then
-  echo "Could not find host ${TARGET_PHYSICAL_HOST} in DOSARRAY_PHYSICAL_HOSTS_PUB=${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}" >&2
+  echo "Could not find host \"${TARGET_PHYSICAL_HOST}\" in DOSARRAY_PHYSICAL_HOSTS_PUB=${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}" >&2
   exit 1
 fi
 
