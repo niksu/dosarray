@@ -22,13 +22,16 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
-while getopts ":r" opt; do
+while getopts ":r:t" opt; do
   case ${opt} in
     r )
       ADD_ROUTES=true
       ;;
+    t )
+      ADD_TABLE_RULES=true
+      ;;
     ? )
-      echo "Usage: ./dosarray_configure_network [-r] <target-physical-host>"
+      echo "Usage: ./dosarray_configure_network [-r] [-t] <target-physical-host>"
       exit 1
       ;;
   esac
@@ -56,9 +59,15 @@ DOSARRAY_VIRTUAL_NETWORK="${DOSARRAY_VIRT_NETS[${TARGET_IDX}]}0"
 
 echo "Targetting TARGET_PHYSICAL_HOST=${TARGET_PHYSICAL_HOST} TARGET_IDX=${TARGET_IDX} DOSARRAY_VIRTUAL_NETWORK=${DOSARRAY_VIRTUAL_NETWORK}"
 
+CMD=""
+
+
+if [ ${ADD_TABLE_RULES} ]
+then
 CMD="sudo iptables -t nat -D POSTROUTING -s ${DOSARRAY_VIRTUAL_NETWORK}/24 ! -o docker_bridge -j MASQUERADE \
 && sudo iptables -D FORWARD -o docker_bridge -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT \
 && sudo iptables -A FORWARD -o docker_bridge -j ACCEPT"
+fi
 
 if [ ${ADD_ROUTES} ]
 then
@@ -74,7 +83,9 @@ then
 fi
 
 echo "Running CMD=${CMD}"
-echo
-echo "Please enter sudo password for ${TARGET_PHYSICAL_HOST} when prompted"
 
-dosarray_execute_on "${TARGET_PHYSICAL_HOST}" "${CMD}" "-t"
+if [ -n "${CMD}" ]
+  echo
+  echo "Please enter sudo password for ${TARGET_PHYSICAL_HOST} when prompted"
+  dosarray_execute_on "${TARGET_PHYSICAL_HOST}" "${CMD}" "-t"
+fi
