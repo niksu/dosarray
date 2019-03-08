@@ -60,20 +60,18 @@ CMD="sudo iptables -t nat -D POSTROUTING -s ${DOSARRAY_VIRTUAL_NETWORK}/24 ! -o 
 && sudo iptables -D FORWARD -o docker_bridge -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT \
 && sudo iptables -A FORWARD -o docker_bridge -j ACCEPT"
 
-for IDX in `seq 0 $(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - 1 ))`
-do
-  if [ "${IDX}" -ne "${TARGET_IDX}" ]
-  then
-    HOST_IP=${DOSARRAY_PHYSICAL_HOSTS_PRIV[$IDX]}
-    VIRTUAL_NETWORK="${DOSARRAY_VIRT_NETS[${IDX}]}0"
-    if [ ${ADD_ROUTES} ]
+if [ ${ADD_ROUTES} ]
+then
+  for IDX in `seq 0 $(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - 1 ))`
+  do
+    if [ "${IDX}" -ne "${TARGET_IDX}" ]
     then
+      HOST_IP=${DOSARRAY_PHYSICAL_HOSTS_PRIV[$IDX]}
+      VIRTUAL_NETWORK="${DOSARRAY_VIRT_NETS[${IDX}]}0"
       CMD="${CMD} ; sudo route add -net ${VIRTUAL_NETWORK} netmask 255.255.255.0 gw ${HOST_IP}"
-    else
-      CMD="${CMD}"
     fi
-  fi
-done
+  done
+fi
 
 echo "Running CMD=${CMD}"
 echo
