@@ -22,8 +22,11 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
-while getopts ":r:t" opt; do
+while getopts "rtd" opt; do
   case ${opt} in
+    d )
+      DRY_RUN=true
+      ;;
     r )
       ADD_ROUTES=true
       ;;
@@ -31,7 +34,7 @@ while getopts ":r:t" opt; do
       ADD_TABLE_RULES=true
       ;;
     ? )
-      echo "Usage: ./dosarray_configure_network [-r] [-t] <target-physical-host>"
+      echo "Usage: ./dosarray_configure_network [-d] [-r] [-t] <target-physical-host>"
       exit 1
       ;;
   esac
@@ -84,7 +87,14 @@ fi
 
 echo "Running CMD=${CMD}"
 
+if [ ${DRY_RUN} ]
+then
+  echo "Dry run: not actually running the command"
+  exit 0
+fi
+
 if [ -n "${CMD}" ]
+then
   echo
   echo "Please enter sudo password for ${TARGET_PHYSICAL_HOST} when prompted"
   dosarray_execute_on "${TARGET_PHYSICAL_HOST}" "${CMD}" "-t"
