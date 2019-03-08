@@ -22,8 +22,11 @@ then
 fi
 source "${DOSARRAY_SCRIPT_DIR}/config/dosarray_config.sh"
 
-while getopts "rtd" opt; do
+while getopts "bdrt" opt; do
   case ${opt} in
+    b )
+      ADD_BRIDGE=true
+      ;;
     d )
       DRY_RUN=true
       ;;
@@ -64,6 +67,18 @@ echo "Targetting TARGET_PHYSICAL_HOST=${TARGET_PHYSICAL_HOST} TARGET_IDX=${TARGE
 
 CMD=""
 
+if [ ${ADD_BRIDGE} ]
+then
+CMD="docker network create --subnet ${DOSARRAY_VIRTUAL_NETWORK}/24 \
+   --driver bridge \
+   --attachable \
+   --opt com.docker.network.bridge.name=docker_bridge \
+   --opt com.docker.network.bridge.enable_icc=true \
+   --opt com.docker.network.bridge.enable_ip_masquerade=true \
+   --opt com.docker.network.bridge.host_binding_ipv4=0.0.0.0 \
+   --opt com.docker.network.driver.mtu=1500 \
+   docker_bridge"
+fi
 
 if [ ${ADD_TABLE_RULES} ]
 then
