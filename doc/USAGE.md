@@ -61,7 +61,7 @@ a message 'iptables: No chain/target/match by that name.' indicating the the
 unnecessary rules have already been deleted.
 
 ```
-./src/dosarray_configure_networking.sh [-r] <physical-host-name>
+./src/dosarray_configure_networking.sh [see options] <physical-host-name>
 ```
 
 NOTE: Configure network on the target machine with the -r option to route packets correctly 
