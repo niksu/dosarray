@@ -30,7 +30,7 @@ do \n\
   echo -n \"\${CONTAINER_NAME} \" \n\
   docker container stop \${CONTAINER_NAME} & \n\
 done \n\
-echo " | dosarray_execute_on "${HOST_NAME}" "" \
+echo " | dosarray_execute_on "${HOST_NAME}" "" "" \
   > /dev/null
 done
 

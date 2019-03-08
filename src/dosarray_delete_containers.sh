@@ -33,7 +33,7 @@ do \n\
   docker container rm \${CONTAINER_NAME} >> /tmp/dosarray.stdout 2>> /tmp/dosarray.stderr & \n\
 done \n\
 echo \"\$(date) finishing dosarray_delete_containers.sh\" >> /tmp/dosarray.stdout \n\
-echo " | dosarray_execute_on "${HOST_NAME}" "" \
+echo " | dosarray_execute_on "${HOST_NAME}" "" "" \
   > /dev/null
 
   echo "Gathering stdout and stderr logs from $HOST_NAME"

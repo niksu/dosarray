@@ -1,6 +1,6 @@
 #/bin/sh -e
-# Container setup for DoSarray
-# Nik Sultana, December 2017, UPenn
+# Host time-synching for DoSarray
+# Nik Sultana, January 2019, UPenn
 #
 # Use of this source code is governed by the Apache 2.0 license; see LICENSE
 
@@ -20,18 +20,8 @@ for IDX in ${DOSARRAY_CONTAINER_HOST_IDXS}
 do
   HOST_NAME="${DOSARRAY_PHYSICAL_HOSTS_PUB[${IDX}]}"
   HOST_IP="${DOSARRAY_PHYSICAL_HOSTS_PRIV[${IDX}]}"
-  echo "Starting containers in $HOST_NAME (${HOST_IP})"
-
-  printf " \
-for CURRENT_CONTAINER_IP in \$(seq $DOSARRAY_MIN_VIP $DOSARRAY_MAX_VIP) \n\
-do \n\
-  CONTAINER_SUFFIX=${DOSARRAY_VIRT_NET_SUFFIX[${IDX}]}.\${CURRENT_CONTAINER_IP} \n\
-  CONTAINER_NAME=\"${DOSARRAY_CONTAINER_PREFIX}\${CONTAINER_SUFFIX}\" \n\
-  echo -n \"\${CONTAINER_NAME} \" \n\
-  docker container start \${CONTAINER_NAME} & \n\
-done \n\
-echo " | dosarray_execute_on "${HOST_NAME}" "" "" \
-  > /dev/null
+  echo "Synching time in $HOST_NAME (${HOST_IP})"
+  dosarray_execute_on "${HOST_NAME}" "ntpdate -s time.nist.gov"
 done
 
 echo "Done"
