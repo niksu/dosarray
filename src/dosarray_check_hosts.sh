@@ -44,13 +44,17 @@ do
   RESULT="$?"
   if [ "$RESULT" == "0" ]
   then
+    tput setaf 2
     tput smso
     echo "OK"
     tput rmso
+    tput sgr0
   else
+    tput setaf 1
     tput smso
     echo "FAIL ($RESULT)"
     tput rmso
+    tput sgr0
   fi
 
   echo -n "  Checking has Docker: "
@@ -58,13 +62,17 @@ do
   RESULT="$?"
   if [ "$RESULT" == "0" ]
   then
+    tput setaf 2
     tput smso
     echo "OK"
     tput rmso
+    tput sgr0
   else
+    tput setaf 1
     tput smso
     echo "FAIL ($RESULT)"
     tput rmso
+    tput sgr0
   fi
 
   echo -n "  Checking has DoSarray image: "
@@ -72,13 +80,17 @@ do
   RESULT="$?"
   if [ "$RESULT" == "0" ]
   then
+    tput setaf 2
     tput smso
     echo "OK"
     tput rmso
+    tput sgr0
   else
+    tput setaf 1
     tput smso
     echo "FAIL ($RESULT)"
     tput rmso
+    tput sgr0
   fi
 
   echo -n "  Checking has network interface \"${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]}\": "
@@ -86,13 +98,17 @@ do
   RESULT="$?"
   if [ "$RESULT" == "0" ]
   then
+    tput setaf 2
     tput smso
     echo "OK"
     tput rmso
+    tput sgr0
   else
+    tput setaf 1
     tput smso
     echo "FAIL ($RESULT)"
     tput rmso
+    tput sgr0
   fi
 
   echo -n "  Checking that interface \"${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]}\" has IP \"${DOSARRAY_PHYSICAL_HOSTS_PRIV[${IDX}]}\": "
@@ -100,20 +116,26 @@ do
   RESULT="$?"
   if [ ! "$RESULT" == "0" ]
   then
+    tput setaf 1
     tput smso
-    echo "PRE-FAIL ($RESULT)"
+    echo -n "PRE-FAIL ($RESULT) "
     tput rmso
+    tput sgr0
   fi
 
   if [ "${REMOTE_RESULT}" == "${DOSARRAY_PHYSICAL_HOSTS_PRIV[${IDX}]}" ]
   then
+    tput setaf 2
     tput smso
     echo "OK"
     tput rmso
+    tput sgr0
   else
+    tput setaf 1
     tput smso
     echo "FAIL (${REMOTE_RESULT})"
     tput rmso
+    tput sgr0
   fi
 
   echo -n "  Checking has network interface \"${DOCKER_BRIDGE}\": "
@@ -121,13 +143,17 @@ do
   RESULT="$?"
   if [ "$RESULT" == "0" ]
   then
+    tput setaf 2
     tput smso
     echo "OK"
     tput rmso
+    tput sgr0
   else
+    tput setaf 1
     tput smso
     echo "FAIL ($RESULT)"
     tput rmso
+    tput sgr0
   fi
 
   echo -n "  Checking that interface \"${DOCKER_BRIDGE}\" has IP \"${DOSARRAY_VIRT_NETS[${IDX}]}\": "
@@ -135,20 +161,26 @@ do
   RESULT="$?"
   if [ ! "$RESULT" == "0" ]
   then
+    tput setaf 1
     tput smso
-    echo "PRE-FAIL ($RESULT)"
+    echo -n "PRE-FAIL ($RESULT) "
     tput rmso
+    tput sgr0
   fi
 
   if [[ "${REMOTE_RESULT}" =~ "${DOSARRAY_VIRT_NETS[${IDX}]}" ]]
   then
+    tput setaf 2
     tput smso
     echo "OK"
     tput rmso
+    tput sgr0
   else
+    tput setaf 1
     tput smso
     echo "FAIL (${REMOTE_RESULT})"
     tput rmso
+    tput sgr0
   fi
 
   echo  "  Checking if host routing configured for DoSarray: "
@@ -161,13 +193,17 @@ do
     RESULT="$?"
     if [ "$RESULT" == "0" ]
     then
+      tput setaf 2
       tput smso
       echo "OK"
       tput rmso
+      tput sgr0
     else
+      tput setaf 1
       tput smso
       echo "FAIL ($RESULT)"
       tput rmso
+      tput sgr0
     fi
   done
 
@@ -177,26 +213,34 @@ do
   RESULT="$?"
   if [ "$RESULT" == "0" ]
   then
+    tput setaf 2
     tput smso
     echo -n "OK"
     tput rmso
+    tput sgr0
   else
+    tput setaf 1
     tput smso
     echo -n "FAIL (${RESULT})"
     tput rmso
+    tput sgr0
   fi
   echo -n " "
   dosarray_execute_on "${HOST_NAME}" "sudo iptables -S | grep -E \"^-A FORWARD -o docker_bridge -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\"" "-q" 2>&1 > /dev/null
   RESULT="$?"
   if [ ! "$RESULT" == "0" ]
   then
+    tput setaf 2
     tput smso
     echo -n "OK"
     tput rmso
+    tput sgr0
   else
+    tput setaf 1
     tput smso
     echo -n "FAIL (${RESULT})"
     tput rmso
+    tput sgr0
   fi
   echo -n " "
   DOSARRAY_VIRTUAL_NETWORK="${DOSARRAY_VIRT_NETS[${TARGET_IDX}]}0"
@@ -204,13 +248,17 @@ do
   RESULT="$?"
   if [ ! "$RESULT" == "0" ]
   then
+    tput setaf 2
     tput smso
     echo -n "OK"
     tput rmso
+    tput sgr0
   else
+    tput setaf 1
     tput smso
     echo -n "FAIL (${RESULT})"
     tput rmso
+    tput sgr0
   fi
 
   echo ""
