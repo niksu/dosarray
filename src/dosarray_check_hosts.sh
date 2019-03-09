@@ -25,7 +25,7 @@ tput rmso
 tput rmul
 
 
-for IDX in ${DOSARRAY_CONTAINER_HOST_IDXS}
+for IDX in ${DOSARRAY_PHYSICAL_HOST_IDXS}
 do
   HOST_NAME="${DOSARRAY_PHYSICAL_HOSTS_PUB[${IDX}]}"
   HOST_IP="${DOSARRAY_PHYSICAL_HOSTS_PRIV[${IDX}]}"
@@ -37,6 +37,7 @@ do
   echo -n " (${HOST_IP})"
   tput sgr0
   echo ""
+
 
 #  echo -n "  Checking host reachable: "
 #  dosarray_execute_on "${HOST_NAME}" "uname -a" "-q" 2>&1 > /dev/null
@@ -135,21 +136,21 @@ do
     tput smso
     echo "FAIL ($RESULT)"
     tput rmso
-    break
+#    break
   fi
 
-  echo -n "  Checking that interface \"${DOCKER_BRIDGE}\" has IP \"${DOSARRAY_PHYSICAL_HOSTS_PRIV[${IDX}]}\": "
-  dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOCKER_BRIDGE} | grep \"inet addr\" | sed 's/^.*inet addr:\([^ ]*\).*$/\1/'" "-q" 2>&1 > /dev/null
+  echo -n "  Checking that interface \"${DOCKER_BRIDGE}\" has IP \"${DOSARRAY_VIRT_NETS[${IDX}]}\": "
+  dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOCKER_BRIDGE} | grep \"inet addr\" | sed 's/^.*inet addr:\([^ ]*\).*$/\1/'" "-q" "capture" 2>&1 > /dev/null
   RESULT="$?"
   if [ ! "$RESULT" == "0" ]
   then
     tput smso
     echo "PRE-FAIL ($RESULT)"
     tput rmso
-    break
+#    break
   fi
 
-  if [ "${REMOTE_RESULT}" == "${DOSARRAY_PHYSICAL_HOSTS_PRIV[${IDX}]}" ]
+  if [[ "${REMOTE_RESULT}" =~ "${DOSARRAY_VIRT_NETS[${IDX}]}" ]]
   then
     tput smso
     echo "OK"
@@ -158,12 +159,32 @@ do
     tput smso
     echo "FAIL (${REMOTE_RESULT})"
     tput rmso
-    break
+#    break
   fi
 
-#  VIRTUAL_NETWORK="${DOSARRAY_VIRT_NETS[${IDX}]}0"
-#  dosarray_execute_on "${HOST_NAME}" "" "route | grep ${VIRTUAL_NETWORK}"
-#
+  echo  "  Checking if host routing configured for DoSarray: "
+  # Make sure that all other hosts' subnets are reachable.
+  for SUB_IDX in ${DOSARRAY_PHYSICAL_HOST_IDXS}
+  do
+    VIRTUAL_NETWORK="${DOSARRAY_VIRT_NETS[${SUB_IDX}]}0"
+    echo -n "    ${DOSARRAY_PHYSICAL_HOSTS_PUB[${SUB_IDX}]}: "
+    dosarray_execute_on "${HOST_NAME}" "route | grep ${VIRTUAL_NETWORK}" "-q" 2>&1 > /dev/null
+    RESULT="$?"
+    if [ "$RESULT" == "0" ]
+    then
+      tput smso
+      echo "OK"
+      tput rmso
+    else
+      tput smso
+      echo "FAIL ($RESULT)"
+      tput rmso
+#      break
+    fi
+  done
+
+
+#  echo -n "  Checking if host's routing configured for DoSarray: "    
 #  dosarray_execute_on "${HOST_NAME}" "" "sudo sh -c 'iptables -S | grep -E \"^-A FORWARD -o docker_bridge -j ACCEPT\"; echo $?'"
 #  dosarray_execute_on "${HOST_NAME}" "" "sudo sh -c 'iptables -S | grep -E \"^-A FORWARD -o docker_bridge -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\" | echo $?'"
 
