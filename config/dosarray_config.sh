@@ -25,6 +25,11 @@ export DOSARRAY_VIRT_NETS=( "${DOSARRAY_VIRT_NET_PREFIX}${DOSARRAY_VIRT_NET_SUFF
 export DOSARRAY_TARGET_SERVER_INDEX=0
 export DOSARRAY_HOST_COLORS=( '#555555' '#777777' '#999999' '#BBBBBB' '#DDDDDD' '#FFFFFF' '#EEEEEE' '#AAAAAA' )
 
+USERNAME=  
+SSH_PARAMS=  
+SCP_PARAMS=  
+DOMAIN=  
+
 # Check that DOSARRAY_PHYSICAL_HOSTS_PRIV, DOSARRAY_VIRT_NET_SUFFIX, etc all have the same number of elements.
 if [ ${#DOSARRAY_PHYSICAL_HOSTS_PRIV[@]} -ne ${#DOSARRAY_VIRT_NET_SUFFIX[@]} ]
 then
@@ -78,7 +83,14 @@ function dosarray_execute_on () {
   local HOST_NAME="$1"
   local CMD="$2"
   local SSH_PARAM="$3"
-  ssh <USERNAME>@${HOST_NAME}.<FULLY_QUALIFIED_NAME> -p <SSH_PORT> ${SSH_PARAM} "${CMD}"
+  local CAPTURE_REMOTE_RESULT="$4"
+  if [ -z "${CAPTURE_REMOTE_RESULT}" ]
+  then
+    ssh -t ${SSH_PARAMS} ${USERNAME}@${HOST_NAME}.${DOMAIN} ${SSH_PARAM} "${CMD}"
+  else
+    # NOTE using "tr" to strip the carriage return we get from using ssh, otherwise it'll confuse downstream consumers of REMOTE_RESULT
+    REMOTE_RESULT=$(ssh -t ${SSH_PARAMS} ${USERNAME}@${HOST_NAME}.${DOMAIN} ${SSH_PARAM} "${CMD}" | tr -d '')
+  fi
 }
 export -f dosarray_execute_on
 
@@ -86,7 +98,7 @@ function dosarray_scp_from () {
   local HOST_NAME="$1"
   local FROM="$2"
   local TO="$3"
-  scp -r -P <SSH_PORT> <USERNAME>@${HOST_NAME}.<FULLY_QUALIFIED_NAME>:${FROM} ${TO}
+  scp ${SCP_PARAMS} -r ${USERNAME}@${HOST_NAME}.${DOMAIN}:${FROM} ${TO}
 }
 export -f dosarray_scp_from
 
@@ -94,13 +106,13 @@ function dosarray_scp_to () {
   local HOST_NAME="$1"
   local FILE="$2"
   local TO="$3"
-  scp ${FILE} <USERNAME>@${HOST_NAME}.<FULLY_QUALIFIED_NAME>:${TO}
+  scp ${SCP_PARAMS} ${FILE} ${USERNAME}@${HOST_NAME}.${DOMAIN}:${TO}
 }
 export -f dosarray_scp_to
 
 export DOSARRAY_CONTAINER_PREFIX="c"
 export DOSARRAY_LOG_NAME_PREFIX="${DOSARRAY_CONTAINER_PREFIX}"
-export DOSARRAY_LOG_PATH_PREFIX="/home/<USERNAME>"
+export DOSARRAY_LOG_PATH_PREFIX="/home/${USERNAME}"
 
 # Set for dosrray_run_http_experiment.sh
 
