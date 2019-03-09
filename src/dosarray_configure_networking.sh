@@ -77,14 +77,14 @@ CMD="docker network create --subnet ${DOSARRAY_VIRTUAL_NETWORK}/24 \
    --opt com.docker.network.bridge.enable_ip_masquerade=true \
    --opt com.docker.network.bridge.host_binding_ipv4=0.0.0.0 \
    --opt com.docker.network.driver.mtu=1500 \
-   docker_bridge"
+   docker_bridge; "
 fi
 
 if [ ${ADD_TABLE_RULES} ]
 then
 CMD="sudo iptables -t nat -D POSTROUTING -s ${DOSARRAY_VIRTUAL_NETWORK}/24 ! -o docker_bridge -j MASQUERADE \
 && sudo iptables -D FORWARD -o docker_bridge -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT \
-&& sudo iptables -A FORWARD -o docker_bridge -j ACCEPT"
+&& sudo iptables -A FORWARD -o docker_bridge -j ACCEPT; "
 fi
 
 if [ ${ADD_ROUTES} ]
@@ -95,7 +95,7 @@ then
     then
       HOST_IP=${DOSARRAY_PHYSICAL_HOSTS_PRIV[$IDX]}
       VIRTUAL_NETWORK="${DOSARRAY_VIRT_NETS[${IDX}]}0"
-      CMD="${CMD} ; sudo route add -net ${VIRTUAL_NETWORK} netmask 255.255.255.0 gw ${HOST_IP}"
+      CMD="${CMD} sudo route add -net ${VIRTUAL_NETWORK} netmask 255.255.255.0 gw ${HOST_IP}; "
     fi
   done
 fi
