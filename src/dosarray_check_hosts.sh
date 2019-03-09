@@ -136,7 +136,6 @@ do
     tput smso
     echo "FAIL ($RESULT)"
     tput rmso
-#    break
   fi
 
   echo -n "  Checking that interface \"${DOCKER_BRIDGE}\" has IP \"${DOSARRAY_VIRT_NETS[${IDX}]}\": "
@@ -147,7 +146,6 @@ do
     tput smso
     echo "PRE-FAIL ($RESULT)"
     tput rmso
-#    break
   fi
 
   if [[ "${REMOTE_RESULT}" =~ "${DOSARRAY_VIRT_NETS[${IDX}]}" ]]
@@ -159,7 +157,6 @@ do
     tput smso
     echo "FAIL (${REMOTE_RESULT})"
     tput rmso
-#    break
   fi
 
   echo  "  Checking if host routing configured for DoSarray: "
@@ -179,7 +176,6 @@ do
       tput smso
       echo "FAIL ($RESULT)"
       tput rmso
-#      break
     fi
   done
 
