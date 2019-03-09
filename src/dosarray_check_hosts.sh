@@ -172,10 +172,48 @@ do
   done
 
 
-#  echo -n "  Checking if host's routing configured for DoSarray: "    
-#  dosarray_execute_on "${HOST_NAME}" "" "sudo sh -c 'iptables -S | grep -E \"^-A FORWARD -o docker_bridge -j ACCEPT\"; echo $?'"
-#  dosarray_execute_on "${HOST_NAME}" "" "sudo sh -c 'iptables -S | grep -E \"^-A FORWARD -o docker_bridge -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\" | echo $?'"
+  echo -n "  Checking host's iptables rules: "
+  dosarray_execute_on "${HOST_NAME}" "sudo iptables -S | grep -E \"^-A FORWARD -o docker_bridge -j ACCEPT\"" "-q" 2>&1 > /dev/null
+  RESULT="$?"
+  if [ "$RESULT" == "0" ]
+  then
+    tput smso
+    echo -n "OK"
+    tput rmso
+  else
+    tput smso
+    echo -n "FAIL (${RESULT})"
+    tput rmso
+  fi
+  echo -n " "
+  dosarray_execute_on "${HOST_NAME}" "sudo iptables -S | grep -E \"^-A FORWARD -o docker_bridge -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\"" "-q" 2>&1 > /dev/null
+  RESULT="$?"
+  if [ ! "$RESULT" == "0" ]
+  then
+    tput smso
+    echo -n "OK"
+    tput rmso
+  else
+    tput smso
+    echo -n "FAIL (${RESULT})"
+    tput rmso
+  fi
+  echo -n " "
+  DOSARRAY_VIRTUAL_NETWORK="${DOSARRAY_VIRT_NETS[${TARGET_IDX}]}0"
+  dosarray_execute_on "${HOST_NAME}" "sudo iptables -S -t nat | grep -E \"^-A D POSTROUTING -s ${DOSARRAY_VIRTUAL_NETWORK}/24 ! -o docker_bridge -j MASQUERADE\"" "-q" 2>&1 > /dev/null
+  RESULT="$?"
+  if [ ! "$RESULT" == "0" ]
+  then
+    tput smso
+    echo -n "OK"
+    tput rmso
+  else
+    tput smso
+    echo -n "FAIL (${RESULT})"
+    tput rmso
+  fi
 
+  echo ""
   echo ""
 done
 
