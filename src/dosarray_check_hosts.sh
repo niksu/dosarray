@@ -39,90 +39,82 @@ do
   echo ""
 
 
-#  echo -n "  Checking host reachable: "
-#  dosarray_execute_on "${HOST_NAME}" "uname -a" "-q" 2>&1 > /dev/null
-#  RESULT="$?"
-#  if [ "$RESULT" == "0" ]
-#  then
-#    tput smso
-#    echo "OK"
-#    tput rmso
-#  else
-#    tput smso
-#    echo "FAIL ($RESULT)"
-#    tput rmso
-#    break
-#  fi
-#
-#  echo -n "  Checking has Docker: "
-#  dosarray_execute_on "${HOST_NAME}" "docker --version" "-q" 2>&1 > /dev/null
-#  RESULT="$?"
-#  if [ "$RESULT" == "0" ]
-#  then
-#    tput smso
-#    echo "OK"
-#    tput rmso
-#  else
-#    tput smso
-#    echo "FAIL ($RESULT)"
-#    tput rmso
-#    break
-#  fi
-#
-#  echo -n "  Checking has DoSarray image: "
-#  dosarray_execute_on "${HOST_NAME}" "docker images | grep dosarray" "-q" 2>&1 > /dev/null
-#  RESULT="$?"
-#  if [ "$RESULT" == "0" ]
-#  then
-#    tput smso
-#    echo "OK"
-#    tput rmso
-#  else
-#    tput smso
-#    echo "FAIL ($RESULT)"
-#    tput rmso
-#    break
-#  fi
+  echo -n "  Checking host reachable: "
+  dosarray_execute_on "${HOST_NAME}" "uname -a" "-q" 2>&1 > /dev/null
+  RESULT="$?"
+  if [ "$RESULT" == "0" ]
+  then
+    tput smso
+    echo "OK"
+    tput rmso
+  else
+    tput smso
+    echo "FAIL ($RESULT)"
+    tput rmso
+  fi
 
+  echo -n "  Checking has Docker: "
+  dosarray_execute_on "${HOST_NAME}" "docker --version" "-q" 2>&1 > /dev/null
+  RESULT="$?"
+  if [ "$RESULT" == "0" ]
+  then
+    tput smso
+    echo "OK"
+    tput rmso
+  else
+    tput smso
+    echo "FAIL ($RESULT)"
+    tput rmso
+  fi
 
+  echo -n "  Checking has DoSarray image: "
+  dosarray_execute_on "${HOST_NAME}" "docker images | grep dosarray" "-q" 2>&1 > /dev/null
+  RESULT="$?"
+  if [ "$RESULT" == "0" ]
+  then
+    tput smso
+    echo "OK"
+    tput rmso
+  else
+    tput smso
+    echo "FAIL ($RESULT)"
+    tput rmso
+  fi
 
-#  echo -n "  Checking has network interface \"${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]}\": "
-#  dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]}" "-q" 2>&1 > /dev/null
-#  RESULT="$?"
-#  if [ "$RESULT" == "0" ]
-#  then
-#    tput smso
-#    echo "OK"
-#    tput rmso
-#  else
-#    tput smso
-#    echo "FAIL ($RESULT)"
-#    tput rmso
-#    break
-#  fi
-#
-#  echo -n "  Checking that interface \"${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]}\" has IP \"${DOSARRAY_PHYSICAL_HOSTS_PRIV[${IDX}]}\": "
-#  dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]} | grep \"inet addr\" | sed 's/^.*inet addr:\([^ ]*\).*$/\1/'" "-q" 2>&1 > /dev/null
-#  RESULT="$?"
-#  if [ ! "$RESULT" == "0" ]
-#  then
-#    tput smso
-#    echo "PRE-FAIL ($RESULT)"
-#    tput rmso
-#    break
-#  fi
-#
-#  if [ "${REMOTE_RESULT}" == "${DOSARRAY_PHYSICAL_HOSTS_PRIV[${IDX}]}" ]
-#  then
-#    tput smso
-#    echo "OK"
-#    tput rmso
-#  else
-#    tput smso
-#    echo "FAIL (${REMOTE_RESULT})"
-#    tput rmso
-#    break
-#  fi
+  echo -n "  Checking has network interface \"${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]}\": "
+  dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]}" "-q" 2>&1 > /dev/null
+  RESULT="$?"
+  if [ "$RESULT" == "0" ]
+  then
+    tput smso
+    echo "OK"
+    tput rmso
+  else
+    tput smso
+    echo "FAIL ($RESULT)"
+    tput rmso
+  fi
+
+  echo -n "  Checking that interface \"${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]}\" has IP \"${DOSARRAY_PHYSICAL_HOSTS_PRIV[${IDX}]}\": "
+  dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]} | grep \"inet addr\" | sed 's/^.*inet addr:\([^ ]*\).*$/\1/'" "-q" "capture" 2>&1 > /dev/null
+  RESULT="$?"
+  if [ ! "$RESULT" == "0" ]
+  then
+    tput smso
+    echo "PRE-FAIL ($RESULT)"
+    tput rmso
+  fi
+
+  if [ "${REMOTE_RESULT}" == "${DOSARRAY_PHYSICAL_HOSTS_PRIV[${IDX}]}" ]
+  then
+    tput smso
+    echo "OK"
+    tput rmso
+  else
+    tput smso
+    echo "FAIL (${REMOTE_RESULT})"
+    tput rmso
+  fi
 
   echo -n "  Checking has network interface \"${DOCKER_BRIDGE}\": "
   dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOCKER_BRIDGE}" "-q" 2>&1 > /dev/null
