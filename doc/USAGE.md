@@ -51,6 +51,10 @@ Next, we need to configure DoSarray to simulate experiments using the available 
 ## Using DoSarray
 
 ### Configuring network
+Prior to running an experiment make sure to check that your cluster
+is configured correctly. The [configuration
+checker](src/dosarray_check_hosts.sh) script gives you informative output.
+
 An important consideration in DoSarray is to achieve address diversity in order
 to simulate larger networks in these experiments. This involves configuring
 each host in the physical network with the network info of the virtual network
@@ -97,7 +101,7 @@ Even iptable modifications such as `sudo iptables -A FORWARD -o docker_bridge -j
 ```
 -A FORWARD -o docker_bridge -j ACCEPT
 ```
- 
+
 ### Container setup
 After configuring the network, the next step is creating and starting docker containers in each of the physical hosts except the target. The following invokation of scripts creates containers in each of these host based on the values set in `dosarray_config.sh`
 
