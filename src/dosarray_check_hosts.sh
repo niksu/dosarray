@@ -230,6 +230,7 @@ do
   dosarray_execute_on "${HOST_NAME}" "sudo iptables -S | grep -E \"^-A FORWARD -o docker_bridge -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\"" "-q" "" "${POST_COMMAND}"
   RESULT="$?"
   if [ ! "$RESULT" == "0" ]
+    # The above is negated since we don't expect to find this rule after the configuration has been made.
   then
     tput setaf 2
     tput smso
@@ -248,6 +249,7 @@ do
   dosarray_execute_on "${HOST_NAME}" "sudo iptables -S -t nat | grep -E \"^-A D POSTROUTING -s ${DOSARRAY_VIRTUAL_NETWORK}/24 ! -o docker_bridge -j MASQUERADE\"" "-q" "" "${POST_COMMAND}"
   RESULT="$?"
   if [ ! "$RESULT" == "0" ]
+    # The above is negated since we don't expect to find this rule after the configuration has been made.
   then
     tput setaf 2
     tput smso
