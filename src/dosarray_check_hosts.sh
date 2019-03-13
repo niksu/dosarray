@@ -38,9 +38,10 @@ do
   tput sgr0
   echo ""
 
+  POST_COMMAND="2>&1 > /dev/null"
 
   echo -n "  Checking host reachable: "
-  dosarray_execute_on "${HOST_NAME}" "uname -a" "-q" 2>&1 > /dev/null
+  dosarray_execute_on "${HOST_NAME}" "uname -a" "-q" "" "${POST_COMMAND}"
   RESULT="$?"
   if [ "$RESULT" == "0" ]
   then
@@ -58,7 +59,7 @@ do
   fi
 
   echo -n "  Checking has Docker: "
-  dosarray_execute_on "${HOST_NAME}" "docker --version" "-q" 2>&1 > /dev/null
+  dosarray_execute_on "${HOST_NAME}" "docker --version" "-q" "" "${POST_COMMAND}"
   RESULT="$?"
   if [ "$RESULT" == "0" ]
   then
@@ -76,7 +77,7 @@ do
   fi
 
   echo -n "  Checking has DoSarray image: "
-  dosarray_execute_on "${HOST_NAME}" "docker images | grep dosarray" "-q" 2>&1 > /dev/null
+  dosarray_execute_on "${HOST_NAME}" "docker images | grep dosarray" "-q" "" "${POST_COMMAND}"
   RESULT="$?"
   if [ "$RESULT" == "0" ]
   then
@@ -94,7 +95,7 @@ do
   fi
 
   echo -n "  Checking has network interface \"${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]}\": "
-  dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]}" "-q" 2>&1 > /dev/null
+  dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]}" "-q" "" "${POST_COMMAND}"
   RESULT="$?"
   if [ "$RESULT" == "0" ]
   then
@@ -112,7 +113,7 @@ do
   fi
 
   echo -n "  Checking that interface \"${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]}\" has IP \"${DOSARRAY_PHYSICAL_HOSTS_PRIV[${IDX}]}\": "
-  dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]} | grep \"inet addr\" | sed 's/^.*inet addr:\([^ ]*\).*$/\1/'" "-q" "capture" 2>&1 > /dev/null
+  dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOSARRAY_HOST_INTERFACE_MAP[${IDX}]} | grep \"inet addr\" | sed 's/^.*inet addr:\([^ ]*\).*$/\1/'" "-q" "capture" "${POST_COMMAND}"
   RESULT="$?"
   if [ ! "$RESULT" == "0" ]
   then
@@ -139,7 +140,7 @@ do
   fi
 
   echo -n "  Checking has network interface \"${DOCKER_BRIDGE}\": "
-  dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOCKER_BRIDGE}" "-q" 2>&1 > /dev/null
+  dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOCKER_BRIDGE}" "-q" "" "${POST_COMMAND}"
   RESULT="$?"
   if [ "$RESULT" == "0" ]
   then
@@ -157,7 +158,7 @@ do
   fi
 
   echo -n "  Checking that interface \"${DOCKER_BRIDGE}\" has IP \"${DOSARRAY_VIRT_NETS[${IDX}]}\": "
-  dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOCKER_BRIDGE} | grep \"inet addr\" | sed 's/^.*inet addr:\([^ ]*\).*$/\1/'" "-q" "capture" 2>&1 > /dev/null
+  dosarray_execute_on "${HOST_NAME}" "ifconfig ${DOCKER_BRIDGE} | grep \"inet addr\" | sed 's/^.*inet addr:\([^ ]*\).*$/\1/'" "-q" "capture" "${POST_COMMAND}"
   RESULT="$?"
   if [ ! "$RESULT" == "0" ]
   then
@@ -189,7 +190,7 @@ do
   do
     VIRTUAL_NETWORK="${DOSARRAY_VIRT_NETS[${SUB_IDX}]}0"
     echo -n "    ${DOSARRAY_PHYSICAL_HOSTS_PUB[${SUB_IDX}]}: "
-    dosarray_execute_on "${HOST_NAME}" "route | grep ${VIRTUAL_NETWORK}" "-q" 2>&1 > /dev/null
+    dosarray_execute_on "${HOST_NAME}" "route | grep ${VIRTUAL_NETWORK}" "-q" "" "${POST_COMMAND}"
     RESULT="$?"
     if [ "$RESULT" == "0" ]
     then
@@ -209,7 +210,7 @@ do
 
 
   echo -n "  Checking host's iptables rules: "
-  dosarray_execute_on "${HOST_NAME}" "sudo iptables -S | grep -E \"^-A FORWARD -o docker_bridge -j ACCEPT\"" "-q" 2>&1 > /dev/null
+  dosarray_execute_on "${HOST_NAME}" "sudo iptables -S | grep -E \"^-A FORWARD -o docker_bridge -j ACCEPT\"" "-q" "" "${POST_COMMAND}"
   RESULT="$?"
   if [ "$RESULT" == "0" ]
   then
@@ -226,7 +227,7 @@ do
     tput sgr0
   fi
   echo -n " "
-  dosarray_execute_on "${HOST_NAME}" "sudo iptables -S | grep -E \"^-A FORWARD -o docker_bridge -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\"" "-q" 2>&1 > /dev/null
+  dosarray_execute_on "${HOST_NAME}" "sudo iptables -S | grep -E \"^-A FORWARD -o docker_bridge -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT\"" "-q" "" "${POST_COMMAND}"
   RESULT="$?"
   if [ ! "$RESULT" == "0" ]
   then
@@ -244,7 +245,7 @@ do
   fi
   echo -n " "
   DOSARRAY_VIRTUAL_NETWORK="${DOSARRAY_VIRT_NETS[${TARGET_IDX}]}0"
-  dosarray_execute_on "${HOST_NAME}" "sudo iptables -S -t nat | grep -E \"^-A D POSTROUTING -s ${DOSARRAY_VIRTUAL_NETWORK}/24 ! -o docker_bridge -j MASQUERADE\"" "-q" 2>&1 > /dev/null
+  dosarray_execute_on "${HOST_NAME}" "sudo iptables -S -t nat | grep -E \"^-A D POSTROUTING -s ${DOSARRAY_VIRTUAL_NETWORK}/24 ! -o docker_bridge -j MASQUERADE\"" "-q" "" "${POST_COMMAND}"
   RESULT="$?"
   if [ ! "$RESULT" == "0" ]
   then
