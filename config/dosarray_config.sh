@@ -84,9 +84,10 @@ function dosarray_execute_on () {
   local CMD="$2"
   local SSH_PARAM="$3"
   local CAPTURE_REMOTE_RESULT="$4"
-  if [ -z "${CAPTURE_REMOTE_RESULT}" ]
+  local POST_COMMAND="$5"
+  if [ "${CAPTURE_REMOTE_RESULT}" == "" ] || [ -z "${CAPTURE_REMOTE_RESULT}" ]
   then
-    ssh -t ${SSH_PARAMS} ${USERNAME}@${HOST_NAME}.${DOMAIN} ${SSH_PARAM} "${CMD}"
+    ssh -t ${SSH_PARAMS} ${USERNAME}@${HOST_NAME}.${DOMAIN} ${SSH_PARAM} "${CMD}" ${POST_COMMAND}
   else
     # NOTE using "tr" to strip the carriage return we get from using ssh, otherwise it'll confuse downstream consumers of REMOTE_RESULT
     REMOTE_RESULT=$(ssh -t ${SSH_PARAMS} ${USERNAME}@${HOST_NAME}.${DOMAIN} ${SSH_PARAM} "${CMD}" | tr -d '')
