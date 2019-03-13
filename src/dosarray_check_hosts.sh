@@ -38,6 +38,8 @@ do
   tput sgr0
   echo ""
 
+  # NOTE can use empty POST_COMMAND to show output for debugging,
+  #      alternatively could log it in a file.
   POST_COMMAND="2>&1 > /dev/null"
 
   echo -n "  Checking host reachable: "

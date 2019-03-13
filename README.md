@@ -26,7 +26,9 @@ The output from this experiment can be seen in the
 
 Prior to running an experiment make sure to check that your cluster
 is configured correctly. The [configuration
-checker](src/dosarray_check_hosts.sh) script gives you informative output:
+checker](src/dosarray_check_hosts.sh) script gives you informative break-down
+of the findings, which can be made more detailed to help with diagnosing
+problems:
 ![DoSarray configuration checking script](doc/dosarray_check_hosts.png)
 
 ## Documentation
