@@ -25,11 +25,12 @@ The output from this experiment can be seen in the
 [DoStbin archive](https://gitlab.com/niksu/dostbin/tree/master/results/1).
 
 ## Documentation
-Please see our [usage guide](doc/USAGE.md), which explains how to set the two
-levels of configuration: [DoSarray-wide](config/dosarray_config.sh) and
+Please see our [usage guide](doc/USAGE.md) which explains how to set DoSarray's
+two levels of configuration: [DoSarray-wide](config/dosarray_config.sh) and
 experiment-specific (such as in the
 [example](experiments/dosarray_slowloris_experiment.sh) above).
-We also have an [FAQ](doc/FAQ.md).
+
+We also have an [FAQ](doc/FAQ.md) and a [trouble-shoot checklist](doc/CHECKLIST.md).
 
 ## Multi-run experiments
 Multiple runs of an experiment can be made by giving an additional
