@@ -168,3 +168,7 @@ You should be seeing the IP addresses of containers mentioned in the logs instea
 192.168.7.8 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
 192.168.7.10 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
 ```
+
+**8. The [configuration checker](../src/dosarray_check_hosts.sh) has indicated that a check has ["failed"](dosarray_check_hosts.png). Can I get more detailed information about how it failed?**
+
+Yes -- look for the `POST_COMMAND` variable in that script and assign it to the empty string (`""`). That variable controls what happens to output that's obtained from the DoSarray nodes, and by default that output is discarded. By setting the variable to `""` then that output will be printed to you, and can give you clues about what the failure consisted of.
