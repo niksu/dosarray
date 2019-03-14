@@ -1,6 +1,6 @@
 ![DoSarray](doc/dosarray_logo.png)
 
-DoSarray is a system that facilitates carrying out experiments involving
+DoSarray is an [extensively documented](doc/README.md) system that facilitates carrying out experiments involving
 [Denial-of-Service](https://en.wikipedia.org/wiki/Denial-of-service_attack) (DoS) attacks and mitigations.
 It is developed at the University of Pennsylvania as part of the [DeDOS project](http://dedos-project.net/).
 
@@ -32,11 +32,12 @@ problems:
 ![DoSarray configuration checking script](doc/dosarray_check_hosts.png)
 
 ## Documentation
-Please see our [usage guide](doc/USAGE.md), which explains how to set the two
-levels of configuration: [DoSarray-wide](config/dosarray_config.sh) and
+Please see our [usage guide](doc/USAGE.md) which explains how to set DoSarray's
+two levels of configuration: [DoSarray-wide](config/dosarray_config.sh) and
 experiment-specific (such as in the
 [example](experiments/dosarray_slowloris_experiment.sh) above).
-We also have an [FAQ](doc/FAQ.md).
+
+We also have an [FAQ](doc/FAQ.md) and a [trouble-shoot checklist](doc/CHECKLIST.md).
 
 ## Multi-run experiments
 Multiple runs of an experiment can be made by giving an additional
