@@ -169,6 +169,13 @@ You should be seeing the IP addresses of containers mentioned in the logs instea
 192.168.7.10 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
 ```
 
-**8. The [configuration checker](../src/dosarray_check_hosts.sh) has indicated that a check has ["failed"](dosarray_check_hosts.png). Can I get more detailed information about how it failed?**
+**8. The [configuration checker](../src/dosarray_check_hosts.sh) seems to be getting stuck during one of the checks.**
+
+Most likely it's trying to run a remote command that involves `sudo` and is blocked at the prompt for the sudo password. One way of solving this involves removing the password prompt for sudo for the account you're using for DoSarray. This could be done by running `$ sudo vim /etc/sudoers` and editing sudo's configuration file. You can restrict which commands you can run without a password through sudo; to be able to run all commands then add the following line (replacing `<USERNAME>` with the username you're using for this purpose -- good sense should apply when doing this since it removes a layer of security between normal and privileged access to the target system):
+```
+<USERNAME> ALL=(ALL) NOPASSWD: ALL
+```
+
+**9. The [configuration checker](../src/dosarray_check_hosts.sh) has indicated that a check has ["failed"](dosarray_check_hosts.png). Can I get more detailed information about how it failed?**
 
 Yes -- look for the `POST_COMMAND` variable in that script and assign it to the empty string (`""`). That variable controls what happens to output that's obtained from the DoSarray nodes, and by default that output is discarded. By setting the variable to `""` then that output will be printed to you, and can give you clues about what the failure consisted of.
