@@ -111,6 +111,17 @@ function dosarray_scp_to () {
 }
 export -f dosarray_scp_to
 
+function dosarray_cp_and_execute_on () {
+  local HOST_NAME="$1"
+  local CMD="$2"
+  local SSH_PARAM="$3"
+  local CAPTURE_REMOTE_RESULT="$4"
+  local POST_COMMAND="$5"
+
+  dosarray_execute_on "${HOST_NAME}" "${CMD}" "${SSH_PARAM}" "${CAPTURE_REMOTE_RESULT}" "${POST_COMMAND}"
+}
+export -f dosarray_cp_and_execute_on
+
 export DOSARRAY_CONTAINER_PREFIX="c"
 export DOSARRAY_LOG_NAME_PREFIX="${DOSARRAY_CONTAINER_PREFIX}"
 export DOSARRAY_LOG_PATH_PREFIX="/home/${USERNAME}"
