@@ -20,7 +20,16 @@ do
   HOST_NAME="${DOSARRAY_PHYSICAL_HOSTS_PUB[${IDX}]}"
   echo "Gathering container logs from $HOST_NAME"
   echo Running dosarray_scp_from "${HOST_NAME}" "${DOSARRAY_LOG_PATH_PREFIX}/${DOSARRAY_LOG_NAME_PREFIX}*.log" "." >&2
-  dosarray_scp_from "${HOST_NAME}" "${DOSARRAY_LOG_PATH_PREFIX}/${DOSARRAY_LOG_NAME_PREFIX}*.log" "."
+  dosarray_execute_on "${HOST_NAME}" "ls ${DOSARRAY_LOG_PATH_PREFIX}/${DOSARRAY_LOG_NAME_PREFIX}*.log" "" "capture" ""
+  # We have to first get a list of files and then copy them one by on,
+  # since dosarray_scp_from doesn't work with wildcards since these
+  # aren't given meaning if there are intermediate access nodes.
+  # We can only map specific files to specific files when copying, not
+  # "*" to a path as we can normally do with "cp"..
+  for FILE in ${REMOTE_RESULT}
+  do
+    dosarray_scp_from "${HOST_NAME}" "${FILE}" ${DOSARRAY_DESTINATION_DIR}/$(basename ${FILE})
+  done
   echo Running dosarray_execute_on "${HOST_NAME}" "rm ${DOSARRAY_LOG_PATH_PREFIX}/${DOSARRAY_LOG_NAME_PREFIX}*.log" >&2
   dosarray_execute_on "${HOST_NAME}" "rm ${DOSARRAY_LOG_PATH_PREFIX}/${DOSARRAY_LOG_NAME_PREFIX}*.log"
 done
