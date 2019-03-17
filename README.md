@@ -8,6 +8,7 @@ It is developed at the University of Pennsylvania as part of the [DeDOS project]
 
 You can also 3D-print the 3D graphs the produced by DoSarray. This photo shows
 an example from [one of the archived results](https://gitlab.com/niksu/dostbin/blob/master/results/1/graph.pdf) in DoStbin:
+
 ![3D-printed 3D graph from DoSarray](doc/3d_printed_result1.jpg)
 
 ## Getting started...
