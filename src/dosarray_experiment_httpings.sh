@@ -74,6 +74,10 @@ do \n\
 done \n\
 echo \n\
 " > ${TMP}
+  # The paradigm here involves creating a command, writing it to a file
+  # for simpler handling, calling dosarray_cp_and_execute_on() then
+  # removing the local command/file after it has finished executing
+  # remotely.
   ( dosarray_cp_and_execute_on "${HOST_NAME}" "$(cat ${TMP})" "" "" ""; rm ${TMP} ) &
 done
 
