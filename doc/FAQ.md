@@ -210,3 +210,41 @@ netdb01 1552831503 0.00 0.00 0.00 2/915 35827
 ```
 
 The only work-around we're aware of currently involves rerunning the experiment.
+
+**11. DoSarray seems to be running but doesn't seem to be generating the correct output. I looked at the raw logs and it appears that the target cannot be reached. What could be the problem?**
+
+Check that the node on which the target is running isn't firewalled too strongly to prevent the experiment from taking place.
+(Also check that the other nodes' firewall rules allow outgoing traffic to the target.)
+
+(The example given here would need porting to whatever firewall front-end tool you're using.)
+For example here we see that the firewall rules for an experiment target's node only lets through connections from a given range:
+```
+$ sudo ufw status verbose
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), allow (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+Anywhere                   ALLOW IN    158.130.0.0/16
+```
+If the DoSarray network is not in that range then the experiment target won't be reachable, and the experiment cannot take place.
+We'd need to modify the rules as follows:
+```
+$ sudo ufw allow proto tcp from 192.168.0.0/16
+Rule added
+```
+Then we can confirm that the rules have been updated as intended:
+```
+$ sudo ufw status verbose
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), allow (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+Anywhere                   ALLOW IN    158.130.0.0/16
+Anywhere                   ALLOW IN    192.168.0.0/16/tcp
+```
