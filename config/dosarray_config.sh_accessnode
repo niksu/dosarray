@@ -98,15 +98,15 @@ function dosarray_execute_on () {
   if [ "${CAPTURE_REMOTE_RESULT}" == "" ] || [ -z "${CAPTURE_REMOTE_RESULT}" ]
   then
 
-    if [ "${HOST_NAME}" = "netdb01" ]
+    if [ "${HOST_NAME}" == "netdb01" ]
     then
       ssh -t ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} "ssh -t ${L2_SSH_PARAMS} ${USERNAME}@${L2_GATEWAY}.${DOMAIN} \"${CMD}\"" ${POST_COMMAND}
       return
     else
-      if [ "${HOST_NAME}" = "netdb05" ]
+      if [ "${HOST_NAME}" == "netdb05" ]
       then
         L3_HOST="n5"
-      elif [ "${HOST_NAME}" = "netdb07" ]
+      elif [ "${HOST_NAME}" == "netdb07" ]
       then
         L3_HOST="n7"
       else
@@ -118,16 +118,16 @@ function dosarray_execute_on () {
     fi
   else
 
-    if [ "${HOST_NAME}" = "netdb01" ]
+    if [ "${HOST_NAME}" == "netdb01" ]
     then
       # NOTE using "tr" to strip the carriage return we get from using ssh, otherwise it'll confuse downstream consumers of REMOTE_RESULT
       REMOTE_RESULT=$(ssh -t ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} "ssh -t ${L2_SSH_PARAMS} ${USERNAME}@${L2_GATEWAY}.${DOMAIN} \"${CMD}\" | tr -d ''" | tr -d '')
       return
     else
-      if [ "${HOST_NAME}" = "netdb05" ]
+      if [ "${HOST_NAME}" == "netdb05" ]
       then
         L3_HOST="n5"
-      elif [ "${HOST_NAME}" = "netdb07" ]
+      elif [ "${HOST_NAME}" == "netdb07" ]
       then
         L3_HOST="n7"
       else
@@ -145,19 +145,21 @@ function dosarray_scp_from () {
   local HOST_NAME="$1"
   local FROM="$2"
   local TO="$3"
-  echo "HOST_NAME=${HOST_NAME} FROM=${FROM} TO=${TO}"
+  local L3_HOST=
+  local TMP=
+  echo "dosarray_scp_from: HOST_NAME=${HOST_NAME} FROM=${FROM} TO=${TO}"
 
-  if [ "${HOST_NAME}" = "netdb01" ]
+  if [ "${HOST_NAME}" == "netdb01" ]
   then
-    local TMP=`ssh ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} -t "mktemp dosarray_scp.XXXXXXX"`
+    TMP=`ssh ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} -t "mktemp dosarray_scp_from.XXXXXXX"`
     ssh ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} -t "scp ${L2_SSH_PARAMS} ${USERNAME}@netdb01.${DOMAIN}:${FROM} ${TMP}"
     scp ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN}:${TMP} ${TO}
     ssh ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} -t "rm ${TMP}"
     return
-  elif [ "${HOST_NAME}" = "netdb05" ]
+  elif [ "${HOST_NAME}" == "netdb05" ]
   then
     L3_HOST="n5"
-  elif [ "${HOST_NAME}" = "netdb07" ]
+  elif [ "${HOST_NAME}" == "netdb07" ]
   then
     L3_HOST="n7"
   else
@@ -165,8 +167,8 @@ function dosarray_scp_from () {
     exit 1
   fi
 
-  dosarray_execute_on "netdb01" "mktemp dosarray_scp.XXXXXXX" "" "capture" ""
-  local TMP=${REMOTE_RESULT}
+  dosarray_execute_on "netdb01" "mktemp dosarray_scp_from.XXXXXXX" "" "capture" ""
+  TMP=${REMOTE_RESULT}
   dosarray_execute_on "netdb01" "scp -q ${USERNAME}@${L3_HOST}:${FROM} ${TMP}" "" "" ""
   dosarray_scp_from "netdb01" ${TMP} ${TO}
   dosarray_execute_on "netdb01" "rm ${TMP}" "" "" ""
@@ -177,18 +179,19 @@ function dosarray_scp_to () {
   local HOST_NAME="$1"
   local FILE="$2"
   local TO="$3"
+  local L3_HOST=
 
-  if [ "${HOST_NAME}" = "netdb01" ]
+  if [ "${HOST_NAME}" == "netdb01" ]
   then
-    local TMP=`ssh ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} -t "mktemp dosarray_scp.XXXXXXX"`
+    local TMP=`ssh ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} -t "mktemp dosarray_scp_to.XXXXXXX"`
     scp ${L1_SSH_PARAMS} ${FILE} ${USERNAME}@${L1_GATEWAY}.${DOMAIN}:${TMP}
     ssh ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} -t "scp ${L2_SSH_PARAMS} ${TMP} ${USERNAME}@netdb01.${DOMAIN}:${TO}"
     ssh ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} -t "rm ${TMP}"
     return
-  elif [ "${HOST_NAME}" = "netdb05" ]
+  elif [ "${HOST_NAME}" == "netdb05" ]
   then
     L3_HOST="n5"
-  elif [ "${HOST_NAME}" = "netdb07" ]
+  elif [ "${HOST_NAME}" == "netdb07" ]
   then
     L3_HOST="n7"
   else
@@ -196,7 +199,7 @@ function dosarray_scp_to () {
     exit 1
   fi
 
-  dosarray_execute_on "netdb01" "mktemp dosarray_scp.XXXXXXX" "" "capture" ""
+  dosarray_execute_on "netdb01" "mktemp dosarray_scp_to.XXXXXXX" "" "capture" ""
   local TMP=${REMOTE_RESULT}
   #echo "  here -> netdb01: FILE=${FILE} TO=${TMP}"
   dosarray_scp_to "netdb01" ${FILE} ${TMP}
@@ -231,7 +234,7 @@ function dosarray_cp_and_execute_on () {
 }
 export -f dosarray_cp_and_execute_on
 
-export DOSARRAY_CONTAINER_PREFIX="c"
+export DOSARRAY_CONTAINER_PREFIX="da_container"
 export DOSARRAY_LOG_NAME_PREFIX="${DOSARRAY_CONTAINER_PREFIX}"
 export DOSARRAY_LOG_PATH_PREFIX="/home/${USERNAME}"
 
