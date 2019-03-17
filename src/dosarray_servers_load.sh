@@ -70,21 +70,26 @@ LOAD_MEASURE_SCRIPT="dosarray_measure_load.sh"
 
 for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
 do
-  dosarray_scp_to ${HOST_NAME} src/${LOAD_MEASURE_SCRIPT} ${DOSARRAY_LOG_PATH_PREFIX}
+  # We copy the script for later execution, therefore after copying
+  # the script we must make it executable.
+  dosarray_scp_to ${HOST_NAME} src/${LOAD_MEASURE_SCRIPT} ${DOSARRAY_LOG_PATH_PREFIX}/${LOAD_MEASURE_SCRIPT}
+  dosarray_execute_on ${HOST_NAME} "chmod +x ${DOSARRAY_LOG_PATH_PREFIX}/${LOAD_MEASURE_SCRIPT}" "" "" ""
 done
 
 for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
 do
-  dosarray_execute_on ${HOST_NAME} "nohup ${DOSARRAY_LOG_PATH_PREFIX}/${LOAD_MEASURE_SCRIPT} ${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS} ${DOSARRAY_EXPERIMENT_DURATION} ${NUM_ROUNDS} > /dev/null 2>&1 &"
+  dosarray_cp_and_execute_on ${HOST_NAME} "nohup ${DOSARRAY_LOG_PATH_PREFIX}/${LOAD_MEASURE_SCRIPT} ${DOSARRAY_INTERVAL_BETWEEN_LOAD_POLLS} ${DOSARRAY_EXPERIMENT_DURATION} ${NUM_ROUNDS} > /dev/null 2>&1 &" "" "" ""
 done
 
 sleep ${DOSARRAY_EXPERIMENT_DURATION}
 
 for HOST_NAME in "${DOSARRAY_PHYSICAL_HOSTS_PUB[@]}"
 do
-  dosarray_scp_from ${HOST_NAME} "${DOSARRAY_LOG_PATH_PREFIX}/$(logname_of_load ${HOST_NAME})" ${DOSARRAY_DESTINATION_DIR}
-  dosarray_scp_from ${HOST_NAME} "${DOSARRAY_LOG_PATH_PREFIX}/$(logname_of_mem ${HOST_NAME})" ${DOSARRAY_DESTINATION_DIR}
-  dosarray_scp_from ${HOST_NAME} "${DOSARRAY_LOG_PATH_PREFIX}/$(logname_of_net ${HOST_NAME})" ${DOSARRAY_DESTINATION_DIR}
+  # NOTE when using dosarray_scp_from() we need to mention the
+  #      specific source and target files -- can't use paths or wildcards.
+  dosarray_scp_from ${HOST_NAME} "${DOSARRAY_LOG_PATH_PREFIX}/$(logname_of_load ${HOST_NAME})" "${DOSARRAY_DESTINATION_DIR}/$(logname_of_load ${HOST_NAME})"
+  dosarray_scp_from ${HOST_NAME} "${DOSARRAY_LOG_PATH_PREFIX}/$(logname_of_mem ${HOST_NAME})" "${DOSARRAY_DESTINATION_DIR}/$(logname_of_mem ${HOST_NAME})"
+  dosarray_scp_from ${HOST_NAME} "${DOSARRAY_LOG_PATH_PREFIX}/$(logname_of_net ${HOST_NAME})" "${DOSARRAY_DESTINATION_DIR}/$(logname_of_net ${HOST_NAME})"
   dosarray_execute_on ${HOST_NAME} "rm ${DOSARRAY_LOG_PATH_PREFIX}/${LOAD_MEASURE_SCRIPT}"
   dosarray_execute_on ${HOST_NAME} "rm ${DOSARRAY_LOG_PATH_PREFIX}/${HOST_NAME}_*.log"
 done
