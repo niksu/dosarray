@@ -57,7 +57,8 @@ else
   CMD="curl --insecure --silent -o /dev/null -w \"%{http_code}\" https://${DOSARRAY_PHYSICAL_HOSTS_PRIV[${DOSARRAY_TARGET_SERVER_INDEX}]}:${PORT}/index.html"
 fi
 
-RESULT=$(dosarray_execute_on "${HOST_NAME}" "${CMD}")
+dosarray_cp_and_execute_on "${HOST_NAME}" "${CMD}" "" "capture" ""
+RESULT="${REMOTE_RESULT}"
 
 # A success code 200 is returned when the server is up. However, some environments involving multiple hops to the server machine may return an output "200Connection to host@xzy.com is closed". This trims away the appended message and returns 200
 RESULT=${RESULT/Connection to * closed*/}
