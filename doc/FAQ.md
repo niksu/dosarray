@@ -43,7 +43,8 @@ eno49:1   Link encap:Ethernet  HWaddr XX:XX:XX:XX:XX:XX
 
 **4. My servers cannot be accessed directly, but through a sequence of one or more access nodes. Can DoSarray work through access nodes?**
 
-Yes, this involves changing the functions `dosarray_execute_on()` and `dosarray_scp_from()` to do the necessary "hops" through the access nodes. *We're currently working on an example of doing this.*
+Yes, this involves changing the functions `dosarray_execute_on()` and `dosarray_scp_from()` to do the necessary "hops" through the access nodes.
+Look at [example](../config/dosarray_config.sh_accessnode) of how to do this.
 
 **5. I cannot delete instances using `dosarray_delete_containers.sh`. What's wrong?**
 
