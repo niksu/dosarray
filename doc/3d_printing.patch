@@ -1,0 +1,72 @@
+--- dosarray_graphing.sh	2019-03-05 18:49:46.000000000 -0500
++++ dosarray_graphing.sh_3DPRINT	2019-03-05 18:49:24.000000000 -0500
+@@ -27,10 +27,19 @@
+ ATTACK_ENDS_AT=$3
+ 
+ PREFIX="\
+-set terminal pdf \n\
+-set xlabel 'time (s)' rotate parallel # probe number, approx one probe each second. \n\
+-set ylabel 'latency (10e-4 s)' rotate parallel # latency \"class\", since latencies are quantised. \n\
+-set zlabel 'instances (%%)' rotate parallel # number of instances, whose latency of that probe falls in this latency class. \n\
++#set terminal pdf truecolor size 800,600 enhanced\n\
++set terminal pngcairo size 800,600 enhanced\n\
++#set xlabel 'time (s)' rotate parallel # probe number, approx one probe each second. \n\
++#set ylabel 'latency (10e-4 s)' rotate parallel # latency \"class\", since latencies are quantised. \n\
++#set zlabel 'instances (%%)' rotate parallel # number of instances, whose latency of that probe falls in this latency class. \n\
++unset xlabel \n\
++unset ylabel \n\
++unset zlabel \n\
++unset border \n\
++set lmargin 0 \n\
++set rmargin 0 \n\
++set tmargin 0 \n\
++set bmargin 0 \n\
+  \n\
+ unset key \n\
+  \n\
+@@ -41,8 +50,9 @@
+ "
+ 
+ SUFFIX="\n\
+-set style data lines \n\
+-set contour base \n\
++#set style data lines \n\
++set style rectangle fillstyle noborder \n\
++#set contour base \n\
+ set hidden3d \n\
+  \n\
+ set parametric \n\
+@@ -51,14 +61,17 @@
+ # NOTE these should be fixed, to ensure consistency across presentation of different experiments \n\
+ #set ztics 0,10 \n\
+ #set ytics 0,0.1 \n\
++unset ytics \n\
+ #set zrange [0:100] \n\
+ #set yrange [0:1] \n\
+ #set cbrange [0:0.7] \n\
+  \n\
+ #set xtics 0,5 \n\
++unset xtics \n\
+ #set xrange [0:60] \n\
+  \n\
+-set title '${TITLE}' \n\
++#set title '${TITLE}' \n\
++unset title \n\
+ set output '${OUTPUT_FILE}' \n\
+ splot '${INPUT_FILE}' using 1:2:3 title 'availability' \n\
+ "
+@@ -67,8 +80,13 @@
+ if [ -z "${DOSARRAY_GRAPH_CONTOUR}" ]
+ then
+ MIDDLE="# Block B: coloured surface for the 3d plot \n\
++set view 0,0 \n\
+ set pm3d \n\
+-set palette \n\
++#set palette \n\
++set pm3d map interpolate 1,1 \n\
++unset key \n\
++#set palette defined (  0 \"blue\", 8 \"white\", 16 \"red\") \n\
++set palette defined (  0 \"black\", 50 \"white\") \n\
+ unset colorbox \n\
+ "
+ else

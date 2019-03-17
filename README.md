@@ -6,8 +6,10 @@ It is developed at the University of Pennsylvania as part of the [DeDOS project]
 
 [DoStbin](https://gitlab.com/niksu/dostbin/) is a sister project that shares the results from DoSarray experiments.
 
-You can also 3D-print the 3D graphs the produced by DoSarray. This photo shows
-an example from [one of the archived results](https://gitlab.com/niksu/dostbin/blob/master/results/1/graph.pdf) in DoStbin:
+You can also 3D-print the 3D graphs the produced by DoSarray. We have [documented](3D_printing.md) how to do this.
+The photo below shows an example from [one of the archived result
+graphs](https://gitlab.com/niksu/dostbin/blob/master/results/1/graph.pdf) in
+DoStbin:
 
 ![3D-printed 3D graph from DoSarray](doc/3d_printed_result1.jpg)
 
