@@ -188,7 +188,7 @@ Yes -- look for the `POST_COMMAND` variable in that script and assign it to the 
 We're aware of this since we've seen it happen sometimes (but not very frequently) but we're not sure why it arises or how to avoid it. Because of how we carry out load measurements, the cause seems to be deep -- outside DoSarray -- because the zeros show up in the raw data we gather from the userspace tools (which in turn query the kernel's data structures). We've only seen this happen for CPU load.
 
 For example, this is a load graph we had got -- note how "netdb01" never appears to have any load:
-![Example graph showing a complete non-loaded node](doc/empty_load.png)
+![Example graph showing a complete non-loaded node](empty_load.png)
 
 The raw log we got for that machine, directly from userspace tools, shows that the load we measured was indeed 0:
 ```
