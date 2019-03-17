@@ -40,6 +40,7 @@ eno49:1   Link encap:Ethernet  HWaddr XX:XX:XX:XX:XX:XX
           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
 ...
 ```
+*NOTE* The logging you get is less precise we only gather logs for the "parent" NIC as described as [dosarray_filter_net_logs.sh](../src/dosarray_filter_net_logs.sh).
 
 **4. My servers cannot be accessed directly, but through a sequence of one or more access nodes. Can DoSarray work through access nodes?**
 
