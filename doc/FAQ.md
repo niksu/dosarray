@@ -2,7 +2,8 @@
 
 **1. DoSarray is not working, what can I do?**
 
-Follow this [checklist](CHECKLIST.md).
+Follow this [checklist](CHECKLIST.md) and look at other FAQ
+answers below -- such as the one about firewalling.
 
 **2. I run a cluster. Can I exclude DoSarray from running on some machines?**
 
@@ -181,3 +182,31 @@ Most likely it's trying to run a remote command that involves `sudo` and is bloc
 **9. The [configuration checker](../src/dosarray_check_hosts.sh) has indicated that a check has ["failed"](dosarray_check_hosts.png). Can I get more detailed information about how it failed?**
 
 Yes -- look for the `POST_COMMAND` variable in that script and assign it to the empty string (`""`). That variable controls what happens to output that's obtained from the DoSarray nodes, and by default that output is discarded. By setting the variable to `""` then that output will be printed to you, and can give you clues about what the failure consisted of.
+
+**10. Occasionally CPU load appears to be empty, but this is impossible. What's wrong?**
+
+We're aware of this since we've seen it happen sometimes (but not very frequently) but we're not sure why it arises or how to avoid it. Because of how we carry out load measurements, the cause seems to be deep -- outside DoSarray -- because the zeros show up in the raw data we gather from the userspace tools (which in turn query the kernel's data structures). We've only seen this happen for CPU load.
+
+For example, this is a load graph we had got -- note how "netdb01" never appears to have any load:
+![Example graph showing a complete non-loaded node](doc/empty_load.png)
+
+The raw log we got for that machine, directly from userspace tools, shows that the load we measured was indeed 0:
+```
+$ cat netdb01_load.log
+netdb01 1552831438 0.00 0.00 0.00 5/942 35416
+netdb01 1552831443 0.00 0.00 0.00 2/1077 35598
+netdb01 1552831448 0.00 0.00 0.00 2/1078 35658
+netdb01 1552831453 0.00 0.00 0.00 2/1079 35712
+netdb01 1552831458 0.00 0.00 0.00 2/1079 35730
+netdb01 1552831463 0.00 0.00 0.00 2/1079 35748
+netdb01 1552831468 0.00 0.00 0.00 2/1079 35758
+netdb01 1552831473 0.00 0.00 0.00 2/1078 35767
+netdb01 1552831478 0.00 0.00 0.00 2/1026 35778
+netdb01 1552831483 0.00 0.00 0.00 2/917 35788
+netdb01 1552831488 0.00 0.00 0.00 2/917 35798
+netdb01 1552831493 0.00 0.00 0.00 3/915 35808
+netdb01 1552831498 0.00 0.00 0.00 2/917 35818
+netdb01 1552831503 0.00 0.00 0.00 2/915 35827
+```
+
+The only work-around we're aware of currently involves rerunning the experiment.
