@@ -91,7 +91,7 @@ function dosarray_execute_on () {
 
   if [ ! "${SSH_PARAM}" == "" ]
   then
-    printf "dosarray_execute_on(): WARNING: ignoring \$SSH_PARAM since not supported for this cluster -- use \$L1_SSH_PARAMS, \$L2_SSH_PARAMS, \$L3_SSH_PARAMS\n" >&2
+    printf "dosarray_execute_on(): WARNING: ignoring \$SSH_PARAM (${SSH_PARAM}) since not supported for this cluster -- use \$L1_SSH_PARAMS, \$L2_SSH_PARAMS, \$L3_SSH_PARAMS\n" >&2
   fi
 
   if [ "${CAPTURE_REMOTE_RESULT}" == "" ] || [ -z "${CAPTURE_REMOTE_RESULT}" ]
