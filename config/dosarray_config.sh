@@ -4,7 +4,7 @@
 #
 # Use of this source code is governed by the Apache 2.0 license; see LICENSE
 
-export DOSARRAY_VERSION="0.4"
+export DOSARRAY_VERSION="0.5"
 export DOSARRAY_IMAGE="dosarray_image_v0.2a"
 
 # NOTE we only include cluster machines that participate in the experiment in
