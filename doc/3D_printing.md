@@ -1,6 +1,6 @@
 ## How to print 3D graphs produced by DoSarray
 
-![3D-printed 3D graph from DoSarray](doc/3d_printed_result1.jpg)
+![3D-printed 3D graph from DoSarray](3d_printed_result1.jpg)
 
 > Big thanks to [André DeHon](http://www.seas.upenn.edu/~andre/) for explaining
 > the 3D-printing options, helping with the 3D printing toolchain, and running
