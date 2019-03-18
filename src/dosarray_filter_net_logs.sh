@@ -22,7 +22,11 @@ fi
 for (( x=0 ; x < ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]}; x++ ))
 do
   HOSTNAME=${DOSARRAY_PHYSICAL_HOSTS_PUB[$x]}
-  INTERFACE=${DOSARRAY_HOST_INTERFACE_MAP[$x]}
+  # NOTE if interface is overloaded (e.g., "eno1:1") we remove
+  #      the ":" and everything that follows it, since the network
+  #      load trace we get only featres NICs (e.g., "eno1") not their
+  #      overloads.
+  INTERFACE=${DOSARRAY_HOST_INTERFACE_MAP[$x]/:*/}
   grep "${INTERFACE}" ${DOSARRAY_DESTINATION_DIR}/${HOSTNAME}_net.log > ${DOSARRAY_DESTINATION_DIR}/${HOSTNAME}_filtered_net.log
 done
 

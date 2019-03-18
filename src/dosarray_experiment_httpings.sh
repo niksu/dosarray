@@ -25,6 +25,7 @@ do
   HOST_IP="${DOSARRAY_VIRT_NET_PREFIX}0.${CURRENT_HOST_IP}"
   echo "Starting httpings in $HOST_NAME (${HOST_IP})"
 
+  TMP=$(mktemp dosarray_experiment.XXXXXXX)
   printf "\
 ${DOSARRAY_ATTACKERS} \n\
 for CURRENT_CONTAINER_IP in \$(seq $DOSARRAY_MIN_VIP $DOSARRAY_MAX_VIP) \n\
@@ -72,7 +73,12 @@ do \n\
   fi \n\
 done \n\
 echo \n\
-" | dosarray_execute_on "${HOST_NAME}" "" &
+" > ${TMP}
+  # The paradigm here involves creating a command, writing it to a file
+  # for simpler handling, calling dosarray_cp_and_execute_on() then
+  # removing the local command/file after it has finished executing
+  # remotely.
+  ( dosarray_cp_and_execute_on "${HOST_NAME}" "$(cat ${TMP})" "" "" ""; rm ${TMP} ) &
 done
 
 DOUBLE_EXPERIMENT_DURATION=$(echo "2 * ${DOSARRAY_EXPERIMENT_DURATION}" | bc -l)

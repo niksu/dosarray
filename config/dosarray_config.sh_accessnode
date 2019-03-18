@@ -1,0 +1,255 @@
+#/bin/sh -e
+# Configuration for DoSarray
+# Nik Sultana, February 2018, UPenn
+#
+# Use of this source code is governed by the Apache 2.0 license; see LICENSE
+
+export DOSARRAY_VERSION="0.4"
+export DOSARRAY_IMAGE="dosarray_image_v0.2a"
+
+# NOTE we only include cluster machines that participate in the experiment in
+#      one form or another. We exclude machines that are not to be touched
+#      by DoSarray. We do include machines running "targets" however -- DoSarray
+#      won't start containers on these machines, but it will poll their load.
+export DOSARRAY_PHYSICAL_HOSTS_PRIV=( 192.168.0.1 192.168.0.5 192.168.0.7 )
+export DOSARRAY_VIRT_NET_SUFFIX=( 1 5 7 )
+# NOTE names in DOSARRAY_PHYSICAL_HOSTS_PUB are "public" only as far as the
+#      access node is concerned. If there's no access node then they're
+#      expected to be public (i.e., directly accessible from the monitor),
+#      otherwise we need to hop through the access node. There may a sequence
+#      of access nodes we need to use, in general.
+export DOSARRAY_PHYSICAL_HOSTS_PUB=( netdb01 netdb05 netdb07 )
+export DOSARRAY_HOST_INTERFACE_MAP=( eno1:1 eno49:1 eno49:1 )
+export DOSARRAY_VIRT_NET_PREFIX="192.168."
+export DOSARRAY_VIRT_NETS=( "${DOSARRAY_VIRT_NET_PREFIX}${DOSARRAY_VIRT_NET_SUFFIX[0]}." "${DOSARRAY_VIRT_NET_PREFIX}${DOSARRAY_VIRT_NET_SUFFIX[1]}." "${DOSARRAY_VIRT_NET_PREFIX}${DOSARRAY_VIRT_NET_SUFFIX[2]}." )
+export DOSARRAY_TARGET_SERVER_INDEX=0
+export DOSARRAY_HOST_COLORS=( '#555555' '#777777' '#000000' )
+
+USERNAME=  
+L1_SSH_PARAMS=  
+L2_SSH_PARAMS=  
+L3_SSH_PARAMS=  
+DOMAIN=  
+L1_GATEWAY=  
+L2_GATEWAY=  
+
+# Check that DOSARRAY_PHYSICAL_HOSTS_PRIV, DOSARRAY_VIRT_NET_SUFFIX, etc all have the same number of elements.
+if [ ${#DOSARRAY_PHYSICAL_HOSTS_PRIV[@]} -ne ${#DOSARRAY_VIRT_NET_SUFFIX[@]} ]
+then
+  printf "Check dosarray_config.sh for errors \nDOSARRAY_PHYSICAL_HOSTS_PRIV=${#DOSARRAY_PHYSICAL_HOSTS_PRIV[@]} elements \nDOSARRAY_VIRT_NET_SUFFIX=${#DOSARRAY_VIRT_NET_SUFFIX[@]} elements\n" >&2
+  exit 1
+elif [ ${#DOSARRAY_VIRT_NET_SUFFIX[@]} -ne ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} ]
+then
+  printf "Check dosarray_config.sh for errors \nDOSARRAY_VIRT_NET_SUFFIX=${#DOSARRAY_VIRT_NET_SUFFIX[@]} elements \nDOSARRAY_PHYSICAL_HOSTS_PUB=${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} elements\n" >&2
+  exit 1
+elif [ ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} -ne ${#DOSARRAY_HOST_INTERFACE_MAP[@]} ]
+then
+  printf "Check dosarray_config.sh for errors \nDOSARRAY_PHYSICAL_HOSTS_PUB=${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} elements \nDOSARRAY_HOST_INTERFACE_MAP=${#DOSARRAY_HOST_INTERFACE_MAP[@]} elements\n" >&2
+  exit 1
+elif [ ${#DOSARRAY_HOST_INTERFACE_MAP[@]} -ne ${#DOSARRAY_VIRT_NETS[@]} ]
+then
+  printf "Check dosarray_config.sh for errors \nDOSARRAY_HOST_INTERFACE_MAP=${#DOSARRAY_HOST_INTERFACE_MAP[@]} elements \nDOSARRAY_VIRT_NETS=${#DOSARRAY_VIRT_NETS[@]} elements\n" >&2
+  exit 1
+elif [ ${#DOSARRAY_VIRT_NETS[@]} -ne ${#DOSARRAY_HOST_COLORS[@]} ]
+then
+  printf "Check dosarray_config.sh for errors \nDOSARRAY_VIRT_NETS=${#DOSARRAY_VIRT_NETS[@]} elements \nDOSARRAY_HOST_COLORS=${#DOSARRAY_HOST_COLORS[@]} elements\n" >&2
+  exit 1
+fi
+
+# Check if target index is within allowed range
+if [ ${DOSARRAY_TARGET_SERVER_INDEX} -ge  $(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - 1 )) ]
+then
+  printf "Check dosarray_config.sh for errors \nDOSARRAY_TARGET_SERVER_INDEX cannot exceed $(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - 1 ))" >&2
+  exit 1
+fi
+
+function dosarray_physical_hosts_skip () {
+  if [ ${DOSARRAY_TARGET_SERVER_INDEX} -eq 0 ]
+  then
+    echo `seq $(( ${DOSARRAY_TARGET_SERVER_INDEX} + 1)) $(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - 1 ))`
+  elif [ ${DOSARRAY_TARGET_SERVER_INDEX} -eq $(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - 1 )) ]
+  then
+    echo `seq 0 $(( ${DOSARRAY_TARGET_SERVER_INDEX} - 1))`
+  else
+    index=(`seq 0 $(( ${DOSARRAY_TARGET_SERVER_INDEX} - 1))` `seq $(( ${DOSARRAY_TARGET_SERVER_INDEX} + 1)) $(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - 1 ))`)
+    echo ${index[@]}
+  fi
+}
+export -f dosarray_physical_hosts_skip
+export DOSARRAY_PHYSICAL_HOST_IDXS=("`seq 0 $(( ${#DOSARRAY_PHYSICAL_HOSTS_PUB[@]} - 1))`")
+export DOSARRAY_CONTAINER_HOST_IDXS=`dosarray_physical_hosts_skip`
+
+export DOSARRAY_VIRT_INSTANCES=10
+export DOSARRAY_MIN_VIP=2
+export DOSARRAY_MAX_VIP=$((DOSARRAY_VIRT_INSTANCES + (DOSARRAY_MIN_VIP - 1)))
+
+function dosarray_execute_on () {
+  local HOST_NAME="$1"
+  local CMD="$2"
+  local SSH_PARAM="$3"
+  local CAPTURE_REMOTE_RESULT="$4"
+  local POST_COMMAND="$5"
+
+  if [ ! "${SSH_PARAM}" == "" ]
+  then
+    printf "dosarray_execute_on(): WARNING: ignoring \$SSH_PARAM (${SSH_PARAM}) since not supported for this cluster -- use \$L1_SSH_PARAMS, \$L2_SSH_PARAMS, \$L3_SSH_PARAMS\n" >&2
+  fi
+
+  if [ "${CAPTURE_REMOTE_RESULT}" == "" ] || [ -z "${CAPTURE_REMOTE_RESULT}" ]
+  then
+
+    if [ "${HOST_NAME}" == "netdb01" ]
+    then
+      ssh -t ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} "ssh -t ${L2_SSH_PARAMS} ${USERNAME}@${L2_GATEWAY}.${DOMAIN} \"${CMD}\"" ${POST_COMMAND}
+      return
+    else
+      if [ "${HOST_NAME}" == "netdb05" ]
+      then
+        L3_HOST="n5"
+      elif [ "${HOST_NAME}" == "netdb07" ]
+      then
+        L3_HOST="n7"
+      else
+        echo "Unrecognised host: HOST_NAME=${HOST_NAME}" >&2
+        exit 1
+      fi
+
+      ssh -t ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} "ssh -t ${L2_SSH_PARAMS} ${USERNAME}@${L2_GATEWAY}.${DOMAIN} \"ssh ${L3_HOST} ${L3_SSH_PARAMS} \\\"${CMD}\\\"\"" ${POST_COMMAND}
+    fi
+  else
+
+    if [ "${HOST_NAME}" == "netdb01" ]
+    then
+      # NOTE using "tr" to strip the carriage return we get from using ssh, otherwise it'll confuse downstream consumers of REMOTE_RESULT
+      REMOTE_RESULT=$(ssh -t ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} "ssh -t ${L2_SSH_PARAMS} ${USERNAME}@${L2_GATEWAY}.${DOMAIN} \"${CMD}\" | tr -d ''" | tr -d '')
+      return
+    else
+      if [ "${HOST_NAME}" == "netdb05" ]
+      then
+        L3_HOST="n5"
+      elif [ "${HOST_NAME}" == "netdb07" ]
+      then
+        L3_HOST="n7"
+      else
+        echo "Unrecognised host: HOST_NAME=${HOST_NAME}" >&2
+        exit 1
+      fi
+
+      REMOTE_RESULT=$(ssh -t ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} "ssh -t ${L2_SSH_PARAMS} ${USERNAME}@${L2_GATEWAY}.${DOMAIN} \"ssh ${L3_HOST} ${L3_SSH_PARAMS} \\\"${CMD} | tr -d ''\\\"\" | tr -d ''" | tr -d '')
+    fi
+  fi
+}
+export -f dosarray_execute_on
+
+# NOTE the "from" and "to" parameters must mention specific files -- they cannot
+#      simply be paths, and cannot include wildcards, otherwise the behaviour
+#      breaks across access hops (where temporary files are created as the
+#      files are copied between FROM and TO).
+function dosarray_scp_from () {
+  local HOST_NAME="$1"
+  local FROM="$2"
+  local TO="$3"
+  local L3_HOST=
+  local TMP=
+  echo "dosarray_scp_from: HOST_NAME=${HOST_NAME} FROM=${FROM} TO=${TO}"
+
+  if [ "${HOST_NAME}" == "netdb01" ]
+  then
+    TMP=`ssh ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} -t "mktemp dosarray_scp_from.XXXXXXX"`
+    ssh ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} -t "scp ${L2_SSH_PARAMS} ${USERNAME}@netdb01.${DOMAIN}:${FROM} ${TMP}"
+    scp ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN}:${TMP} ${TO}
+    ssh ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} -t "rm ${TMP}"
+    return
+  elif [ "${HOST_NAME}" == "netdb05" ]
+  then
+    L3_HOST="n5"
+  elif [ "${HOST_NAME}" == "netdb07" ]
+  then
+    L3_HOST="n7"
+  else
+    echo "Unrecognised host: HOST_NAME=${HOST_NAME}" >&2
+    exit 1
+  fi
+
+  dosarray_execute_on "netdb01" "mktemp dosarray_scp_from.XXXXXXX" "" "capture" ""
+  TMP=${REMOTE_RESULT}
+  dosarray_execute_on "netdb01" "scp -q ${USERNAME}@${L3_HOST}:${FROM} ${TMP}" "" "" ""
+  dosarray_scp_from "netdb01" ${TMP} ${TO}
+  dosarray_execute_on "netdb01" "rm ${TMP}" "" "" ""
+}
+export -f dosarray_scp_from
+
+# NOTE the "file" and "to" parameters must mention specific files -- they cannot
+#      simply be paths, and cannot include wildcards, otherwise the behaviour
+#      breaks across access hops (where temporary files are created as the
+#      files are copied between FILE and TO).
+function dosarray_scp_to () {
+  local HOST_NAME="$1"
+  local FILE="$2"
+  local TO="$3"
+  local L3_HOST=
+
+  if [ "${HOST_NAME}" == "netdb01" ]
+  then
+    local TMP=`ssh ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} -t "mktemp dosarray_scp_to.XXXXXXX"`
+    scp ${L1_SSH_PARAMS} ${FILE} ${USERNAME}@${L1_GATEWAY}.${DOMAIN}:${TMP}
+    ssh ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} -t "scp ${L2_SSH_PARAMS} ${TMP} ${USERNAME}@netdb01.${DOMAIN}:${TO}"
+    ssh ${L1_SSH_PARAMS} ${USERNAME}@${L1_GATEWAY}.${DOMAIN} -t "rm ${TMP}"
+    return
+  elif [ "${HOST_NAME}" == "netdb05" ]
+  then
+    L3_HOST="n5"
+  elif [ "${HOST_NAME}" == "netdb07" ]
+  then
+    L3_HOST="n7"
+  else
+    echo "Unrecognised host: HOST_NAME=${HOST_NAME}" >&2
+    exit 1
+  fi
+
+  dosarray_execute_on "netdb01" "mktemp dosarray_scp_to.XXXXXXX" "" "capture" ""
+  local TMP=${REMOTE_RESULT}
+  #echo "  here -> netdb01: FILE=${FILE} TO=${TMP}"
+  dosarray_scp_to "netdb01" ${FILE} ${TMP}
+  #echo "  netdb01 -> ${HOST_NAME}: FILE=${TMP} TO=${TO}"
+  dosarray_execute_on "netdb01" "scp -q ${TMP} ${USERNAME}@${L3_HOST}:${TO}" "" "" ""
+  dosarray_execute_on "netdb01" "rm ${TMP}" "" "" ""
+}
+export -f dosarray_scp_to
+
+function dosarray_cp_and_execute_on () {
+  local HOST_NAME="$1"
+  local CMD="$2"
+  local SSH_PARAM="$3"
+  local CAPTURE_REMOTE_RESULT="$4"
+  local POST_COMMAND="$5"
+
+  local TMP_LOCAL=`mktemp dosarray_sh.XXXXXXX`
+  dosarray_execute_on "${HOST_NAME}" "mktemp dosarray_sh.XXXXXXX" "" "capture" ""
+  local TMP_REMOTE=${REMOTE_RESULT}
+  echo "${CMD}" > ${TMP_LOCAL}
+  dosarray_scp_to ${HOST_NAME} ${TMP_LOCAL} ${TMP_REMOTE}
+  rm ${TMP_LOCAL}
+  # FIXME next line needed?  
+  dosarray_execute_on "${HOST_NAME}" "chmod +x ${TMP_REMOTE}" "" "" ""
+  # NOTE we ignore SSH_PARAM, we inline it into the individual SSH_PARAM for each hop
+  dosarray_execute_on "${HOST_NAME}" "./${TMP_REMOTE}" "" "${CAPTURE_REMOTE_RESULT}" "${POST_COMMAND}"
+  local EXIT_CODE=$?
+  local BUFFERED_REMOTE_RESULT="${REMOTE_RESULT}"
+  dosarray_execute_on "${HOST_NAME}" "rm ${TMP_REMOTE}" "" "" ""
+  REMOTE_RESULT="${BUFFERED_REMOTE_RESULT}"
+  return $EXIT_CODE
+}
+export -f dosarray_cp_and_execute_on
+
+export DOSARRAY_CONTAINER_PREFIX="da_container"
+export DOSARRAY_LOG_NAME_PREFIX="${DOSARRAY_CONTAINER_PREFIX}"
+export DOSARRAY_LOG_PATH_PREFIX="/home/${USERNAME}"
+
+# Set for dosrray_run_http_experiment.sh
+
+# FIXME prefix with DOSARRAY_
+#       DESTINATION_DIR
+#       ATTACK_STARTS_AT
+#       ATTACK_LASTS_FOR
+#       EXPERIMENT_DURATION

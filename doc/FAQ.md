@@ -2,7 +2,8 @@
 
 **1. DoSarray is not working, what can I do?**
 
-Follow this [checklist](CHECKLIST.md).
+Follow this [checklist](CHECKLIST.md) and look at other FAQ
+answers below -- such as the one about firewalling.
 
 **2. I run a cluster. Can I exclude DoSarray from running on some machines?**
 
@@ -40,10 +41,12 @@ eno49:1   Link encap:Ethernet  HWaddr XX:XX:XX:XX:XX:XX
           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
 ...
 ```
+*NOTE* The logging you get is less precise we only gather logs for the "parent" NIC as described as [dosarray_filter_net_logs.sh](../src/dosarray_filter_net_logs.sh).
 
 **4. My servers cannot be accessed directly, but through a sequence of one or more access nodes. Can DoSarray work through access nodes?**
 
-Yes, this involves changing the functions `dosarray_execute_on()` and `dosarray_scp_from()` to do the necessary "hops" through the access nodes. *We're currently working on an example of doing this.*
+Yes, this involves changing the functions `dosarray_execute_on()` and `dosarray_scp_from()` to do the necessary "hops" through the access nodes.
+Look at [example](../config/dosarray_config.sh_accessnode) of how to do this.
 
 **5. I cannot delete instances using `dosarray_delete_containers.sh`. What's wrong?**
 
@@ -167,4 +170,81 @@ You should be seeing the IP addresses of containers mentioned in the logs instea
 192.168.7.7 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
 192.168.7.8 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
 192.168.7.10 - - [03/Dec/2018:23:00:12 -0500] "HEAD / HTTP/1.0" 200 -
+```
+
+**8. The [configuration checker](../src/dosarray_check_hosts.sh) seems to be getting stuck during one of the checks.**
+
+Most likely it's trying to run a remote command that involves `sudo` and is blocked at the prompt for the sudo password. One way of solving this involves removing the password prompt for sudo for the account you're using for DoSarray. This could be done by running `$ sudo vim /etc/sudoers` and editing sudo's configuration file. You can restrict which commands you can run without a password through sudo; to be able to run all commands then add the following line (replacing `<USERNAME>` with the username you're using for this purpose -- good sense should apply when doing this since it removes a layer of security between normal and privileged access to the target system):
+```
+<USERNAME> ALL=(ALL) NOPASSWD: ALL
+```
+
+**9. The [configuration checker](../src/dosarray_check_hosts.sh) has indicated that a check has ["failed"](dosarray_check_hosts.png). Can I get more detailed information about how it failed?**
+
+Yes -- look for the `POST_COMMAND` variable in that script and assign it to the empty string (`""`). That variable controls what happens to output that's obtained from the DoSarray nodes, and by default that output is discarded. By setting the variable to `""` then that output will be printed to you, and can give you clues about what the failure consisted of.
+
+**10. Occasionally CPU load appears to be empty, but this is impossible. What's wrong?**
+
+We're aware of this since we've seen it happen sometimes (but not very frequently) but we're not sure why it arises or how to avoid it. Because of how we carry out load measurements, the cause seems to be deep -- outside DoSarray -- because the zeros show up in the raw data we gather from the userspace tools (which in turn query the kernel's data structures). We've only seen this happen for CPU load.
+
+For example, this is a load graph we had got -- note how "netdb01" never appears to have any load:
+![Example graph showing a complete non-loaded node](empty_load.png)
+
+The raw log we got for that machine, directly from userspace tools, shows that the load we measured was indeed 0:
+```
+$ cat netdb01_load.log
+netdb01 1552831438 0.00 0.00 0.00 5/942 35416
+netdb01 1552831443 0.00 0.00 0.00 2/1077 35598
+netdb01 1552831448 0.00 0.00 0.00 2/1078 35658
+netdb01 1552831453 0.00 0.00 0.00 2/1079 35712
+netdb01 1552831458 0.00 0.00 0.00 2/1079 35730
+netdb01 1552831463 0.00 0.00 0.00 2/1079 35748
+netdb01 1552831468 0.00 0.00 0.00 2/1079 35758
+netdb01 1552831473 0.00 0.00 0.00 2/1078 35767
+netdb01 1552831478 0.00 0.00 0.00 2/1026 35778
+netdb01 1552831483 0.00 0.00 0.00 2/917 35788
+netdb01 1552831488 0.00 0.00 0.00 2/917 35798
+netdb01 1552831493 0.00 0.00 0.00 3/915 35808
+netdb01 1552831498 0.00 0.00 0.00 2/917 35818
+netdb01 1552831503 0.00 0.00 0.00 2/915 35827
+```
+
+The only work-around we're aware of currently involves rerunning the experiment.
+
+**11. DoSarray seems to be running but doesn't seem to be generating the correct output. I looked at the raw logs and it appears that the target cannot be reached. What could be the problem?**
+
+Check that the node on which the target is running isn't firewalled too strongly to prevent the experiment from taking place.
+(Also check that the other nodes' firewall rules allow outgoing traffic to the target.)
+
+(The example given here would need porting to whatever firewall front-end tool you're using.)
+For example here we see that the firewall rules for an experiment target's node only lets through connections from a given range:
+```
+$ sudo ufw status verbose
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), allow (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+Anywhere                   ALLOW IN    158.130.0.0/16
+```
+If the DoSarray network is not in that range then the experiment target won't be reachable, and the experiment cannot take place.
+We'd need to modify the rules as follows:
+```
+$ sudo ufw allow proto tcp from 192.168.0.0/16
+Rule added
+```
+Then we can confirm that the rules have been updated as intended:
+```
+$ sudo ufw status verbose
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), allow (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+Anywhere                   ALLOW IN    158.130.0.0/16
+Anywhere                   ALLOW IN    192.168.0.0/16/tcp
 ```

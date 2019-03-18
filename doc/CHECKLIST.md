@@ -1,8 +1,14 @@
 # Troubleshoot Checklist
 
-Try the following when DoSarray doesn't work.
+If DoSarray doesn't work then try running the  [configuration
+checker](../src/dosarray_check_hosts.sh) for an [informative
+break-down](dosarray_check_hosts.png) of checks.
+The script's output can be made more detailed by tweaking
+it as described in the [FAQ](FAQ.md).
 
-1. Has DoSarray worked previously on this setup? If not then make sure you've followed our [setup instructions](doc/SETUP.md) and that the [target](doc/TARGET.md) has been started.
+For more in-depth troubleshooting try the following:
+
+1. Has DoSarray worked previously on this setup? If not then make sure you've followed our [setup instructions](SETUP.md) and that the [target](TARGET.md) has been started.
 2. Is the host network configured correctly?
 3. Is docker running?
 Run `service docker status`
@@ -17,7 +23,6 @@ This script must also be run against physical machines that don't run docker (e.
 Run `docker ps`
 7. Are the containers interacting over the network with each other?
 Try sending packets from inside to outside and vice versa.
-For example, use `tcpdump` and `ping` within a container. See the [setup advice](https://github.com/niksu/dosarray/blob/master/doc/SETUP.md#manual-running) on how to run commands in containers.
-
+For example, use `tcpdump` and `ping` within a container. See the [setup advice](SETUP.md#manual-running) on how to run commands in containers.
 
 Finally, look for clues in the DoSarray stdout and stderr logs, and the raw logs.
