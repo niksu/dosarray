@@ -24,7 +24,7 @@ We then used standard 3D printing tools that take this 2D image and turn it
 into a 3D model in a standard open format, and fed it into a 3D printing
 toolchain.
 
-Note that generating such graphs can be done retractively for experiments,
+Note that generating such graphs can be done retroactively for experiments,
 and doesn't require redo-ing experiments. For the example mentioned earlier
 we pbtained the
 [availability.data](https://gitlab.com/niksu/dostbin/blob/master/results/1/availability.data)
