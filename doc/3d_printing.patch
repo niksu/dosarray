@@ -1,6 +1,6 @@
 --- dosarray_graphing.sh	2019-03-05 18:49:46.000000000 -0500
-+++ dosarray_graphing.sh_3DPRINT	2019-03-05 18:49:24.000000000 -0500
-@@ -27,10 +27,19 @@
++++ dosarray_graphing.sh_3DPRINT	2019-03-23 16:52:25.000000000 -0400
+@@ -27,38 +27,35 @@
  ATTACK_ENDS_AT=$3
  
  PREFIX="\
@@ -8,11 +8,7 @@
 -set xlabel 'time (s)' rotate parallel # probe number, approx one probe each second. \n\
 -set ylabel 'latency (10e-4 s)' rotate parallel # latency \"class\", since latencies are quantised. \n\
 -set zlabel 'instances (%%)' rotate parallel # number of instances, whose latency of that probe falls in this latency class. \n\
-+#set terminal pdf truecolor size 800,600 enhanced\n\
 +set terminal pngcairo size 800,600 enhanced\n\
-+#set xlabel 'time (s)' rotate parallel # probe number, approx one probe each second. \n\
-+#set ylabel 'latency (10e-4 s)' rotate parallel # latency \"class\", since latencies are quantised. \n\
-+#set zlabel 'instances (%%)' rotate parallel # number of instances, whose latency of that probe falls in this latency class. \n\
 +unset xlabel \n\
 +unset ylabel \n\
 +unset zlabel \n\
@@ -24,48 +20,47 @@
   \n\
  unset key \n\
   \n\
-@@ -41,8 +50,9 @@
+-#set dgrid3d 50,30 hann \n\
+-#set dgrid3d 100,120 hann \n\
+ set dgrid3d 100,60 gauss \n\
+  \n\
  "
  
  SUFFIX="\n\
 -set style data lines \n\
 -set contour base \n\
-+#set style data lines \n\
 +set style rectangle fillstyle noborder \n\
-+#set contour base \n\
  set hidden3d \n\
   \n\
  set parametric \n\
-@@ -51,14 +61,17 @@
- # NOTE these should be fixed, to ensure consistency across presentation of different experiments \n\
- #set ztics 0,10 \n\
- #set ytics 0,0.1 \n\
-+unset ytics \n\
- #set zrange [0:100] \n\
- #set yrange [0:1] \n\
- #set cbrange [0:0.7] \n\
+ set autoscale \n\
   \n\
- #set xtics 0,5 \n\
+ # NOTE these should be fixed, to ensure consistency across presentation of different experiments \n\
+-#set ztics 0,10 \n\
+-#set ytics 0,0.1 \n\
+-#set zrange [0:100] \n\
+-#set yrange [0:1] \n\
+-#set cbrange [0:0.7] \n\
++unset ytics \n\
+  \n\
+-#set xtics 0,5 \n\
+-#set xrange [0:60] \n\
 +unset xtics \n\
- #set xrange [0:60] \n\
   \n\
 -set title '${TITLE}' \n\
-+#set title '${TITLE}' \n\
 +unset title \n\
  set output '${OUTPUT_FILE}' \n\
  splot '${INPUT_FILE}' using 1:2:3 title 'availability' \n\
  "
-@@ -67,8 +80,13 @@
+@@ -67,8 +64,11 @@
  if [ -z "${DOSARRAY_GRAPH_CONTOUR}" ]
  then
  MIDDLE="# Block B: coloured surface for the 3d plot \n\
 +set view 0,0 \n\
  set pm3d \n\
 -set palette \n\
-+#set palette \n\
 +set pm3d map interpolate 1,1 \n\
 +unset key \n\
-+#set palette defined (  0 \"blue\", 8 \"white\", 16 \"red\") \n\
 +set palette defined (  0 \"black\", 50 \"white\") \n\
  unset colorbox \n\
  "
