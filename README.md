@@ -2,10 +2,10 @@
 
 DoSarray is an [extensively documented](doc/README.md) system that facilitates carrying out experiments involving
 [Denial-of-Service](https://en.wikipedia.org/wiki/Denial-of-service_attack) (DoS) attacks and mitigations.
-Find out more by reading our [paper on DoSarray](https://www.seas.upenn.edu/~nsultana/files/dosarray.pdf).
+Find out more by reading our [paper on DoSarray](https://www.nik.network/files/dosarray.pdf).
 
 [DoStbin](https://gitlab.com/niksu/dostbin/) is a sister project that shares the results from DoSarray experiments.
-Both DoSarray and DoStbin are developed at the University of Pennsylvania as part of the [DeDOS project](http://dedos-project.net/).
+Both DoSarray and DoStbin are developed at the University of Pennsylvania as part of the [DeDOS project]([http://dedos-project.net/](https://dedos.cis.upenn.edu/)).
 
 You can also 3D-print the 3D graphs produced by DoSarray. We have [documented](doc/3D_printing.md) how to do this.
 The photo below shows an example from [one of the archived result
